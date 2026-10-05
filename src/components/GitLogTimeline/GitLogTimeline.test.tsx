@@ -21,8 +21,8 @@ describe('GitLogTimeline', () => {
 
   it('draws fork and merge rows around the side branch', () => {
     const { container } = render(<GitLogTimeline />);
-    expect(container.textContent).toContain('|\\');
-    expect(container.textContent).toContain('|/');
+    expect(container.textContent).toContain(' \\');
+    expect(container.textContent).toContain(' /');
   });
 
   it('renders an aria-hidden svg spine', () => {

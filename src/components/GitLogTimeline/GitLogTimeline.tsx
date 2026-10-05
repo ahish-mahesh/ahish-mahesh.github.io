@@ -10,7 +10,7 @@ import styles from './GitLogTimeline.module.css';
 const FADE_IN = {
   initial: { opacity: 0, scale: 0.6 },
   whileInView: { opacity: 1, scale: 1 },
-  viewport: { once: true, amount: 1 },
+  viewport: { once: true, amount: 0.5 },
   transition: { duration: 0.3 },
 } as const;
 
@@ -53,7 +53,7 @@ export function GitLogTimeline() {
               <li key={e.id} className={styles.item}>
                 {opens ? (
                   <span aria-hidden="true" className={styles.fork}>
-                    {'|\\'}
+                    {' \\'}
                   </span>
                 ) : null}
                 <div className={styles.commit}>
@@ -61,7 +61,7 @@ export function GitLogTimeline() {
                     aria-hidden="true"
                     className={cx(styles.graph, e.branch === 'side' && styles.side)}
                   >
-                    {e.branch === 'side' ? '| ' : null}
+                    {e.branch === 'side' ? '  ' : null}
                     <m.span className={styles.marker} {...fade}>
                       *
                     </m.span>
@@ -97,7 +97,7 @@ export function GitLogTimeline() {
                 </div>
                 {closes ? (
                   <span aria-hidden="true" className={styles.fork}>
-                    {'|/'}
+                    {' /'}
                   </span>
                 ) : null}
               </li>

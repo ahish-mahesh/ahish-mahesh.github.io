@@ -42,6 +42,17 @@
   z-index: 1;
 }
 
+/* The spine is the main branch, so side rows draw no | glyphs of their own.
+   A side commit gets a short line from its * down to the closing /. */
+.side::after {
+  content: '';
+  position: absolute;
+  top: var(--rhythm);
+  bottom: 0;
+  left: calc(2.5ch - 0.5px);
+  border-left: 1px solid var(--muted);
+}
+
 /* Stack the glyphs above the spine so the line reads as connecting nodes. */
 .marker {
   display: inline-block;

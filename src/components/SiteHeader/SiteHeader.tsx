@@ -3,8 +3,8 @@ import { ThemeSwitch } from '../ThemeSwitch/ThemeSwitch.tsx';
 import styles from './SiteHeader.module.css';
 
 const links = [
-  { label: 'work', href: '#work' },
   { label: 'projects', href: '#projects' },
+  { label: 'work', href: '#work' },
   { label: 'about', href: '#about' },
   { label: 'contact', href: '#contact' },
   { label: 'resume', href: profile.links.resume },

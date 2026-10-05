@@ -3,15 +3,10 @@ import { archive, projects } from '../../content/projects.ts';
 import { cx } from '../cx.ts';
 import type { Project } from '../../content/types.ts';
 import { Section } from '../Section/Section.tsx';
+import { ProcessBar } from './ProcessBar.tsx';
 import styles from './ProcessList.module.css';
 
-const BAR_WIDTH = 18;
 const HASH_PREFIX = '#project-';
-
-function bar(fill: number): string {
-  const n = Math.round(fill * BAR_WIDTH);
-  return `[${'|'.repeat(n)}${' '.repeat(BAR_WIDTH - n)}]`;
-}
 
 function hashSlug(): string | undefined {
   const hash = window.location.hash;
@@ -22,11 +17,12 @@ function hashSlug(): string | undefined {
 
 interface ProcessRowProps {
   project: Project;
+  index: number;
   open: boolean;
   onToggle: () => void;
 }
 
-function ProcessRow({ project, open, onToggle }: ProcessRowProps) {
+function ProcessRow({ project, index, open, onToggle }: ProcessRowProps) {
   const panelId = `panel-${project.slug}`;
 
   return (
@@ -42,9 +38,7 @@ function ProcessRow({ project, open, onToggle }: ProcessRowProps) {
           <span className={cx(styles.pid, 'muted')}>{project.pid}</span>
           <span className={styles.name}>{project.name}</span>
           <span className={cx(styles.stack, 'muted')}>{project.stack.join(' ')}</span>
-          <span aria-hidden="true" className={styles.bar}>
-            {bar(project.barFill)}
-          </span>
+          <ProcessBar fill={project.barFill} index={index} />
           <span className={styles.metric}>{project.metric}</span>
         </button>
       </h3>
@@ -117,10 +111,11 @@ export function ProcessList() {
           <span className={styles.metricHead}>METRIC</span>
         </div>
         <ul>
-          {projects.map((p) => (
+          {projects.map((p, i) => (
             <ProcessRow
               key={p.slug}
               project={p}
+              index={i}
               open={openSlugs.has(p.slug)}
               onToggle={() => {
                 toggle(p.slug);

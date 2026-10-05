@@ -1,4 +1,7 @@
+import { flushSync } from 'react-dom';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { prefersReducedMotion } from '../hooks/useReducedMotion.ts';
+import './transitions.css';
 import { ThemeContext, type ThemeContextValue } from './themeContext.ts';
 import {
   THEMES,
@@ -35,10 +38,23 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, [explicit]);
 
   const setTheme = useCallback((t: Theme) => {
-    setThemeState(t);
-    setExplicit(true);
-    document.documentElement.dataset.theme = t;
-    writeStoredTheme(t);
+    const apply = () => {
+      setThemeState(t);
+      setExplicit(true);
+      document.documentElement.dataset.theme = t;
+      writeStoredTheme(t);
+    };
+    const animate =
+      typeof document.startViewTransition === 'function' &&
+      !prefersReducedMotion() &&
+      document.documentElement.dataset.theme !== t;
+    if (animate) {
+      document.startViewTransition(() => {
+        flushSync(apply);
+      });
+    } else {
+      apply();
+    }
   }, []);
 
   const value = useMemo<ThemeContextValue>(

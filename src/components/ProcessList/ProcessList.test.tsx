@@ -2,6 +2,8 @@ import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 import { projects } from '../../content/projects.ts';
+import { mockReducedMotion } from '../../test/matchMedia.ts';
+import { bar } from './bar.ts';
 import { ProcessList } from './ProcessList.tsx';
 
 afterEach(() => {
@@ -52,5 +54,26 @@ describe('ProcessList', () => {
       window.dispatchEvent(new HashChangeEvent('hashchange'));
     });
     expect(button).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  describe('bars', () => {
+    function barTexts(container: HTMLElement): (string | null)[] {
+      return Array.from(
+        container.querySelectorAll('li[id^="project-"] button > span[aria-hidden]'),
+      ).map((el) => el.textContent);
+    }
+
+    it('shows the full bar immediately under reduced motion', () => {
+      mockReducedMotion();
+      const { container } = render(<ProcessList />);
+      expect(barTexts(container)).toEqual(projects.map((p) => bar(p.barFill)));
+    });
+
+    it('starts empty, at full width, until the row scrolls into view', () => {
+      const { container } = render(<ProcessList />);
+      const texts = barTexts(container);
+      expect(texts).toEqual(projects.map(() => bar(0)));
+      expect(texts[0]).toHaveLength(bar(1).length);
+    });
   });
 });

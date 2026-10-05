@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { LazyMotion, MotionConfig, domAnimation } from 'motion/react';
 import '@fontsource/jetbrains-mono/latin-400.css';
 import '@fontsource/jetbrains-mono/latin-700.css';
 import './theme/tokens.css';
@@ -12,10 +13,15 @@ if (!root) {
   throw new Error('Missing #root element');
 }
 
+// LazyMotion + `m.*` keeps Motion's initial cost small; `strict` throws on a stray `motion.*`.
 createRoot(root).render(
   <StrictMode>
-    <ThemeProvider>
-      <App />
-    </ThemeProvider>
+    <LazyMotion features={domAnimation} strict>
+      <MotionConfig reducedMotion="user">
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </MotionConfig>
+    </LazyMotion>
   </StrictMode>,
 );

@@ -1,4 +1,5 @@
 import { profile } from '../../content/profile.ts';
+import { DecodeText } from '../DecodeText/DecodeText.tsx';
 import styles from './Hero.module.css';
 
 const buttons = [
@@ -12,7 +13,7 @@ export function Hero() {
     <section id="top" aria-labelledby="hero-heading" className={styles.hero}>
       <div className={styles.text}>
         <h1 id="hero-heading" className={styles.name}>
-          {profile.name}
+          <DecodeText text={profile.name} />
         </h1>
         <p>{profile.oneLiner}</p>
         <p className="muted">{profile.subLine}</p>

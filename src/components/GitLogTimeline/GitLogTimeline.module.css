@@ -1,5 +1,22 @@
+.timeline {
+  position: relative;
+}
+
 .list {
   display: block;
+}
+
+/* One spine for the main branch, centered on the * glyph (0.5ch). */
+.spine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(0.5ch - 0.5px);
+  width: 1px;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .fork,
@@ -22,20 +39,13 @@
 
 .graph {
   position: relative;
+  z-index: 1;
 }
 
-/* The continuing branch line: a pipe column that stretches with the entry. */
-.graph::after {
-  content: '';
-  position: absolute;
-  top: var(--rhythm);
-  bottom: 0;
-  left: 0.5ch;
-  border-left: 1px solid var(--muted);
-}
-
-.side::after {
-  left: 0.5ch;
+/* Stack the glyphs above the spine so the line reads as connecting nodes. */
+.marker {
+  display: inline-block;
+  background: var(--bg);
 }
 
 .article {
@@ -47,6 +57,8 @@
 }
 
 .head {
+  display: inline-block;
+  white-space: pre;
   color: var(--accent);
 }
 

@@ -4,12 +4,32 @@ import userEvent from '@testing-library/user-event';
 import { ThemeProvider } from './ThemeProvider.tsx';
 import { ThemeSwitch } from '../components/ThemeSwitch/ThemeSwitch.tsx';
 import { useTheme } from './useTheme.ts';
+import { mockReducedMotion } from '../test/matchMedia.ts';
 
 afterEach(() => {
   vi.restoreAllMocks();
   delete document.documentElement.dataset.theme;
   localStorage.clear();
+  Reflect.deleteProperty(document, 'startViewTransition');
 });
+
+function stubViewTransition() {
+  const stub = vi.fn((cb: () => void) => {
+    cb();
+    return {
+      finished: Promise.resolve(),
+      ready: Promise.resolve(),
+      updateCallbackDone: Promise.resolve(),
+      skipTransition: vi.fn(),
+    };
+  });
+  Object.defineProperty(document, 'startViewTransition', {
+    value: stub,
+    configurable: true,
+    writable: true,
+  });
+  return stub;
+}
 
 function renderSwitch() {
   return render(
@@ -54,5 +74,25 @@ describe('ThemeProvider', () => {
       return null;
     }
     expect(() => render(<Probe />)).toThrow(/ThemeProvider/);
+  });
+
+  it('wraps the switch in a view transition when supported', async () => {
+    const stub = stubViewTransition();
+    const user = userEvent.setup();
+    renderSwitch();
+    await user.click(screen.getByRole('button', { name: /paper/ }));
+    expect(stub).toHaveBeenCalledTimes(1);
+    expect(document.documentElement.dataset.theme).toBe('paper');
+    expect(screen.getByRole('button', { name: /paper/ })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('skips the view transition under reduced motion', async () => {
+    mockReducedMotion();
+    const stub = stubViewTransition();
+    const user = userEvent.setup();
+    renderSwitch();
+    await user.click(screen.getByRole('button', { name: /paper/ }));
+    expect(stub).not.toHaveBeenCalled();
+    expect(document.documentElement.dataset.theme).toBe('paper');
   });
 });

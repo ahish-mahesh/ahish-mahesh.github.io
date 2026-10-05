@@ -45,6 +45,14 @@ describe('ProcessList', () => {
     expect(within(figure).getByText(/^pipeline:/)).toBeVisible();
   });
 
+  it('shows the migration panel in the kla panel', async () => {
+    const user = userEvent.setup();
+    render(<ProcessList />);
+    await user.click(screen.getByRole('button', { name: /kla-pg-migration/ }));
+    const figure = screen.getByRole('figure');
+    expect(within(figure).getByText(/^illustrative:/)).toBeVisible();
+  });
+
   it('expands the row named in the hash', () => {
     render(<ProcessList />);
     const button = screen.getByRole('button', { name: /kla-pg-migration/ });

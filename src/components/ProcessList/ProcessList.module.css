@@ -68,6 +68,11 @@
   gap: var(--rhythm);
 }
 
+/* Let wide figures scroll inside themselves instead of stretching the grid. */
+.panel > * {
+  min-width: 0;
+}
+
 .label {
   text-transform: lowercase;
 }
@@ -80,18 +85,6 @@
 .bullets li::before {
   content: '- ';
   color: var(--muted);
-}
-
-.figure {
-  display: grid;
-  gap: 0;
-}
-
-.diagram {
-  overflow-x: auto;
-  white-space: pre;
-  font-size: var(--fs-0);
-  padding-bottom: var(--space-1);
 }
 
 .archiveHeading {

@@ -17,6 +17,7 @@ export const projects: readonly Project[] = [
     stack: ['PostgreSQL', 'Babelfish', 'T-SQL'],
     metric: '1,200 queries, -25% cost',
     barFill: 14 / 18,
+    visual: 'migration',
     summary:
       'I analysed 30+ product cost components and found the MSSQL high-availability cluster was ~20% of product cost.',
     bullets: [
@@ -45,6 +46,7 @@ export const projects: readonly Project[] = [
     ],
     repo: 'https://github.com/ahish-mahesh/agent-notes-cpp',
     diagram: agentNotesDiagram,
+    visual: 'pipeline',
     diagramCaption:
       'pipeline: mic to AudioCapture to ring buffer to WhisperTranscriber, transcript to LLMClient, summary to DBHelper to SQLite.',
   },

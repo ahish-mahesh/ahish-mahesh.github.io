@@ -1,0 +1,51 @@
+.figure {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+}
+
+.figure > * {
+  min-width: 0;
+}
+
+.counter,
+.cost {
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.value {
+  color: var(--accent);
+}
+
+.code {
+  overflow-x: auto;
+  white-space: pre;
+  font-size: var(--fs-0);
+  margin: var(--rhythm) 0;
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--border);
+}
+
+.drop {
+  color: var(--accent);
+}
+
+.dropHidden {
+  visibility: hidden;
+}
+
+.replay {
+  justify-self: start;
+  padding: 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.replay:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}

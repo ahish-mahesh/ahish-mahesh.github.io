@@ -35,6 +35,8 @@ export interface Project {
   readonly diagram?: string;
   /** Plain-text description of the diagram for screen readers. */
   readonly diagramCaption?: string;
+  /** Animated figure in the case study panel. */
+  readonly visual?: 'pipeline' | 'migration';
 }
 
 export interface ArchiveProject {

@@ -101,6 +101,11 @@ a {
   scroll-margin-top: calc(var(--rhythm) * 3);
 }
 
+/* Component display rules must not reveal a hidden element. */
+[hidden] {
+  display: none !important;
+}
+
 .muted {
   color: var(--muted);
 }

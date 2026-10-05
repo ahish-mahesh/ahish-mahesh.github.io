@@ -1,23 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useReducedMotion } from '../../hooks/useReducedMotion.ts';
+import { initialScramble, randomGlyph, scrambleFrame } from './scramble.ts';
 
-const GLYPHS = '!<>-_/[]{}=+*^?#%@$';
 const DURATION_MS = 900;
 
 interface DecodeTextProps {
   text: string;
   className?: string;
-}
-
-/** Deterministic first frame, so render stays pure and server and client agree. */
-function initialScramble(text: string): string {
-  return Array.from(text, (ch, i) =>
-    ch === ' ' ? ' ' : GLYPHS.charAt((i * 7 + 3) % GLYPHS.length),
-  ).join('');
-}
-
-function randomGlyph(): string {
-  return GLYPHS.charAt(Math.floor(Math.random() * GLYPHS.length));
 }
 
 /**
@@ -31,7 +20,6 @@ export function DecodeText({ text, className }: DecodeTextProps) {
 
   useEffect(() => {
     if (reduced) return;
-    const chars = Array.from(text);
     const start = performance.now();
     let frame = 0;
 
@@ -41,15 +29,7 @@ export function DecodeText({ text, className }: DecodeTextProps) {
         setDisplay(text);
         return;
       }
-      setDisplay(
-        chars
-          .map((ch, i) => {
-            if (ch === ' ') return ' ';
-            const resolveAt = ((i + 1) / chars.length) * DURATION_MS;
-            return elapsed >= resolveAt ? ch : randomGlyph();
-          })
-          .join(''),
-      );
+      setDisplay(scrambleFrame(text, text, elapsed / DURATION_MS, randomGlyph));
       frame = requestAnimationFrame(tick);
     };
 

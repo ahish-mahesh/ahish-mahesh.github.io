@@ -1,0 +1,30 @@
+.figure {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  padding-bottom: var(--space-1);
+}
+
+.svg {
+  display: block;
+  width: 78ch;
+  max-width: none;
+  height: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-0);
+  color: var(--fg);
+}
+
+/* One user unit is one em: the viewBox is in character cells. */
+.svg text {
+  font-size: 1px;
+}
+
+.counter {
+  color: var(--accent);
+}

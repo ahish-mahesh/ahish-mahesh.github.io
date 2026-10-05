@@ -3,6 +3,8 @@ import { archive, projects } from '../../content/projects.ts';
 import { cx } from '../cx.ts';
 import type { Project } from '../../content/types.ts';
 import { Section } from '../Section/Section.tsx';
+import { MigrationPanel } from '../MigrationPanel/MigrationPanel.tsx';
+import { PipelineDiagram } from '../PipelineDiagram/PipelineDiagram.tsx';
 import { ProcessBar } from './ProcessBar.tsx';
 import styles from './ProcessList.module.css';
 
@@ -61,14 +63,10 @@ function ProcessRow({ project, index, open, onToggle }: ProcessRowProps) {
             </a>
           </p>
         ) : null}
-        {project.diagram ? (
-          <figure className={styles.figure}>
-            <pre aria-hidden="true" className={styles.diagram}>
-              {project.diagram}
-            </pre>
-            <figcaption className="muted">{project.diagramCaption}</figcaption>
-          </figure>
+        {project.visual === 'pipeline' && project.diagram ? (
+          <PipelineDiagram source={project.diagram} caption={project.diagramCaption} />
         ) : null}
+        {project.visual === 'migration' ? <MigrationPanel /> : null}
       </div>
     </li>
   );

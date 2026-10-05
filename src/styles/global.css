@@ -1,0 +1,39 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #1d1d1b;
+  background: #f4f1ea;
+}
+
+main {
+  max-width: 80ch;
+  margin: 0 auto;
+  padding: 3rem 16px;
+}
+
+h1 {
+  margin: 0 0 1.5rem;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  text-transform: lowercase;
+}
+
+p {
+  margin: 0 0 1.5rem;
+}
+
+a {
+  color: #0b4f8a;
+}
+
+.muted {
+  color: #5c5c58;
+}

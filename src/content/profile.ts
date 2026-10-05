@@ -10,7 +10,8 @@ export const profile: Profile = {
     linkedin: 'https://linkedin.com/in/ahish-mahesh',
     resume: '/resume.pdf',
   },
-  location: 'Montreal. I prefer hybrid, and I am happy to look at Toronto.',
+  location:
+    'Open to opportunities in Montreal and Ontario. I prefer hybrid, and I am happy to move around anywhere on the east coast.',
   availability: 'Graduating December 2026, can start full time in January 2027.',
   workAuthorization:
     "Post-Graduation Work Permit from January 2027. It's an open permit, so there's no sponsorship, no LMIA, and nothing for an employer to file.",

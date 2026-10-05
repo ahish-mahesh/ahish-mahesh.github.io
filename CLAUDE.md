@@ -213,7 +213,7 @@ The branch line draws itself as you scroll (Motion `pathLength`); commits fade i
 
 Content:
 
-- **Vffice**, Montreal/Brossard. Back end developer, May 2026 to now (co-op May-Aug 2026, then full time). AL development on Microsoft Dynamics 365 Business Central: order sync, workflow validation, financial logic for invoicing and inventory. Built the secured REST API external systems integrate through. 23 PRs across 3 repos; owns review and release for what he ships.
+- **Vffice**, Montreal/Brossard. Back end developer, May 2026 to now (co-op May-Aug 2026, then part time from September). AL development on Microsoft Dynamics 365 Business Central: order sync, workflow validation, financial logic for invoicing and inventory. Built the secured REST API external systems integrate through. 23 PRs across 3 repos; owns review and release for what he ships.
 - **Concordia University**. Teaching assistant, Winter 2026: Data Structures and Algorithms (COMP 352), Programming and Problem Solving (COMP 6481).
 - **KLA Corporation**, Chennai. Software engineer, Jul 2021 to Nov 2024. C++/.NET metrology applications and the SQL Server HA tier (+30% query performance and reliability). Led the PostgreSQL migration (link to case study). Jenkins + MSTest pipeline: quarterly to weekly releases, -40% deployment time, -95% production bugs. Mentored four engineers; ran the division's weekly "Tech Junction" talks for ~80 people. On-site escalations and deployments in Korea, Japan and Singapore.
 - **KLA Corporation**. Software engineering intern, 2019-2021 (multiple terms). Migrated a legacy Windows data-management system to a web platform (ReactJS, Three.js, C# REST API, MSSQL): 500+ users, -25% maintenance cost. Placement offer, 8 of 70+ candidates.

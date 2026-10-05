@@ -13,7 +13,7 @@ export const experience: readonly ExperienceEntry[] = [
     branch: 'main',
     note: 'started as the co-op, stayed on',
     bullets: [
-      'Co-op May-Aug 2026, then full time.',
+      'Co-op May-Aug 2026, then part time from September.',
       'AL development on Microsoft Dynamics 365 Business Central: order sync, workflow validation, financial logic for invoicing and inventory.',
       'Built the secured REST API external systems integrate through.',
       '23 PRs across 3 repos; I own review and release for what I ship.',

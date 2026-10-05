@@ -23,6 +23,13 @@ ESLint is pinned to 9.x because `eslint-plugin-jsx-a11y` does not support 10 yet
 | `bun run test`      | Vitest, single run                                         |
 | `bun run check`     | Typecheck, lint, format check, tests, build (what CI runs) |
 
+## Resume
+
+`public/resume.pdf` is added by hand. Before committing it, check that it contains no phone number
+and no home address, because the site is public and indexed.
+
+Font preloading is deferred to milestone 7.
+
 ## Deploy
 
 Pushes to `main` run `.github/workflows/deploy.yml`: install, `bun run check`, build, then publish

@@ -1,0 +1,10 @@
+.body {
+  display: grid;
+  gap: var(--rhythm);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 11ch 1fr;
+  overflow-wrap: anywhere;
+}

@@ -1,0 +1,13 @@
+.section {
+  width: min(var(--measure), 100%);
+  margin: 0 auto;
+  padding: calc(var(--rhythm) * 2) var(--gutter);
+}
+
+.heading {
+  margin-bottom: var(--rhythm);
+}
+
+.prompt {
+  color: var(--muted);
+}

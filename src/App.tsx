@@ -1,14 +1,26 @@
+import { Contact } from './components/Contact/Contact.tsx';
+import { GitLogTimeline } from './components/GitLogTimeline/GitLogTimeline.tsx';
+import { Hero } from './components/Hero/Hero.tsx';
+import { Neofetch } from './components/Neofetch/Neofetch.tsx';
+import { ProcessList } from './components/ProcessList/ProcessList.tsx';
+import { SiteFooter } from './components/SiteFooter/SiteFooter.tsx';
+import { SiteHeader } from './components/SiteHeader/SiteHeader.tsx';
+
 export default function App() {
   return (
-    <main>
-      <h1>Ahish Mahesh</h1>
-      <p>Backend engineer. C++ and C#/.NET in production, plus the database tier underneath.</p>
-      <p>Back end developer at Vffice · CS master&apos;s at Concordia, Dec 2026 · Montreal</p>
-      <p>
-        <a href="mailto:ahish.mahesh@gmail.com">email</a> ·{' '}
-        <a href="https://github.com/ahish-mahesh">github</a>
-      </p>
-      <p className="muted">site under construction. milestone 1 of 7.</p>
-    </main>
+    <>
+      <a className="skip-link" href="#main">
+        skip to content
+      </a>
+      <SiteHeader />
+      <main id="main" tabIndex={-1}>
+        <Hero />
+        <ProcessList />
+        <GitLogTimeline />
+        <Neofetch />
+        <Contact />
+      </main>
+      <SiteFooter />
+    </>
   );
 }

@@ -1,0 +1,14 @@
+.footer {
+  border-top: 1px solid var(--border);
+  font-size: var(--fs-0);
+}
+
+.inner {
+  width: min(var(--measure), 100%);
+  margin: 0 auto;
+  padding: var(--rhythm) var(--gutter);
+}
+
+.inner a {
+  color: inherit;
+}

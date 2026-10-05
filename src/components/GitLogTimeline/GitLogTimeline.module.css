@@ -1,0 +1,79 @@
+.list {
+  display: block;
+}
+
+.fork,
+.graph {
+  color: var(--accent);
+  white-space: pre;
+  font-weight: 700;
+}
+
+.fork {
+  display: block;
+  width: 4ch;
+}
+
+.commit {
+  display: grid;
+  grid-template-columns: 4ch 1fr;
+  column-gap: var(--space-1);
+}
+
+.graph {
+  position: relative;
+}
+
+/* The continuing branch line: a pipe column that stretches with the entry. */
+.graph::after {
+  content: '';
+  position: absolute;
+  top: var(--rhythm);
+  bottom: 0;
+  left: 0.5ch;
+  border-left: 1px solid var(--muted);
+}
+
+.side::after {
+  left: 0.5ch;
+}
+
+.article {
+  padding-bottom: var(--rhythm);
+}
+
+.meta {
+  line-height: var(--rhythm);
+}
+
+.head {
+  color: var(--accent);
+}
+
+.title {
+  text-transform: lowercase;
+  overflow-wrap: anywhere;
+}
+
+.bullets li {
+  padding-left: 2ch;
+  text-indent: -2ch;
+}
+
+.bullets li::before {
+  content: '- ';
+  color: var(--muted);
+}
+
+.sub {
+  margin-top: var(--rhythm);
+}
+
+.edu li,
+.award {
+  overflow-wrap: anywhere;
+}
+
+.award {
+  margin-top: var(--rhythm);
+}

@@ -1,0 +1,54 @@
+:root {
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --fs-0: 14px;
+  --fs-1: 16px;
+  --fs-2: 20px;
+  --fs-3: 28px;
+  --fs-4: 40px;
+  --rhythm: 1.5rem;
+  --space-1: calc(var(--rhythm) * 0.5);
+  --space-2: var(--rhythm);
+  --space-3: calc(var(--rhythm) * 2);
+  --space-4: calc(var(--rhythm) * 3);
+  --measure: 88ch;
+  --gutter: 16px;
+}
+
+:root[data-theme='phosphor'],
+:root:not([data-theme]) {
+  color-scheme: dark;
+  --bg: #0b0f0c;
+  --fg: #c8e6c9;
+  --accent: #39ff88;
+  --muted: #7c907d;
+  --border: var(--muted);
+}
+
+:root[data-theme='amber'] {
+  color-scheme: dark;
+  --bg: #100c07;
+  --fg: #ffb347;
+  --accent: #ffcc66;
+  --muted: #ab7931;
+  --border: var(--muted);
+}
+
+:root[data-theme='paper'] {
+  color-scheme: light;
+  --bg: #f4f1ea;
+  --fg: #1d1d1b;
+  --accent: #0b4f8a;
+  --muted: #686763;
+  --border: var(--muted);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #f4f1ea;
+    --fg: #1d1d1b;
+    --accent: #0b4f8a;
+    --muted: #686763;
+    --border: var(--muted);
+  }
+}

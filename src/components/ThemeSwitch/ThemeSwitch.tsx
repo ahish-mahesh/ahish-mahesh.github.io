@@ -3,23 +3,19 @@ import styles from './ThemeSwitch.module.css';
 
 export function ThemeSwitch() {
   const { theme, setTheme, themes } = useTheme();
+  const next = themes[(themes.indexOf(theme) + 1) % themes.length] ?? theme;
   return (
-    <div role="group" aria-label="theme" className={styles.group}>
-      {themes.map((t) => (
-        <button
-          key={t}
-          type="button"
-          className={styles.button}
-          aria-pressed={theme === t}
-          onClick={() => {
-            setTheme(t);
-          }}
-        >
-          <span aria-hidden="true">[</span>
-          {t}
-          <span aria-hidden="true">]</span>
-        </button>
-      ))}
-    </div>
+    <button
+      type="button"
+      className={styles.button}
+      aria-label={`theme: ${theme}, switch to ${next}`}
+      onClick={() => {
+        setTheme(next);
+      }}
+    >
+      <span aria-hidden="true">[</span>
+      {theme}
+      <span aria-hidden="true">]</span>
+    </button>
   );
 }

@@ -1,24 +1,15 @@
-.group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 var(--space-1);
-  font-size: var(--fs-0);
-}
-
 .button {
+  min-width: 10ch;
   padding: 0;
   border: 0;
   background: none;
-  color: var(--muted);
+  color: var(--accent);
   font: inherit;
   line-height: var(--rhythm);
+  text-align: left;
   cursor: pointer;
 }
 
 .button:hover {
   color: var(--fg);
-}
-
-.button[aria-pressed='true'] {
-  color: var(--accent);
 }

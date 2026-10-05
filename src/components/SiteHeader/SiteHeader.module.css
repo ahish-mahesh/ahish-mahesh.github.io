@@ -1,20 +1,31 @@
+/* Mobile breakpoint: keep in sync with MOBILE_QUERY in SiteHeader.tsx. */
+
 .header {
   position: sticky;
   top: 0;
   z-index: 10;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
+  font-size: var(--fs-0);
 }
 
 .nav {
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  column-gap: var(--space-3);
-  row-gap: 0;
-  width: min(var(--measure), 100%);
+  column-gap: 3ch;
+  /* Wider than the body column: the prompt, a typed command, five links and the
+     theme button need ~100ch at this font size. */
+  width: min(112ch, 100%);
   margin: 0 auto;
   padding: 0 var(--gutter);
+}
+
+.promptArea {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .prompt {
@@ -23,19 +34,104 @@
   font-weight: 700;
 }
 
-.links {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: var(--space-2);
-  flex: 1;
+.typed {
+  color: var(--fg);
 }
 
-.link {
-  color: var(--fg);
+.cursor {
+  color: var(--accent);
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  column-gap: 3ch;
+}
+
+.links {
+  display: flex;
+  column-gap: 2ch;
+}
+
+.link,
+.fileLink {
   text-decoration: none;
 }
 
-.link:hover {
+.link {
   color: var(--accent);
+}
+
+.fileLink {
+  color: var(--fg);
+}
+
+.link:hover,
+.fileLink:hover {
   text-decoration: underline;
+}
+
+.link[aria-current='location'] {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.toggle {
+  display: none;
+  font: inherit;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+@media (max-width: 880px) {
+  .nav {
+    column-gap: 1ch;
+  }
+
+  .typed {
+    display: none;
+  }
+
+  .toggle {
+    display: inline;
+  }
+
+  .menu {
+    display: none;
+  }
+
+  .menu[data-open='true'] {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    row-gap: var(--space-1);
+    position: absolute;
+    top: 100%;
+    right: var(--gutter);
+    padding: var(--space-1) var(--space-2);
+    background: var(--bg);
+    border: 1px solid var(--border);
+  }
+
+  .menu[data-open='true'] .links {
+    flex-direction: column;
+    align-items: flex-end;
+    row-gap: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
 }

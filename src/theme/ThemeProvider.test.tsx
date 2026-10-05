@@ -40,18 +40,22 @@ function renderSwitch() {
 }
 
 describe('ThemeProvider', () => {
-  it('switches theme, updates aria-pressed and persists', async () => {
+  it('cycles themes, updates the label and persists', async () => {
     const user = userEvent.setup();
     renderSwitch();
-    await user.click(screen.getByRole('button', { name: /paper/ }));
+    const button = () => screen.getByRole('button', { name: /^theme:/ });
+    expect(button()).toHaveAccessibleName(/theme: phosphor, switch to amber/);
+    await user.click(button());
+    expect(document.documentElement.dataset.theme).toBe('amber');
+    expect(localStorage.getItem('theme')).toBe('amber');
+    expect(button()).toHaveAccessibleName(/theme: amber, switch to paper/);
+    await user.click(button());
     expect(document.documentElement.dataset.theme).toBe('paper');
-    expect(screen.getByRole('button', { name: /paper/ })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('button', { name: /amber/ })).toHaveAttribute('aria-pressed', 'false');
-    expect(screen.getByRole('button', { name: /phosphor/ })).toHaveAttribute(
-      'aria-pressed',
-      'false',
-    );
     expect(localStorage.getItem('theme')).toBe('paper');
+    expect(button()).toHaveAccessibleName(/theme: paper, switch to phosphor/);
+    await user.click(button());
+    expect(document.documentElement.dataset.theme).toBe('phosphor');
+    expect(localStorage.getItem('theme')).toBe('phosphor');
   });
 
   it('still works when storage throws', async () => {
@@ -63,7 +67,7 @@ describe('ThemeProvider', () => {
     });
     const user = userEvent.setup();
     renderSwitch();
-    await user.click(screen.getByRole('button', { name: /amber/ }));
+    await user.click(screen.getByRole('button', { name: /^theme:/ }));
     expect(document.documentElement.dataset.theme).toBe('amber');
   });
 
@@ -80,10 +84,9 @@ describe('ThemeProvider', () => {
     const stub = stubViewTransition();
     const user = userEvent.setup();
     renderSwitch();
-    await user.click(screen.getByRole('button', { name: /paper/ }));
+    await user.click(screen.getByRole('button', { name: /^theme:/ }));
     expect(stub).toHaveBeenCalledTimes(1);
-    expect(document.documentElement.dataset.theme).toBe('paper');
-    expect(screen.getByRole('button', { name: /paper/ })).toHaveAttribute('aria-pressed', 'true');
+    expect(document.documentElement.dataset.theme).toBe('amber');
   });
 
   it('skips the view transition under reduced motion', async () => {
@@ -91,8 +94,8 @@ describe('ThemeProvider', () => {
     const stub = stubViewTransition();
     const user = userEvent.setup();
     renderSwitch();
-    await user.click(screen.getByRole('button', { name: /paper/ }));
+    await user.click(screen.getByRole('button', { name: /^theme:/ }));
     expect(stub).not.toHaveBeenCalled();
-    expect(document.documentElement.dataset.theme).toBe('paper');
+    expect(document.documentElement.dataset.theme).toBe('amber');
   });
 });

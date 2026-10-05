@@ -1,5 +1,6 @@
 import { profile } from '../../content/profile.ts';
 import { DecodeText } from '../DecodeText/DecodeText.tsx';
+import { HeroVisual } from './HeroVisual.tsx';
 import styles from './Hero.module.css';
 
 const buttons = [
@@ -29,7 +30,7 @@ export function Hero() {
           ))}
         </ul>
       </div>
-      <div aria-hidden="true" className={styles.visual} />
+      <HeroVisual className={styles.visual} />
     </section>
   );
 }

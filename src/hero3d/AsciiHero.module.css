@@ -1,0 +1,39 @@
+/* Same character cell as the static frame (Hero.module.css .frame): 1/res px wide,
+   2/res px tall. JetBrains Mono advances 0.6em, so font-size = cell / 0.6. */
+.wrap {
+  --ascii-cell: calc(1px / var(--ascii-res, 0.15));
+
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* The WebGL canvas is only a source for the ASCII pass. */
+.wrap :global(canvas) {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.ascii {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: calc(var(--ascii-cell) / 0.6);
+  line-height: calc(var(--ascii-cell) * 2);
+  letter-spacing: 0;
+  font-variant-ligatures: none;
+  color: var(--muted);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* The pulse is colour only: the active platter's glyphs never change. */
+.active {
+  color: var(--accent);
+}

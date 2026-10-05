@@ -36,6 +36,38 @@
 
 .visual {
   display: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Same character cell as the live ASCII pass (see src/hero3d/AsciiHero.module.css,
+   resolution 0.15), so the static frame and the 3D render line up when they swap. */
+.frame {
+  --ascii-cell: calc(1px / 0.15);
+
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: calc(var(--ascii-cell) / 0.6);
+  line-height: calc(var(--ascii-cell) * 2);
+  letter-spacing: 0;
+  font-variant-ligatures: none;
+  color: var(--muted);
+  pointer-events: none;
+  user-select: none;
+  opacity: 1;
+  transition: opacity 400ms ease;
+}
+
+.frame[data-hidden='true'] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame {
+    transition: none;
+  }
 }
 
 @media (min-width: 720px) {

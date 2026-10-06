@@ -20,6 +20,7 @@
     "check": "bun run typecheck && bun run lint && bun run format:check && bun run test && bun run build"
   },
   "dependencies": {
+    "@fontsource/ibm-plex-sans": "^5.3.0",
     "@fontsource/jetbrains-mono": "^5.3.0",
     "@react-three/fiber": "^9.8.1",
     "motion": "^14.0.0",

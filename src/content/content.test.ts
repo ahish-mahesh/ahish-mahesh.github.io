@@ -69,6 +69,10 @@ describe('projects', () => {
     expect(new Set(projects.map((p) => p.slug)).size).toBe(projects.length);
   });
 
+  it('has a non-empty headline on every project', () => {
+    for (const p of projects) expect(p.headline.trim().length).toBeGreaterThan(0);
+  });
+
   it('only links to the ahish-mahesh GitHub account', () => {
     const repos = [...projects, ...projectsModule.archive].flatMap((p) =>
       p.repo === undefined ? [] : [p.repo],

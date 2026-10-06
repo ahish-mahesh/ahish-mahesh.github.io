@@ -3,9 +3,6 @@ export const CH = 0.6;
 /** Line height in em: matches `--rhythm` (1.5rem) at a 16px font. */
 export const LH = 1.5;
 
-export const COLS = 78;
-export const ROWS = 7;
-
 export type Point = readonly [col: number, row: number];
 
 export interface Sub {
@@ -34,7 +31,15 @@ export const y = (row: number): number => row * LH;
 /** Centre of a grid cell, for edge endpoints. */
 export const px = ([col, row]: Point): readonly [number, number] => [x(col), y(row + 0.5)];
 
-export const viewBox = `0 0 ${String(x(COLS))} ${String(y(ROWS))}`;
+export interface Layout {
+  id: 'wide' | 'narrow';
+  cols: number;
+  rows: number;
+  nodes: readonly PipelineNode[];
+  edges: readonly PipelineEdge[];
+}
+
+export const viewBox = (l: Layout): string => `0 0 ${String(x(l.cols))} ${String(y(l.rows))}`;
 
 /** Arrowhead length in user units; the tip sits at the end of the edge. */
 export const ARROW = 0.5;
@@ -65,7 +70,7 @@ export function packetPath(points: readonly Point[]): string {
   return toPath([...coords.slice(0, -1), stop]);
 }
 
-export const nodes: readonly PipelineNode[] = [
+const wideNodes: readonly PipelineNode[] = [
   { id: 'mic', label: 'mic', col: 0, row: 0 },
   {
     id: 'capture',
@@ -94,7 +99,7 @@ export const nodes: readonly PipelineNode[] = [
   { id: 'sqlite', label: 'SQLite', col: 5, row: 6 },
 ];
 
-export const edges: readonly PipelineEdge[] = [
+const wideEdges: readonly PipelineEdge[] = [
   {
     id: 'mic-capture',
     points: [
@@ -148,3 +153,61 @@ export const edges: readonly PipelineEdge[] = [
     ],
   },
 ];
+
+/** The README layout: two rows, 78 columns. */
+export const wide: Layout = { id: 'wide', cols: 78, rows: 7, nodes: wideNodes, edges: wideEdges };
+
+/** Phone layout: the same pipeline as one column, top to bottom. */
+const SPINE = 1.5;
+
+const down = (id: string, from: number, to: number, label?: Sub): PipelineEdge => ({
+  id,
+  points: [
+    [SPINE, from + 0.4],
+    [SPINE, to - 0.4],
+  ],
+  ...(label ? { label } : {}),
+});
+
+export const narrow: Layout = {
+  id: 'narrow',
+  cols: 26,
+  rows: 19,
+  nodes: [
+    { id: 'mic', label: 'mic', col: 0, row: 0 },
+    {
+      id: 'capture',
+      label: 'AudioCapture',
+      col: 0,
+      row: 2,
+      sub: { text: '(RtAudio/PA)', col: 0, row: 3 },
+    },
+    { id: 'ring', label: 'ring buffer', col: 0, row: 5 },
+    {
+      id: 'whisper',
+      label: 'WhisperTranscriber',
+      col: 0,
+      row: 7,
+      sub: { text: '(whisper.cpp)', col: 0, row: 8 },
+    },
+    {
+      id: 'llm',
+      label: 'LLMClient',
+      col: 0,
+      row: 11,
+      sub: { text: '(llama.cpp, Qwen 2.5 0.5B)', col: 0, row: 12 },
+    },
+    { id: 'summary', label: 'summary', col: 0, row: 14 },
+    { id: 'db', label: 'DBHelper', col: 0, row: 16 },
+    { id: 'sqlite', label: 'SQLite', col: 0, row: 18 },
+  ],
+  edges: [
+    down('mic-capture', 0, 2),
+    down('capture-ring', 3, 5),
+    down('ring-whisper', 5, 7),
+    down('whisper-llm', 8, 11, { text: 'transcript', col: 3, row: 9.5 }),
+    down('llm-summary', 12, 14),
+    down('summary-db', 14, 16),
+    down('db-sqlite', 16, 18),
+  ],
+};

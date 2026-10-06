@@ -1,4 +1,5 @@
 import { profile } from '../../content/profile.ts';
+import { cx } from '../cx.ts';
 import { Section } from '../Section/Section.tsx';
 import styles from './Contact.module.css';
 
@@ -18,24 +19,26 @@ const links = [
     text: bare(profile.links.github),
     external: true,
   },
-  { label: 'resume.pdf', href: profile.links.resume, text: 'resume.pdf', external: false },
+  { label: 'résumé', href: profile.links.resume, text: 'resume.pdf', external: false },
 ] as const;
 
 export function Contact() {
   return (
     <Section id="contact" title="saying hello">
       <div className={styles.body}>
-        <p className={styles.email}>
-          <a href={`mailto:${profile.email}`} className={styles.emailLink}>
-            <span aria-hidden="true">[ </span>
-            {profile.email}
-            <span aria-hidden="true"> ]</span>
-          </a>
-        </p>
-        <p>{profile.location}</p>
-        <p>{profile.availability}</p>
-        <p className={styles.auth}>{profile.workAuthorization}</p>
-        <ul>
+        <div className={styles.main}>
+          <p className={styles.email}>
+            <a href={`mailto:${profile.email}`} className={styles.emailLink}>
+              <span aria-hidden="true">[ </span>
+              {profile.email}
+              <span aria-hidden="true"> ]</span>
+            </a>
+          </p>
+          <p className="prose">{profile.location}</p>
+          <p className="prose">{profile.availability}</p>
+          <p className={cx('prose', styles.auth)}>{profile.workAuthorization}</p>
+        </div>
+        <ul className={styles.links}>
           {links.map((l) => (
             <li key={l.label} className={styles.item}>
               <span className="muted">{l.label}</span>

@@ -1,17 +1,66 @@
 .footer {
+  margin-top: var(--section-gap);
   border-top: 1px solid var(--border);
 }
 
 .inner {
-  width: min(var(--measure), 100%);
+  width: min(var(--page), 100%);
   margin: 0 auto;
-  padding: var(--rhythm) var(--gutter);
+  padding: var(--space-1) var(--gutter);
 }
 
 .inner p {
-  font-size: var(--fs-0);
+  font-size: 13px;
+  line-height: calc(var(--rhythm) * 0.875);
 }
 
 .inner a {
   color: inherit;
+}
+
+.hint {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: inherit;
+}
+
+.hint:hover {
+  text-decoration: underline;
+}
+
+.hint kbd {
+  font: inherit;
+  color: var(--accent);
+}
+
+/* Phones have no backtick key. Both variants are rendered and CSS picks one. */
+.hintTouch {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .hintKeys {
+    display: none;
+  }
+
+  .hintTouch {
+    display: inline;
+  }
+}
+
+@media (max-width: 719.98px) {
+  .footer {
+    margin-top: var(--space-3);
+  }
+
+  /* 44px tap target without changing the line rhythm. */
+  .hint {
+    display: inline-block;
+    padding-block: 10px;
+    margin-block: -10px;
+  }
 }

@@ -1,7 +1,10 @@
 export interface Profile {
   readonly name: string;
   readonly oneLiner: string;
-  readonly subLine: string;
+  /** One line of career background under the one-liner. */
+  readonly background: string;
+  /** Hiring status: when, where, and work authorization in one sentence. */
+  readonly status: string;
   readonly email: string;
   readonly links: {
     readonly github: string;
@@ -23,6 +26,8 @@ export interface Project {
   readonly name: string;
   /** The case-study heading. */
   readonly title: string;
+  /** Plain-language one-line headline shown on the card. */
+  readonly headline: string;
   /** Short tokens for the htop STACK column. */
   readonly stack: readonly string[];
   /** The "Stack:" line in the case study, where given. */

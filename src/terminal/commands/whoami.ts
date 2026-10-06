@@ -9,7 +9,8 @@ export const whoamiCommand: Command = {
     return [
       [{ text: profile.name, tone: 'accent' }],
       profile.oneLiner,
-      profile.subLine,
+      profile.background,
+      profile.status,
       '',
       profile.availability,
       muted('contact has the links.'),

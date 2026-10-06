@@ -1,14 +1,15 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { animate, m, useInView, useMotionValue, useTransform } from 'motion/react';
+import { m, useInView } from 'motion/react';
+import { NARROW_QUERY, useMediaQuery } from '../../hooks/useMediaQuery.ts';
 import { useReducedMotion } from '../../hooks/useReducedMotion.ts';
 import {
   ARROW,
   PACKET_R,
   edgePath,
-  edges,
-  nodes,
+  narrow,
   packetPath,
   viewBox,
+  wide,
   x,
   y,
   type Sub,
@@ -19,10 +20,8 @@ const STROKE = 0.07;
 const DRAW_S = 0.45;
 const STAGGER_S = 0.4;
 const PACKET_S = 3;
-const COUNT_S = 1.6;
-const TARGET = 16;
-const DRAWN_MS = ((edges.length - 1) * STAGGER_S + DRAW_S) * 1000;
-const FINAL = `${String(TARGET)}x real-time`;
+// Both layouts have the same edges, so the draw time is the same for either.
+const DRAWN_MS = ((wide.edges.length - 1) * STAGGER_S + DRAW_S) * 1000;
 
 interface PipelineDiagramProps {
   source: string;
@@ -39,26 +38,24 @@ function SubLabel({ sub }: { sub: Sub }) {
 
 export function PipelineDiagram({ source, caption }: PipelineDiagramProps) {
   const reduceMotion = useReducedMotion();
+  const layout = useMediaQuery(NARROW_QUERY) ? narrow : wide;
+  const { nodes, edges } = layout;
   const uid = useId().replace(/[^a-zA-Z0-9]/g, '_');
   const wrapRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const inView = useInView(wrapRef, { once: true, amount: 0.4 });
   const visible = useInView(svgRef);
   const [drawn, setDrawn] = useState(false);
-  const count = useMotionValue(0);
-  const text = useTransform(count, (v) => `${String(Math.round(v))}x real-time`);
 
   useEffect(() => {
     if (reduceMotion || !inView) return;
     const timer = window.setTimeout(() => {
       setDrawn(true);
     }, DRAWN_MS);
-    const controls = animate(count, TARGET, { duration: COUNT_S, ease: 'easeOut' });
     return () => {
       window.clearTimeout(timer);
-      controls.stop();
     };
-  }, [reduceMotion, inView, count]);
+  }, [reduceMotion, inView]);
 
   // Packets run on the SVG timeline, so pause it while offscreen.
   useEffect(() => {
@@ -77,7 +74,13 @@ export function PipelineDiagram({ source, caption }: PipelineDiagramProps) {
   return (
     <figure className={styles.figure}>
       <div ref={wrapRef} className={styles.scroll}>
-        <svg ref={svgRef} aria-hidden="true" className={styles.svg} viewBox={viewBox}>
+        <svg
+          ref={svgRef}
+          aria-hidden="true"
+          className={styles.svg}
+          style={{ width: `${String(layout.cols)}ch` }}
+          viewBox={viewBox(layout)}
+        >
           <defs>
             <marker
               id={markerId}
@@ -119,7 +122,12 @@ export function PipelineDiagram({ source, caption }: PipelineDiagramProps) {
           {showPackets
             ? edges.map((e, i) => (
                 // No cx/cy: animateMotion translates from the origin.
-                <circle key={e.id} data-testid="packet" r={PACKET_R} fill="var(--accent)">
+                <circle
+                  key={`${layout.id}-${e.id}`}
+                  data-testid="packet"
+                  r={PACKET_R}
+                  fill="var(--accent)"
+                >
                   <animateMotion
                     dur={`${String(PACKET_S)}s`}
                     begin={`${(i * 0.35).toFixed(2)}s`}
@@ -131,12 +139,8 @@ export function PipelineDiagram({ source, caption }: PipelineDiagramProps) {
             : null}
         </svg>
       </div>
-      <p className={styles.counter}>
-        <m.span aria-hidden="true">{reduceMotion ? FINAL : text}</m.span>
-        <span className="visually-hidden">{`${FINAL} transcription`}</span>
-      </p>
       <pre className="visually-hidden">{source}</pre>
-      {caption ? <figcaption className="muted">{caption}</figcaption> : null}
+      {caption ? <figcaption className="visually-hidden">{caption}</figcaption> : null}
     </figure>
   );
 }

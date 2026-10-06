@@ -12,11 +12,11 @@ import { TypedCommand } from './TypedCommand.tsx';
 const MOBILE_QUERY = '(max-width: 880px)';
 
 const links = [
-  { id: 'projects', label: 'projects/', href: '#projects', command: 'cd projects' },
-  { id: 'work', label: 'work/', href: '#work', command: 'cd work' },
-  { id: 'about', label: 'about/', href: '#about', command: 'cd about' },
-  { id: 'contact', label: 'contact/', href: '#contact', command: 'cd contact' },
-  { id: 'resume', label: 'resume.pdf', href: profile.links.resume, command: 'open resume.pdf' },
+  { id: 'projects', label: 'projects', href: '#projects', command: 'cd projects' },
+  { id: 'work', label: 'experience', href: '#work', command: 'cd work' },
+  { id: 'about', label: 'skills', href: '#about', command: 'cd about' },
+  { id: 'contact', label: 'contact', href: '#contact', command: 'cd contact' },
+  { id: 'resume', label: 'résumé', href: profile.links.resume, command: 'open resume.pdf' },
 ] as const;
 
 export function SiteHeader() {

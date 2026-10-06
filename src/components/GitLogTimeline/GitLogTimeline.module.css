@@ -66,7 +66,9 @@
 }
 
 .toggle {
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
   width: 100%;
   margin: 0;
   padding: 0;
@@ -80,22 +82,21 @@
   overflow-wrap: anywhere;
 }
 
-.title {
-  text-transform: lowercase;
+.org {
+  font-weight: 700;
 }
 
-.toggle:hover .title {
+.toggle:hover .org {
   text-decoration: underline;
 }
 
-.head {
-  white-space: pre-wrap;
-  color: var(--accent);
+/* Desktop: org · role on the left, the dates on the right, one line each. */
+.titleRow {
+  min-width: 0;
 }
 
-.tag {
-  white-space: pre-wrap;
-  font-weight: 700;
+.date {
+  white-space: nowrap;
 }
 
 .panel {
@@ -108,12 +109,16 @@
 }
 
 .bullets li {
+  position: relative;
   padding-left: 2ch;
-  text-indent: -2ch;
 }
 
+/* Hanging marker set in mono, so wrapped prose lines align with the first line's text. */
 .bullets li::before {
-  content: '- ';
+  content: '-';
+  position: absolute;
+  left: 0;
+  font-family: var(--font-mono);
   color: var(--muted);
 }
 
@@ -143,6 +148,7 @@
   }
 
   .toggle {
+    display: block;
     min-height: calc(var(--rhythm) * 2);
     overflow-wrap: normal;
   }
@@ -156,11 +162,6 @@
 
   .line {
     display: block;
-  }
-
-  .head,
-  .tag {
-    white-space: normal;
   }
 
   .nowrap {

@@ -18,26 +18,30 @@ function toggleAt(id: string): HTMLElement {
   return button;
 }
 
-function toggleFor(id: string): HTMLElement {
-  const entry = experience.find((e) => e.id === id);
-  if (!entry) throw new Error(id);
-  return screen.getByRole('button', { name: new RegExp(`${entry.role}$`, 'i') });
-}
-
 describe('GitLogTimeline', () => {
   it('renders one article per entry', () => {
     render(<GitLogTimeline />);
     expect(screen.getAllByRole('article')).toHaveLength(experience.length);
   });
 
-  it('opens only the first entry by default', () => {
+  it('opens vffice and kla-engineer by default', () => {
     render(<GitLogTimeline />);
     const buttons = screen.getAllByRole('button');
     expect(buttons).toHaveLength(experience.length);
     buttons.forEach((b, i) => {
-      expect(b.getAttribute('aria-expanded')).toBe(i === 0 ? 'true' : 'false');
+      const id = experience[i]?.id ?? '';
+      expect(b.getAttribute('aria-expanded')).toBe(
+        ['vffice', 'kla-engineer'].includes(id) ? 'true' : 'false',
+      );
     });
     expect(screen.getByText(experience[0]?.bullets[0] ?? '')).toBeVisible();
+  });
+
+  it('marks the newest entry as now, without git decorations', () => {
+    const { container } = render(<GitLogTimeline />);
+    expect(screen.getAllByText(/· now/)).toHaveLength(1);
+    expect(container.textContent).not.toContain('HEAD');
+    expect(container.textContent).not.toContain('tag:');
   });
 
   it('starts every commit collapsed on a narrow screen', () => {
@@ -80,7 +84,7 @@ describe('GitLogTimeline', () => {
 
   it('expands and collapses a commit on click', () => {
     render(<GitLogTimeline />);
-    const btn = toggleFor('concordia-ta');
+    const btn = toggleAt('concordia-ta');
     const panel = panelOf(btn);
     expect(panel.getAttribute('hidden')).toBe('until-found');
     fireEvent.click(btn);
@@ -93,25 +97,16 @@ describe('GitLogTimeline', () => {
 
   it('opens a closed commit when the browser finds text in it', () => {
     render(<GitLogTimeline />);
-    const btn = toggleFor('concordia-ta');
+    const btn = toggleAt('concordia-ta');
     const panel = panelOf(btn);
     fireEvent(panel, new Event('beforematch'));
     expect(btn.getAttribute('aria-expanded')).toBe('true');
     expect(panel.hasAttribute('hidden')).toBe(false);
   });
 
-  it('keeps HEAD and tag decorations out of the accessibility tree', () => {
-    const { container } = render(<GitLogTimeline />);
-    const hidden = [...container.querySelectorAll('[aria-hidden="true"]')].map((el) =>
-      el.textContent.trim(),
-    );
-    expect(hidden.filter((t) => t === '(HEAD -> main)')).toHaveLength(1);
-    expect(hidden.filter((t) => t === '(tag: hackathon-2024)')).toHaveLength(1);
-  });
-
   it('puts the award text inside the kla-engineer panel', () => {
     render(<GitLogTimeline />);
-    expect(panelOf(toggleFor('kla-engineer')).textContent).toContain(
+    expect(panelOf(toggleAt('kla-engineer')).textContent).toContain(
       '1st place, KLA Hackathon 2024',
     );
   });

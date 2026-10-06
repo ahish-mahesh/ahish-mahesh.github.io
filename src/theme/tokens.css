@@ -13,6 +13,8 @@
 
 :root {
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --font-prose: 'IBM Plex Sans', system-ui, sans-serif;
+  --page: 1200px;
   --fs-0: 14px;
   --fs-1: 16px;
   --fs-2: 20px;
@@ -24,8 +26,9 @@
   --space-2: var(--rhythm);
   --space-3: calc(var(--rhythm) * 2);
   --space-4: calc(var(--rhythm) * 3);
-  --measure: 88ch;
+  --measure: 72ch;
   --gutter: 16px;
+  --section-gap: calc(var(--rhythm) * 4);
   /* One line at the rhythm plus the 1px border. */
   --header-h: calc(var(--rhythm) + 1px);
 }

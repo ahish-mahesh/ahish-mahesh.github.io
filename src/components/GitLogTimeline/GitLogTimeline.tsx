@@ -14,6 +14,8 @@ const FADE_IN = {
   transition: { duration: 0.3 },
 } as const;
 
+const DEFAULT_OPEN: readonly string[] = ['vffice', 'kla-engineer'];
+
 export function GitLogTimeline() {
   const reduced = useReducedMotion();
   const listRef = useRef<HTMLOListElement>(null);
@@ -24,11 +26,9 @@ export function GitLogTimeline() {
   const drawn = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
   const fade = reduced ? {} : FADE_IN;
   const narrow = useMediaQuery(NARROW_QUERY);
-  // Desktop opens the newest commit. A phone starts fully collapsed so the whole
+  // Desktop opens the two most recent jobs. A phone starts fully collapsed so the whole
   // career fits on one screen. Only the first render decides; later resizes keep the state.
-  const [open, setOpen] = useState<ReadonlySet<string>>(
-    () => new Set(narrow ? [] : experience.slice(0, 1).map((e) => e.id)),
-  );
+  const [open, setOpen] = useState<ReadonlySet<string>>(() => new Set(narrow ? [] : DEFAULT_OPEN));
 
   const toggle = useCallback((id: string) => {
     setOpen((prev) => {
@@ -74,20 +74,7 @@ export function GitLogTimeline() {
             const headingId = `exp-${e.id}`;
             const panelId = `exp-panel-${e.id}`;
             const isOpen = open.has(e.id);
-            const decorations = (
-              <>
-                {i === 0 ? (
-                  <span aria-hidden="true" className={styles.head}>
-                    {' (HEAD -> main)'}
-                  </span>
-                ) : null}
-                {e.tag ? (
-                  <span aria-hidden="true" className={styles.tag}>
-                    {` (tag: ${e.tag.label})`}
-                  </span>
-                ) : null}
-              </>
-            );
+            const now = i === 0 ? <span className="muted">{' · now'}</span> : null;
             return (
               <li key={e.id} className={styles.item}>
                 {opens ? (
@@ -119,34 +106,38 @@ export function GitLogTimeline() {
                         {narrow ? (
                           <>
                             <span className={styles.line}>
-                              <span className={styles.title}>{e.org}</span>
-                              {decorations}
+                              <span className={styles.org}>{e.org}</span>
                               <span aria-hidden="true" className={styles.disclosure}>
                                 {isOpen ? '[-]' : '[+]'}
                               </span>
                             </span>
-                            <span className={cx(styles.line, styles.sub2, styles.title)}>
+                            <span className={cx(styles.line, styles.sub2)}>
                               {e.role}&nbsp;· <span className={styles.nowrap}>{e.graphLabel}</span>
+                              {now}
                             </span>
                           </>
                         ) : (
                           <>
-                            <span className="muted">{e.graphLabel}</span>{' '}
-                            <span className={styles.title}>
-                              {e.org} · {e.role}
+                            <span className={styles.titleRow}>
+                              <span className={styles.org}>{e.org}</span> · {e.role}
+                              {now}
                             </span>
-                            {decorations}
+                            <span className={cx(styles.date, 'muted')}>{e.dateLabel}</span>
                           </>
                         )}
                       </button>
                     </h3>
                     <div id={panelId} ref={panelRef(e.id, isOpen)} className={styles.panel}>
-                      <p>
-                        <time dateTime={e.start}>{e.dateLabel}</time>
-                        {e.location ? <span className="muted">{` · ${e.location}`}</span> : null}
-                      </p>
+                      {narrow ? (
+                        <p>
+                          <time dateTime={e.start}>{e.dateLabel}</time>
+                          {e.location ? <span className="muted">{` · ${e.location}`}</span> : null}
+                        </p>
+                      ) : e.location ? (
+                        <p className="muted">{e.location}</p>
+                      ) : null}
                       {e.note ? <p className="muted">{e.note}</p> : null}
-                      <ul className={styles.bullets}>
+                      <ul className={cx('prose', styles.bullets)}>
                         {e.bullets.map((b) => (
                           <li key={b}>{b}</li>
                         ))}

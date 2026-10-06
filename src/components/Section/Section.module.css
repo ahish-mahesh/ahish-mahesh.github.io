@@ -1,31 +1,16 @@
 .section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: min(var(--measure), 100%);
-  min-height: calc(100svh - var(--header-h));
+  width: min(var(--page), 100%);
   margin: 0 auto;
-  padding: calc(var(--rhythm) * 2) var(--gutter);
-  scroll-snap-align: start;
-}
-
-.section > * {
-  width: 100%;
+  padding: var(--section-gap) var(--gutter) 0;
 }
 
 .heading {
   margin-bottom: var(--rhythm);
 }
 
-.prompt {
-  color: var(--muted);
-}
-
 @media (max-width: 719.98px) {
   .section {
-    min-height: auto;
-    justify-content: flex-start;
-    padding-block: calc(var(--rhythm) * 1.5);
+    padding-top: calc(var(--rhythm) * 2);
   }
 
   .heading {

@@ -7,24 +7,12 @@
 html {
   background: var(--bg);
   scroll-behavior: smooth;
-  scroll-snap-type: y proximity;
   scroll-padding-top: var(--header-h);
-}
-
-@media (max-width: 719.98px) {
-  /* Phones: sections size to their content and scroll freely. */
-  html {
-    scroll-snap-type: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  [data-dim] {
-    transition: none;
   }
 }
 
@@ -116,24 +104,12 @@ a {
   display: none !important;
 }
 
-/* Section focus: the section being read keeps full colour, the rest fall back to
-   --muted (AA on --bg in every theme). Set on the section so children inherit. */
-[data-dim] {
-  color: var(--fg);
-}
-
-/* Narrow screens stay in full colour: half the visible text greyed out reads as broken. */
-@media (min-width: 720px) {
-  [data-dim] {
-    transition:
-      --fg 300ms ease,
-      --accent 300ms ease;
-  }
-
-  [data-dim='true'] {
-    --fg: var(--muted);
-    --accent: var(--muted);
-  }
+.prose {
+  font-family: var(--font-prose);
+  /* Plex has a smaller x-height than JetBrains Mono; 17px reads at the same size as 16px mono. */
+  font-size: 17px;
+  max-width: var(--measure);
+  line-height: var(--rhythm);
 }
 
 .muted {

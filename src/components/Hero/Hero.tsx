@@ -1,51 +1,38 @@
 import { profile } from '../../content/profile.ts';
-import { useActiveSectionId } from '../../hooks/ActiveSectionContext.ts';
-import { useTerminal } from '../../terminal/useTerminal.ts';
+import { cx } from '../cx.ts';
 import { DecodeText } from '../DecodeText/DecodeText.tsx';
 import { HeroVisual } from './HeroVisual.tsx';
 import styles from './Hero.module.css';
 
 const buttons = [
-  { label: 'email', href: `mailto:${profile.email}` },
-  { label: 'resume.pdf', href: profile.links.resume },
+  { label: 'email', href: `mailto:${profile.email}`, external: false },
+  { label: 'résumé', href: profile.links.resume, external: false },
+  { label: 'linkedin', href: profile.links.linkedin, external: true },
 ] as const;
 
 export function Hero() {
-  const active = useActiveSectionId();
-  const terminal = useTerminal();
   return (
-    <section
-      id="top"
-      aria-labelledby="hero-heading"
-      className={styles.hero}
-      data-dim={active === null ? undefined : String(active !== 'top')}
-    >
+    <section id="top" aria-labelledby="hero-heading" className={styles.hero}>
       <div className={styles.text}>
         <h1 id="hero-heading" className={styles.name}>
           <DecodeText text={profile.name} />
         </h1>
         <p>{profile.oneLiner}</p>
-        <p className="muted">{profile.subLine}</p>
-        <p className="muted">
-          <button
-            type="button"
-            className={styles.hint}
-            aria-haspopup="dialog"
-            onClick={terminal.openTerminal}
-            onMouseEnter={terminal.preload}
-            onFocus={terminal.preload}
-          >
-            {/* One variant is display:none per device, so only one is ever announced. */}
-            <span className={styles.hintKeys}>
-              Press <kbd>`</kbd> for the backend of this site.
-            </span>
-            <span className={styles.hintTouch}>Tap here for the backend of this site.</span>
-          </button>
+        <p className="muted">{profile.background}</p>
+        <p className={cx('prose', styles.status)}>
+          <span aria-hidden="true" className={styles.dot}>
+            ●
+          </span>{' '}
+          {profile.status}
         </p>
         <ul className={styles.buttons}>
           {buttons.map((b) => (
             <li key={b.label}>
-              <a href={b.href} className={styles.button}>
+              <a
+                href={b.href}
+                className={styles.button}
+                rel={b.external ? 'noreferrer' : undefined}
+              >
                 <span aria-hidden="true">[ </span>
                 {b.label}
                 <span aria-hidden="true"> ]</span>
@@ -55,10 +42,6 @@ export function Hero() {
         </ul>
       </div>
       <HeroVisual className={styles.visual} />
-      <a href="#projects" className={styles.next}>
-        <span aria-hidden="true">$ </span>
-        cd projects
-      </a>
     </section>
   );
 }

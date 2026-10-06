@@ -21,7 +21,7 @@ describe('PipelineDiagram', () => {
     mockReducedMotion();
     const { container } = render(<PipelineDiagram source={SOURCE} />);
     expect(container.querySelectorAll('animateMotion')).toHaveLength(0);
-    expect(screen.getAllByText(/16x real-time/).length).toBeGreaterThan(0);
+    expect(container.querySelectorAll('path[marker-end]').length).toBeGreaterThan(0);
   });
 
   it('has no packets before it scrolls into view', () => {

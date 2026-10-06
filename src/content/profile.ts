@@ -3,7 +3,10 @@ import type { Profile } from './types.ts';
 export const profile: Profile = {
   name: 'Ahish Mahesh',
   oneLiner: 'Backend engineer. C++ and C#/.NET in production, plus the database tier underneath.',
-  subLine: "Back end developer at Vffice · CS master's at Concordia, Dec 2026 · Montreal",
+  background:
+    "Back end developer at Vffice. Software engineer at KLA from 2021 to 2024. CS master's at Concordia, finishing December 2026.",
+  status:
+    'Open to full-time roles from January 2027 in Montreal or Ontario. Open work permit, no sponsorship needed.',
   email: 'ahish.mahesh@gmail.com',
   links: {
     github: 'https://github.com/ahish-mahesh',

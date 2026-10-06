@@ -3,12 +3,9 @@
   grid-template-columns: 1fr;
   gap: var(--rhythm);
   align-items: center;
-  align-content: center;
-  width: min(var(--measure), 100%);
-  min-height: calc(100svh - var(--header-h));
+  width: min(var(--page), 100%);
   margin: 0 auto;
-  padding: calc(var(--rhythm) * 2) var(--gutter);
-  scroll-snap-align: start;
+  padding: var(--space-4) var(--gutter) 0;
 }
 
 .text {
@@ -19,6 +16,10 @@
 
 .name {
   text-transform: none;
+}
+
+.dot {
+  color: var(--accent);
 }
 
 .buttons {
@@ -35,58 +36,6 @@
 
 .button:hover {
   color: var(--fg);
-}
-
-/* Opens the terminal on tap too, since phones have no backtick key. */
-.hint {
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-  text-align: inherit;
-}
-
-.hint:hover {
-  text-decoration: underline;
-}
-
-.hint kbd {
-  font: inherit;
-  color: var(--accent);
-}
-
-/* Phones have no backtick key. Both variants are rendered and CSS picks one, so there is
-   no flip after hydration; display:none also keeps the other out of the accessibility tree. */
-.hintTouch {
-  display: none;
-}
-
-@media (hover: none) and (pointer: coarse) {
-  .hintKeys {
-    display: none;
-  }
-
-  .hintTouch {
-    display: inline;
-  }
-}
-
-.aside {
-  display: block;
-  font-size: var(--fs-0);
-}
-
-/* Quiet pointer to the next section, bottom-left under the text column. */
-.next {
-  justify-self: start;
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.next:hover {
-  text-decoration: underline;
 }
 
 .visual {
@@ -144,9 +93,7 @@
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-areas: 'name visual';
     gap: var(--rhythm) 2ch;
-    min-height: 0;
     padding-block: var(--rhythm);
-    scroll-snap-align: none;
   }
 
   /* The text's children join the hero grid, so the name can share a row with the visual. */
@@ -191,25 +138,21 @@
 
   /* 44px tap targets without changing the line rhythm: the padding grows the hit area and
      the negative margin gives the space back. */
-  .hint,
   .button {
     display: inline-block;
     padding-block: 10px;
     margin-block: -10px;
   }
-
-  .next {
-    display: none;
-  }
 }
 
 @media (min-width: 720px) {
   .hero {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
     gap: var(--space-4);
   }
 
   .name {
+    white-space: nowrap;
     font-size: var(--fs-5);
     line-height: calc(var(--rhythm) * 3);
   }
@@ -218,9 +161,5 @@
     width: 100%;
     max-width: 40ch;
     justify-self: end;
-  }
-
-  .next {
-    grid-column: 1 / -1;
   }
 }

@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { animate, m, useInView, useMotionValue, useMotionValueEvent } from 'motion/react';
-import { migration } from '../../content/migration.ts';
+import { CODE_COLS, migration } from '../../content/migration.ts';
 import { useReducedMotion } from '../../hooks/useReducedMotion.ts';
 import { randomGlyph, scrambleFrame } from '../DecodeText/scramble.ts';
-import { bar } from '../ProcessList/bar.ts';
+import { bar } from './bar.ts';
 import styles from './MigrationPanel.module.css';
 
 const TOTAL_S = 2.5;
@@ -49,14 +49,21 @@ function Body({ view }: { view: View }) {
     <div aria-hidden="true">
       <p className={styles.counter}>
         queries translated:{' '}
-        <span className={styles.value}>{fmt(view.count).padStart(COUNT_WIDTH)}</span> /{' '}
-        {fmt(migration.queries)}
+        <span className={styles.keep}>
+          <span className={styles.value}>{fmt(view.count).padStart(COUNT_WIDTH)}</span> /{' '}
+          {fmt(migration.queries)}
+        </span>
       </p>
-      <pre className={styles.code}>{view.code}</pre>
+      <pre className={styles.code} style={{ '--code-cols': CODE_COLS } as CSSProperties}>
+        {view.code}
+      </pre>
       <p className={styles.cost}>
-        product cost <span className={styles.value}>{bar(view.fill)}</span>{' '}
-        <span className={view.done ? styles.drop : styles.dropHidden}>
-          {migration.costDropLabel}
+        product cost{' '}
+        <span className={styles.keep}>
+          <span className={styles.value}>{bar(view.fill)}</span>{' '}
+          <span className={view.done ? styles.drop : styles.dropHidden}>
+            {migration.costDropLabel}
+          </span>
         </span>
       </p>
     </div>

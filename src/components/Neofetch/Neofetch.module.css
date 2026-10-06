@@ -22,11 +22,6 @@
   color: var(--muted);
 }
 
-.row {
-  display: grid;
-  grid-template-columns: 1fr;
-}
-
 .key {
   color: var(--fg);
   font-weight: 700;
@@ -43,26 +38,38 @@
   height: 1lh;
 }
 
-/* Phones: five lines of logo cost ~130px and say nothing the title does not. */
-@media (max-width: 719.98px) {
-  .logo {
-    display: none;
+/* The logo shows only in the single-column layout (720-1099px); beside the timeline it costs a third of the column. */
+.logo {
+  display: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 11ch 1fr;
+}
+
+.key {
+  min-width: 0;
+}
+
+/* Values wrap inside the narrow column: the longest one is wider than it. */
+.value {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 479.98px) {
+  .row {
+    grid-template-columns: 1fr;
   }
 }
 
-@media (min-width: 720px) {
+@media (min-width: 720px) and (max-width: 1099.98px) {
+  .logo {
+    display: block;
+  }
+
   .grid {
     grid-template-columns: auto 1fr;
-    column-gap: var(--space-4);
-  }
-
-  .row {
-    grid-template-columns: 12ch 1fr;
-  }
-
-  /* Break between items, never inside one. Narrow screens wrap freely: the longest
-     value is wider than a phone. */
-  .value {
-    white-space: nowrap;
+    column-gap: var(--space-2);
   }
 }

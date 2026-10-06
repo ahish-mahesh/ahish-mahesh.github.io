@@ -19,7 +19,8 @@ describe('whoami', () => {
     const text = outputText(whoamiCommand.run([], fakeCtx()));
     expect(text).toContain(profile.name);
     expect(text).toContain(profile.oneLiner);
-    expect(text).toContain(profile.subLine);
+    expect(text).toContain(profile.background);
+    expect(text).toContain(profile.status);
     expect(text).toContain(profile.availability);
   });
 });

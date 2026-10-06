@@ -1,0 +1,20 @@
+.split {
+  display: block;
+}
+
+@media (min-width: 1100px) {
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    column-gap: var(--space-4);
+    width: min(var(--page), 100%);
+    margin: 0 auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* Two classes of specificity beats the single class in Section.module.css. */
+  .split > section {
+    width: auto;
+    padding-inline: 0;
+  }
+}

@@ -3,8 +3,14 @@
   gap: var(--rhythm);
 }
 
+.main {
+  display: grid;
+  gap: var(--rhythm);
+  align-content: start;
+}
+
 .email {
-  margin-bottom: var(--rhythm);
+  margin: 0;
 }
 
 .emailLink {
@@ -52,5 +58,13 @@
 @media (min-width: 720px) {
   .emailLink {
     font-size: var(--fs-3);
+  }
+}
+
+@media (min-width: 900px) {
+  .body {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    column-gap: var(--space-4);
+    align-items: start;
   }
 }

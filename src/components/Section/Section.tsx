@@ -1,28 +1,19 @@
 import type { ReactNode } from 'react';
-import { useActiveSectionId } from '../../hooks/ActiveSectionContext.ts';
+import { cx } from '../cx.ts';
 import styles from './Section.module.css';
 
 interface SectionProps {
   id: string;
   title: string;
-  prompt?: string;
+  className?: string;
   children: ReactNode;
 }
 
-export function Section({ id, title, prompt = '## ', children }: SectionProps) {
-  const active = useActiveSectionId();
+export function Section({ id, title, className, children }: SectionProps) {
   const headingId = `${id}-heading`;
   return (
-    <section
-      id={id}
-      aria-labelledby={headingId}
-      className={styles.section}
-      data-dim={active === null ? undefined : String(active !== id)}
-    >
+    <section id={id} aria-labelledby={headingId} className={cx(styles.section, className)}>
       <h2 id={headingId} className={styles.heading}>
-        <span aria-hidden="true" className={styles.prompt}>
-          {prompt}
-        </span>
         {title}
       </h2>
       {children}

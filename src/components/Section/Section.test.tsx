@@ -1,29 +1,26 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { ActiveSectionContext } from '../../hooks/ActiveSectionContext.ts';
 import { Section } from './Section.tsx';
 
-function renderSection(active: 'projects' | 'work' | null) {
-  render(
-    <ActiveSectionContext value={active}>
-      <Section id="projects" title="what I'm building">
-        <p>body</p>
-      </Section>
-    </ActiveSectionContext>,
-  );
-  return screen.getByRole('region', { name: "what I'm building" });
-}
-
 describe('Section', () => {
-  it('is dimmed when another section is active', () => {
-    expect(renderSection('work')).toHaveAttribute('data-dim', 'true');
+  it('is a region named by its heading, without a prompt prefix', () => {
+    render(
+      <Section id="projects" title="what I've shipped">
+        <p>body</p>
+      </Section>,
+    );
+    const region = screen.getByRole('region', { name: "what I've shipped" });
+    expect(region).toHaveAttribute('id', 'projects');
+    expect(region).not.toHaveAttribute('data-dim');
+    expect(region.textContent).not.toContain('##');
   });
 
-  it('is not dimmed when it is the active section', () => {
-    expect(renderSection('projects')).toHaveAttribute('data-dim', 'false');
-  });
-
-  it('has no data-dim before the active section is known', () => {
-    expect(renderSection(null)).not.toHaveAttribute('data-dim');
+  it('merges a custom className', () => {
+    render(
+      <Section id="x" title="t" className="extra">
+        <p>body</p>
+      </Section>,
+    );
+    expect(screen.getByRole('region', { name: 't' })).toHaveClass('extra');
   });
 });

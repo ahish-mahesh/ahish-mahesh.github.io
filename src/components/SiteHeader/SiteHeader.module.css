@@ -14,7 +14,7 @@
   align-items: center;
   column-gap: 2ch;
   /* Same box as the content columns (body font size) so the left edges line up. */
-  width: min(var(--measure), 100%);
+  width: min(var(--page), 100%);
   margin: 0 auto;
   padding: 0 var(--gutter);
 }

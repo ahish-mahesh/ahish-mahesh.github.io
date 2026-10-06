@@ -1,15 +1,22 @@
 .button {
-  min-width: 10ch;
   padding: 0;
   border: 0;
   background: none;
   color: var(--accent);
   font: inherit;
   line-height: var(--rhythm);
-  text-align: left;
+  text-align: center;
   cursor: pointer;
 }
 
 .button:hover {
   color: var(--fg);
+}
+
+/* The mobile menu rule already makes menu buttons 44px tall; keep the width too. */
+@media (max-width: 880px) {
+  .button {
+    min-width: 44px;
+    min-height: 44px;
+  }
 }

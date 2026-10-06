@@ -42,11 +42,11 @@ describe('SiteHeader', () => {
     setup();
     expect(screen.getByRole('link', { name: 'ahish@montreal' })).toHaveAttribute('href', '#top');
     for (const [name, href] of [
-      ['projects/', '#projects'],
-      ['work/', '#work'],
-      ['about/', '#about'],
-      ['contact/', '#contact'],
-      ['resume.pdf', '/resume.pdf'],
+      ['projects', '#projects'],
+      ['experience', '#work'],
+      ['skills', '#about'],
+      ['contact', '#contact'],
+      ['résumé', '/resume.pdf'],
     ] as const) {
       expect(screen.getByRole('link', { name })).toHaveAttribute('href', href);
     }
@@ -55,7 +55,7 @@ describe('SiteHeader', () => {
   it('types the command on hover and clears it on leave', async () => {
     const user = userEvent.setup();
     setup();
-    const link = screen.getByRole('link', { name: 'work/' });
+    const link = screen.getByRole('link', { name: 'experience' });
     await user.hover(link);
     expect(screen.getByText('cd work')).toBeInTheDocument();
     await user.unhover(link);
@@ -64,7 +64,7 @@ describe('SiteHeader', () => {
 
   it('types the command on focus and clears it on blur', () => {
     setup();
-    const link = screen.getByRole('link', { name: 'work/' });
+    const link = screen.getByRole('link', { name: 'experience' });
     act(() => {
       link.focus();
     });
@@ -92,7 +92,7 @@ describe('SiteHeader', () => {
     setup();
     const toggle = screen.getByRole('button', { name: /^ls/ });
     await user.click(toggle);
-    await user.click(screen.getByRole('link', { name: 'about/' }));
+    await user.click(screen.getByRole('link', { name: 'skills' }));
     expect(toggle).toHaveAttribute('aria-expanded', 'false');
   });
 

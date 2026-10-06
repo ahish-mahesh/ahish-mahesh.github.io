@@ -1,4 +1,5 @@
 import { neofetchLogo, neofetchTitle, skills } from '../../content/skills.ts';
+import { sectionPrompts } from '../sections.ts';
 import { Section } from '../Section/Section.tsx';
 import styles from './Neofetch.module.css';
 
@@ -6,7 +7,7 @@ const blocks = ['--fg', '--accent', '--muted'] as const;
 
 export function Neofetch() {
   return (
-    <Section id="about" title="what I reach for">
+    <Section id="about" title="what I reach for" command={sectionPrompts.about}>
       <div className={styles.grid}>
         <pre aria-hidden="true" className={styles.logo}>
           {neofetchLogo}

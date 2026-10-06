@@ -75,7 +75,8 @@
 }
 
 .name {
-  color: var(--accent);
+  /* Identifier role: project names. */
+  color: var(--ident);
   overflow-wrap: anywhere;
 }
 
@@ -99,7 +100,8 @@
 /* One unit: wraps under the bar, flush left, rather than splitting mid-phrase. */
 .metric {
   display: inline-block;
-  color: var(--fg);
+  /* Number role. */
+  color: var(--num);
 }
 
 .describe p {
@@ -200,6 +202,8 @@
     --fg: var(--bg);
     --accent: var(--bg);
     --muted: var(--bg);
+    --num: var(--bg);
+    --ident: var(--bg);
   }
 
   .pid,

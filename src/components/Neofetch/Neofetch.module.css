@@ -15,6 +15,7 @@
 }
 
 .title {
+  color: var(--accent);
   font-weight: 700;
 }
 
@@ -23,7 +24,8 @@
 }
 
 .key {
-  color: var(--fg);
+  /* Identifier role: keys. */
+  color: var(--ident);
   font-weight: 700;
 }
 

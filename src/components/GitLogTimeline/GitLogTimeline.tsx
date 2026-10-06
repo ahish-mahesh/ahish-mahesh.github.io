@@ -4,6 +4,7 @@ import { education, experience } from '../../content/experience.ts';
 import { NARROW_QUERY, useMediaQuery } from '../../hooks/useMediaQuery.ts';
 import { useReducedMotion } from '../../hooks/useReducedMotion.ts';
 import { cx } from '../cx.ts';
+import { sectionPrompts } from '../sections.ts';
 import { Section } from '../Section/Section.tsx';
 import styles from './GitLogTimeline.module.css';
 
@@ -57,7 +58,7 @@ export function GitLogTimeline() {
   );
 
   return (
-    <Section id="work" title="where I've worked">
+    <Section id="work" title="where I've worked" command={sectionPrompts.work}>
       <div className={styles.timeline}>
         <m.div
           aria-hidden="true"

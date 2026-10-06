@@ -37,15 +37,26 @@ function themeBlock(theme: string): Record<string, string> {
 }
 
 describe('theme tokens', () => {
-  it.each(THEMES)('%s has all four colors passing WCAG AA', (theme) => {
+  it.each(THEMES)('%s has all colors passing WCAG AA', (theme) => {
     const t = themeBlock(theme);
-    for (const key of ['bg', 'fg', 'accent', 'muted']) {
+    for (const key of ['bg', 'fg', 'accent', 'muted', 'num', 'ident']) {
       expect(t[key], `${theme} --${key}`).toBeDefined();
     }
     const bg = t.bg ?? '';
-    for (const key of ['fg', 'accent', 'muted']) {
+    for (const key of ['fg', 'accent', 'muted', 'num', 'ident']) {
       expect(contrast(t[key] ?? '', bg), `${theme} ${key}/bg`).toBeGreaterThanOrEqual(4.5);
     }
+  });
+
+  it('light-scheme fallback matches the paper theme', () => {
+    const m = /@media \(prefers-color-scheme: light\)\s*\{[^{]*\{([^}]*)\}/.exec(css);
+    expect(m).not.toBeNull();
+    const fallback: Record<string, string> = {};
+    for (const c of (m?.[1] ?? '').matchAll(/--([a-z]+):\s*(#[0-9a-fA-F]{6})\s*;/g)) {
+      fallback[c[1] ?? ''] = c[2] ?? '';
+    }
+    expect(Object.keys(fallback).length).toBeGreaterThanOrEqual(6);
+    expect(fallback).toEqual(themeBlock('paper'));
   });
 
   it('index.html bootstrap theme list matches THEMES', () => {

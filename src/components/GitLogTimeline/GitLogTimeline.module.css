@@ -20,7 +20,7 @@
 
 .fork,
 .graph {
-  color: var(--fg);
+  color: var(--accent);
   white-space: pre;
   font-weight: 700;
   line-height: var(--rhythm);
@@ -83,6 +83,8 @@
 }
 
 .org {
+  /* Identifier role: org names. */
+  color: var(--ident);
   font-weight: 700;
 }
 
@@ -97,6 +99,12 @@
 
 .date {
   white-space: nowrap;
+}
+
+/* Number role: dates. Extra specificity beats the global .muted class. */
+.toggle .date,
+.sub2 .nowrap {
+  color: var(--num);
 }
 
 .panel {

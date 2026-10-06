@@ -23,4 +23,24 @@ describe('Section', () => {
     );
     expect(screen.getByRole('region', { name: 't' })).toHaveClass('extra');
   });
+
+  it('renders an aria-hidden command line when given', () => {
+    render(
+      <Section id="x" title="t" command="htop">
+        <p>body</p>
+      </Section>,
+    );
+    const cmd = screen.getByText('htop', { exact: false, selector: 'p' });
+    expect(cmd).toHaveAttribute('aria-hidden', 'true');
+    expect(cmd.textContent).toBe('$ htop');
+  });
+
+  it('renders no command line without the prop', () => {
+    const { container } = render(
+      <Section id="x" title="t">
+        <p>body</p>
+      </Section>,
+    );
+    expect(container.querySelector('[aria-hidden]')).toBeNull();
+  });
 });

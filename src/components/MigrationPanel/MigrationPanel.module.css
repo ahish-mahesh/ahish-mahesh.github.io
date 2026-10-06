@@ -22,6 +22,12 @@
   color: var(--accent);
 }
 
+/* Number role: the translated-query count (the cost bar keeps accent). */
+.counter .value,
+.drop {
+  color: var(--num);
+}
+
 .code {
   overflow-x: auto;
   white-space: pre;
@@ -29,10 +35,6 @@
   margin: var(--rhythm) 0;
   padding-bottom: var(--space-1);
   border-bottom: 1px solid var(--border);
-}
-
-.drop {
-  color: var(--accent);
 }
 
 .dropHidden {

@@ -4,6 +4,17 @@
   padding: var(--section-gap) var(--gutter) 0;
 }
 
+.command {
+  margin: 0;
+  font-size: var(--fs-0);
+  line-height: var(--rhythm);
+  color: var(--muted);
+}
+
+.prompt {
+  color: var(--accent);
+}
+
 .heading {
   margin-bottom: var(--rhythm);
 }

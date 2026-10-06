@@ -4,7 +4,11 @@ import type { Project } from '../../content/types.ts';
 import { cx } from '../cx.ts';
 import { MigrationPanel } from '../MigrationPanel/MigrationPanel.tsx';
 import { PipelineDiagram } from '../PipelineDiagram/PipelineDiagram.tsx';
-import { PROJECT_HASH_PREFIX as HASH_PREFIX, projectButtonId } from '../sections.ts';
+import {
+  PROJECT_HASH_PREFIX as HASH_PREFIX,
+  projectButtonId,
+  sectionPrompts,
+} from '../sections.ts';
 import { Section } from '../Section/Section.tsx';
 import { ProcessBar } from './ProcessBar.tsx';
 import styles from './Projects.module.css';
@@ -145,7 +149,7 @@ export function Projects() {
   };
 
   return (
-    <Section id="projects" title="what I've shipped">
+    <Section id="projects" title="what I've shipped" command={sectionPrompts.projects}>
       <div className={styles.list}>
         <p className={cx(styles.status, 'muted')}>
           {`Tasks: ${String(projects.length)} total; sorted by impact`}

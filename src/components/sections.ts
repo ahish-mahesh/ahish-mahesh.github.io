@@ -9,7 +9,15 @@ export const sectionCommands: Record<SectionId, string | null> = {
   projects: 'htop',
   work: 'git log',
   about: 'neofetch',
-  contact: 'mail',
+  contact: 'cat contact.txt',
+};
+
+/** The command line shown above each section heading. */
+export const sectionPrompts: Record<Exclude<SectionId, 'top'>, string> = {
+  projects: 'htop --sort=impact',
+  work: 'git log --graph --oneline',
+  about: 'neofetch',
+  contact: 'cat contact.txt',
 };
 
 /** Linking to `#project-<slug>` opens that project's row. */

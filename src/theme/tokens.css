@@ -11,6 +11,18 @@
   initial-value: #39ff88;
 }
 
+@property --num {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #d7c46a;
+}
+
+@property --ident {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #6fc3df;
+}
+
 :root {
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
   --font-prose: 'IBM Plex Sans', system-ui, sans-serif;
@@ -33,12 +45,16 @@
   --header-h: calc(var(--rhythm) + 1px);
 }
 
+/* Colour roles: --accent = interactive (links, buttons, prompts), --num = numbers and
+   metrics, --ident = names and identifiers, --fg = prose, --muted = secondary. */
 :root[data-theme='phosphor'],
 :root:not([data-theme]) {
   color-scheme: dark;
   --bg: #0b0f0c;
   --fg: #c8e6c9;
   --accent: #39ff88;
+  --num: #d7c46a;
+  --ident: #6fc3df;
   --muted: #7c907d;
   --border: var(--muted);
 }
@@ -48,6 +64,8 @@
   --bg: #100c07;
   --fg: #ffb347;
   --accent: #ffcc66;
+  --num: #ffe2a8;
+  --ident: #e8a33d;
   --muted: #ab7931;
   --border: var(--muted);
 }
@@ -57,6 +75,8 @@
   --bg: #f4f1ea;
   --fg: #1d1d1b;
   --accent: #0b4f8a;
+  --num: #8a4b08;
+  --ident: #2c6e3f;
   --muted: #686763;
   --border: var(--muted);
 }
@@ -74,6 +94,8 @@
     --bg: #f4f1ea;
     --fg: #1d1d1b;
     --accent: #0b4f8a;
+    --num: #8a4b08;
+    --ident: #2c6e3f;
     --muted: #686763;
     --border: var(--muted);
   }

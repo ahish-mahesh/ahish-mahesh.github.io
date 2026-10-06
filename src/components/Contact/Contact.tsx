@@ -1,5 +1,6 @@
 import { profile } from '../../content/profile.ts';
 import { cx } from '../cx.ts';
+import { sectionPrompts } from '../sections.ts';
 import { Section } from '../Section/Section.tsx';
 import styles from './Contact.module.css';
 
@@ -24,7 +25,7 @@ const links = [
 
 export function Contact() {
   return (
-    <Section id="contact" title="saying hello">
+    <Section id="contact" title="saying hello" command={sectionPrompts.contact}>
       <div className={styles.body}>
         <div className={styles.main}>
           <p className={styles.email}>

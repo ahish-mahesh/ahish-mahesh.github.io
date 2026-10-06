@@ -35,9 +35,8 @@ export function Hero() {
             onMouseEnter={terminal.preload}
             onFocus={terminal.preload}
           >
-            Press <kbd>`</kbd> to skip the frontend. I usually do.
+            Press <kbd>`</kbd> for the backend of this site.
           </button>
-          <small className={styles.aside}>(kidding. I built this one in React.)</small>
         </p>
         <ul className={styles.buttons}>
           {buttons.map((b) => (

@@ -16,7 +16,6 @@ export const projects: readonly Project[] = [
     title: 'KLA: MSSQL to multi-node PostgreSQL migration',
     stack: ['PostgreSQL', 'Babelfish', 'T-SQL'],
     metric: '1,200 queries, -25% cost',
-    barFill: 14 / 18,
     visual: 'migration',
     summary:
       'I analysed 30+ product cost components and found the MSSQL high-availability cluster was ~20% of product cost.',
@@ -34,7 +33,6 @@ export const projects: readonly Project[] = [
     stack: ['C++17', 'whisper.cpp', 'llama.cpp'],
     fullStack: ['C++17', 'whisper.cpp', 'llama.cpp', 'SQLite', 'RtAudio/PortAudio', 'CMake'],
     metric: '16x real-time',
-    barFill: 16 / 18,
     summary:
       'Records a lecture or meeting and returns a summary. Nothing leaves the machine: Whisper and Qwen 2.5 0.5B run locally.',
     bullets: [
@@ -58,7 +56,6 @@ export const projects: readonly Project[] = [
     stack: ['React Native', 'Supabase', 'Gemini'],
     fullStack: ['React Native/Expo', 'TypeScript', 'Supabase (Auth + RLS)', 'Gemini API'],
     metric: '<100ms sync',
-    barFill: 15 / 18,
     summary:
       'A goal tracker with a planning agent that argues you down from "get fit" to something you can do on a Tuesday. iOS and Android.',
     bullets: [
@@ -77,7 +74,6 @@ export const projects: readonly Project[] = [
     stack: ['Python', 'llama-cpp', 'TinyLlama'],
     fullStack: ['Python', 'discord.py', 'llama-cpp-python', 'Firebase Firestore'],
     metric: '3s -> 900ms',
-    barFill: 12 / 18,
     summary:
       'A Discord bot that nags friends about the gym. Runs TinyLlama on the host rather than calling an API.',
     bullets: [

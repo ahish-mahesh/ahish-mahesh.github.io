@@ -1,7 +1,7 @@
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
-import { projects } from '../../content/projects.ts';
+import { archive, projects } from '../../content/projects.ts';
 import { mockReducedMotion } from '../../test/matchMedia.ts';
 import { bar } from './bar.ts';
 import { ProcessList } from './ProcessList.tsx';
@@ -18,9 +18,11 @@ describe('ProcessList', () => {
     expect(button).toHaveAttribute('aria-expanded', 'false');
     const panel = document.getElementById(button.getAttribute('aria-controls') ?? '');
     if (!panel) throw new Error('missing panel');
+    expect(panel).toHaveAttribute('hidden', 'until-found');
     expect(panel).not.toBeVisible();
     await user.click(button);
     expect(button).toHaveAttribute('aria-expanded', 'true');
+    expect(panel).not.toHaveAttribute('hidden');
     expect(panel).toBeVisible();
     const bullet = project.bullets[0] ?? '';
     expect(within(panel).getByText(bullet)).toBeVisible();
@@ -64,6 +66,39 @@ describe('ProcessList', () => {
     expect(button).toHaveAttribute('aria-expanded', 'true');
   });
 
+  it('opens a closed row when the browser finds text inside it', () => {
+    render(<ProcessList />);
+    const button = screen.getByRole('button', { name: /agent-goal/ });
+    const panel = document.getElementById(button.getAttribute('aria-controls') ?? '');
+    if (!panel) throw new Error('missing panel');
+    act(() => {
+      panel.dispatchEvent(new Event('beforematch'));
+    });
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('keeps the archive collapsed until its summary is clicked', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ProcessList />);
+    const details = container.querySelector('details');
+    if (!details) throw new Error('missing archive');
+    expect(details.open).toBe(false);
+    await user.click(screen.getByText(`archive (${String(archive.length)})`));
+    expect(details.open).toBe(true);
+  });
+
+  it('does not render project summaries in the list', () => {
+    render(<ProcessList />);
+    for (const p of projects) {
+      expect(screen.queryByText(p.summary)).not.toBeInTheDocument();
+    }
+  });
+
+  it('shows the task count status line', () => {
+    render(<ProcessList />);
+    expect(screen.getByText(/^Tasks: 4 total, 4 complete; sorted by impact$/)).toBeVisible();
+  });
+
   describe('bars', () => {
     function barTexts(container: HTMLElement): (string | null)[] {
       return Array.from(
@@ -74,7 +109,7 @@ describe('ProcessList', () => {
     it('shows the full bar immediately under reduced motion', () => {
       mockReducedMotion();
       const { container } = render(<ProcessList />);
-      expect(barTexts(container)).toEqual(projects.map((p) => bar(p.barFill)));
+      expect(barTexts(container)).toEqual(projects.map(() => bar(1)));
     });
 
     it('starts empty, at full width, until the row scrolls into view', () => {

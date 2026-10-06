@@ -14,10 +14,11 @@ export function pickActive(tops: readonly number[], line: number, atBottom: bool
   return active;
 }
 
-const LINE_OFFSET = 24;
+/** The reading line sits this far down the viewport. */
+const LINE_FRACTION = 0.4;
 
-/** Id of the section currently under the sticky header. */
-export function useActiveSection(ids: readonly string[]): string {
+/** Id of the section currently in focus. */
+export function useActiveSection<T extends string>(ids: readonly [T, ...T[]]): T {
   const [index, setIndex] = useState(0);
   const key = ids.join('|');
 
@@ -27,8 +28,7 @@ export function useActiveSection(ids: readonly string[]): string {
 
     const compute = () => {
       frame = 0;
-      const header = document.querySelector('header');
-      const line = (header?.getBoundingClientRect().bottom ?? 0) + LINE_OFFSET;
+      const line = window.innerHeight * LINE_FRACTION;
       const tops = list.map((id) => {
         const el = document.getElementById(id);
         return el ? el.getBoundingClientRect().top : Number.POSITIVE_INFINITY;
@@ -52,5 +52,5 @@ export function useActiveSection(ids: readonly string[]): string {
     };
   }, [key]);
 
-  return ids[index] ?? ids[0] ?? '';
+  return ids[index] ?? ids[0];
 }

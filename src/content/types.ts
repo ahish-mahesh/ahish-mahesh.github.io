@@ -26,8 +26,6 @@ export interface Project {
   /** The "Stack:" line in the case study, where given. */
   readonly fullStack?: readonly string[];
   readonly metric: string;
-  /** Visual only, 0..1. */
-  readonly barFill: number;
   readonly summary: string;
   readonly bullets: readonly string[];
   readonly repo?: string;
@@ -61,6 +59,8 @@ export interface ExperienceEntry {
   readonly note?: string;
   readonly bullets: readonly string[];
   readonly link?: { readonly href: string; readonly label: string };
+  /** A git tag on this commit, e.g. an award. `label` is decorative; `text` is the readable form. */
+  readonly tag?: { readonly label: string; readonly text: string };
 }
 
 export interface Education {

@@ -7,11 +7,17 @@
 html {
   background: var(--bg);
   scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+  scroll-padding-top: var(--header-h);
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  [data-dim] {
+    transition: none;
   }
 }
 
@@ -75,6 +81,7 @@ pre {
   max-width: 100%;
   overflow-x: auto;
   font-family: inherit;
+  font-variant-ligatures: none;
 }
 
 a {
@@ -97,13 +104,23 @@ a {
   color: var(--bg);
 }
 
-[id] {
-  scroll-margin-top: calc(var(--rhythm) * 3);
+/* Component display rules must not reveal a hidden element. */
+[hidden]:not([hidden='until-found']) {
+  display: none !important;
 }
 
-/* Component display rules must not reveal a hidden element. */
-[hidden] {
-  display: none !important;
+/* Section focus: the section being read keeps full colour, the rest fall back to
+   --muted (AA on --bg in every theme). Set on the section so children inherit. */
+[data-dim] {
+  color: var(--fg);
+  transition:
+    --fg 300ms ease,
+    --accent 300ms ease;
+}
+
+[data-dim='true'] {
+  --fg: var(--muted);
+  --accent: var(--muted);
 }
 
 .muted {

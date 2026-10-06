@@ -6,19 +6,22 @@ const repo = 'https://github.com/ahish-mahesh/ahish-mahesh.github.io';
 export function SiteFooter() {
   return (
     <footer className={styles.footer}>
-      <p className={cx(styles.inner, 'muted')}>
-        <a href={repo} rel="noreferrer">
-          source on github
-        </a>
-        {' · '}
-        <a href={`${repo}/blob/main/CREDITS.md`} rel="noreferrer">
-          credits
-        </a>
-        {' · built with '}
-        <a href="https://claude.com/claude-code" rel="noreferrer">
-          Claude Code
-        </a>
-      </p>
+      <div className={cx(styles.inner, 'muted')}>
+        <p>
+          <a href={repo} rel="noreferrer">
+            source on github
+          </a>
+          {' · '}
+          <a href={`${repo}/blob/main/CREDITS.md`} rel="noreferrer">
+            credits
+          </a>
+          {' · built with '}
+          <a href="https://claude.com/claude-code" rel="noreferrer">
+            Claude Code
+          </a>
+        </p>
+        <p>ps5: controllers: montreal. console: india. eta: unknown.</p>
+      </div>
     </footer>
   );
 }

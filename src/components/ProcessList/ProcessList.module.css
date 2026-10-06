@@ -1,5 +1,11 @@
 .list {
   container-type: inline-size;
+  --row-hi: var(--accent);
+  --row-ring: var(--fg);
+}
+
+.status {
+  padding-bottom: var(--space-1);
 }
 
 .header,
@@ -11,10 +17,6 @@
 
 .header {
   display: none;
-}
-
-.row {
-  padding: var(--rhythm) 0 0;
 }
 
 .heading {
@@ -34,38 +36,50 @@
   cursor: pointer;
 }
 
-.button:hover .name {
-  text-decoration: underline;
+/* htop-style selection bar: reverse video on hover, focus and when expanded. */
+.button:hover,
+.button:focus-visible,
+.button[aria-expanded='true'] {
+  background: var(--row-hi);
+  color: var(--bg);
+  --fg: var(--bg);
+  --accent: var(--bg);
+  --muted: var(--bg);
 }
 
+.button:focus-visible {
+  outline-color: var(--row-ring);
+}
+
+/* Narrow: name, then bar, then metric, each on its own line under the name. */
 .name {
+  grid-column: 2;
   color: var(--accent);
   overflow-wrap: anywhere;
 }
 
-.stack {
-  display: none;
-}
-
 .bar {
   grid-column: 2;
+  grid-row: 2;
   white-space: pre;
   color: var(--accent);
 }
 
 .metric {
   grid-column: 2;
-}
-
-.summary {
-  padding-left: calc(5ch + var(--space-2));
-  color: var(--muted);
+  grid-row: 3;
+  color: var(--fg);
 }
 
 .panel {
-  margin: var(--rhythm) 0 0 calc(5ch + var(--space-2));
+  margin: var(--rhythm) 0 var(--rhythm) calc(5ch + var(--space-2));
   display: grid;
   gap: var(--rhythm);
+}
+
+/* A hidden="until-found" panel keeps its box, so drop its spacing while closed. */
+.panel[hidden] {
+  margin: 0;
 }
 
 /* Let wide figures scroll inside themselves instead of stretching the grid. */
@@ -87,8 +101,26 @@
   color: var(--muted);
 }
 
-.archiveHeading {
+.archive {
   margin-top: calc(var(--rhythm) * 2);
+}
+
+.archiveSummary {
+  color: var(--accent);
+  cursor: pointer;
+  list-style: none;
+}
+
+.archiveSummary::-webkit-details-marker {
+  display: none;
+}
+
+.archiveSummary::before {
+  content: '[+] ';
+}
+
+.archive[open] > .archiveSummary::before {
+  content: '[-] ';
 }
 
 .archive li {
@@ -101,10 +133,10 @@
   color: var(--muted);
 }
 
-@container (min-width: 72ch) {
+@container (min-width: 60ch) {
   .header,
   .button {
-    grid-template-columns: 5ch 18ch minmax(0, 1fr) 20ch 16ch;
+    grid-template-columns: 5ch 18ch 20ch 1fr;
   }
 
   .header {
@@ -113,19 +145,13 @@
     border-bottom: 1px solid var(--border);
   }
 
-  .stack {
-    display: block;
-    overflow-wrap: anywhere;
+  .name {
+    grid-column: auto;
   }
 
   .bar,
   .metric {
     grid-column: auto;
-  }
-}
-
-@container (min-width: 72ch) {
-  .metricHead {
-    grid-column: span 2;
+    grid-row: auto;
   }
 }

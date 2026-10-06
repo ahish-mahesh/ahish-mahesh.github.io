@@ -1,3 +1,4 @@
+import { profile } from './profile.ts';
 import type { Education, ExperienceEntry } from './types.ts';
 
 export const experience: readonly ExperienceEntry[] = [
@@ -51,6 +52,7 @@ export const experience: readonly ExperienceEntry[] = [
       'On-site escalations and deployments in Korea, Japan and Singapore.',
     ],
     link: { href: '#project-kla-pg-migration', label: 'read the migration case study' },
+    tag: { label: 'hackathon-2024', text: profile.award },
   },
   {
     id: 'kla-intern',

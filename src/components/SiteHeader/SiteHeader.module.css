@@ -6,19 +6,23 @@
   z-index: 10;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
-  font-size: var(--fs-0);
 }
 
 .nav {
   position: relative;
   display: flex;
   align-items: center;
-  column-gap: 3ch;
-  /* Wider than the body column: the prompt, a typed command, five links and the
-     theme button need ~100ch at this font size. */
-  width: min(112ch, 100%);
+  column-gap: 2ch;
+  /* Same box as the content columns (body font size) so the left edges line up. */
+  width: min(var(--measure), 100%);
   margin: 0 auto;
   padding: 0 var(--gutter);
+}
+
+.promptArea,
+.menu,
+.toggle {
+  font-size: var(--fs-0);
 }
 
 .promptArea {
@@ -52,7 +56,7 @@
 .menu {
   display: flex;
   align-items: center;
-  column-gap: 3ch;
+  column-gap: 2ch;
 }
 
 .links {
@@ -86,6 +90,7 @@
 .toggle {
   display: none;
   font: inherit;
+  font-size: var(--fs-0);
   color: var(--accent);
   background: none;
   border: 0;
@@ -96,10 +101,6 @@
 @media (max-width: 880px) {
   .nav {
     column-gap: 1ch;
-  }
-
-  .typed {
-    display: none;
   }
 
   .toggle {

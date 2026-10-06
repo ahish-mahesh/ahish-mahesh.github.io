@@ -1,7 +1,6 @@
 import { m, useScroll, useSpring } from 'motion/react';
-import { useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { education, experience } from '../../content/experience.ts';
-import { profile } from '../../content/profile.ts';
 import { useReducedMotion } from '../../hooks/useReducedMotion.ts';
 import { cx } from '../cx.ts';
 import { Section } from '../Section/Section.tsx';
@@ -19,29 +18,49 @@ export function GitLogTimeline() {
   const listRef = useRef<HTMLOListElement>(null);
   const { scrollYProgress } = useScroll({
     target: listRef,
-    offset: ['start 0.8', 'end 0.6'],
+    offset: ['start 0.8', 'end 0.95'],
   });
   const drawn = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
   const fade = reduced ? {} : FADE_IN;
+  const [open, setOpen] = useState<ReadonlySet<string>>(
+    () => new Set(experience.slice(0, 1).map((e) => e.id)),
+  );
+
+  const toggle = useCallback((id: string) => {
+    setOpen((prev) => {
+      const next = new Set(prev);
+      if (!next.delete(id)) next.add(id);
+      return next;
+    });
+  }, []);
+
+  // Ctrl+F reveals a hidden="until-found" panel and fires `beforematch` on it.
+  // React's types only accept a boolean for `hidden`, so the attribute is set here.
+  const panelRef = useCallback(
+    (id: string, isOpen: boolean) => (el: HTMLDivElement | null) => {
+      if (!el) return;
+      if (isOpen) el.removeAttribute('hidden');
+      else el.setAttribute('hidden', 'until-found');
+      const onMatch = () => {
+        setOpen((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
+      };
+      el.addEventListener('beforematch', onMatch);
+      return () => {
+        el.removeEventListener('beforematch', onMatch);
+      };
+    },
+    [],
+  );
+
   return (
     <Section id="work" title="where I've worked">
       <div className={styles.timeline}>
-        <svg
+        <m.div
           aria-hidden="true"
           className={styles.spine}
-          viewBox="0 0 1 100"
-          preserveAspectRatio="none"
           data-testid="spine"
-        >
-          <m.path
-            d="M0.5 0 V100"
-            fill="none"
-            stroke="var(--muted)"
-            strokeWidth={1}
-            vectorEffect="non-scaling-stroke"
-            style={reduced ? undefined : { pathLength: drawn }}
-          />
-        </svg>
+          style={reduced ? undefined : { scaleY: drawn, transformOrigin: 'top' }}
+        />
         <ol ref={listRef} className={styles.list}>
           {experience.map((e, i) => {
             const prev = experience[i - 1];
@@ -49,6 +68,8 @@ export function GitLogTimeline() {
             const opens = e.branch === 'side' && prev?.branch !== 'side';
             const closes = e.branch === 'side' && next?.branch !== 'side';
             const headingId = `exp-${e.id}`;
+            const panelId = `exp-panel-${e.id}`;
+            const isOpen = open.has(e.id);
             return (
               <li key={e.id} className={styles.item}>
                 {opens ? (
@@ -67,32 +88,55 @@ export function GitLogTimeline() {
                     </m.span>
                   </span>
                   <article aria-labelledby={headingId} className={styles.article}>
-                    <p className={styles.meta}>
-                      <span className="muted">{e.graphLabel}</span>
-                      {i === 0 ? (
-                        <m.span aria-hidden="true" className={styles.head} {...fade}>
-                          {' (HEAD -> main)'}
-                        </m.span>
-                      ) : null}
-                    </p>
-                    <h3 id={headingId} className={styles.title}>
-                      {e.org} · {e.role}
+                    <h3 id={headingId} className={styles.heading}>
+                      <button
+                        type="button"
+                        className={styles.toggle}
+                        aria-expanded={isOpen}
+                        aria-controls={panelId}
+                        onClick={() => {
+                          toggle(e.id);
+                        }}
+                      >
+                        <span className="muted">{e.graphLabel}</span>{' '}
+                        <span className={styles.title}>
+                          {e.org} · {e.role}
+                        </span>
+                        {i === 0 ? (
+                          <span aria-hidden="true" className={styles.head}>
+                            {' (HEAD -> main)'}
+                          </span>
+                        ) : null}
+                        {e.tag ? (
+                          <span aria-hidden="true" className={styles.tag}>
+                            {` (tag: ${e.tag.label})`}
+                          </span>
+                        ) : null}
+                      </button>
                     </h3>
-                    <p>
-                      <time dateTime={e.start}>{e.dateLabel}</time>
-                      {e.location ? <span className="muted">{` · ${e.location}`}</span> : null}
-                    </p>
-                    {e.note ? <p className="muted">{e.note}</p> : null}
-                    <ul className={styles.bullets}>
-                      {e.bullets.map((b) => (
-                        <li key={b}>{b}</li>
-                      ))}
-                    </ul>
-                    {e.link ? (
+                    <div id={panelId} ref={panelRef(e.id, isOpen)} className={styles.panel}>
                       <p>
-                        <a href={e.link.href}>{e.link.label}</a>
+                        <time dateTime={e.start}>{e.dateLabel}</time>
+                        {e.location ? <span className="muted">{` · ${e.location}`}</span> : null}
                       </p>
-                    ) : null}
+                      {e.note ? <p className="muted">{e.note}</p> : null}
+                      <ul className={styles.bullets}>
+                        {e.bullets.map((b) => (
+                          <li key={b}>{b}</li>
+                        ))}
+                      </ul>
+                      {e.link ? (
+                        <p>
+                          <a href={e.link.href}>{e.link.label}</a>
+                        </p>
+                      ) : null}
+                      {e.tag ? (
+                        <p>
+                          <span className="muted">award: </span>
+                          {e.tag.text}
+                        </p>
+                      ) : null}
+                    </div>
                   </article>
                 </div>
                 {closes ? (
@@ -117,10 +161,6 @@ export function GitLogTimeline() {
           </li>
         ))}
       </ul>
-      <p className={styles.award}>
-        <span className="muted">award: </span>
-        {profile.award}
-      </p>
     </Section>
   );
 }

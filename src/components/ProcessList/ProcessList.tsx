@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { archive, projects } from '../../content/projects.ts';
 import { cx } from '../cx.ts';
 import type { Project } from '../../content/types.ts';
@@ -22,10 +22,31 @@ interface ProcessRowProps {
   index: number;
   open: boolean;
   onToggle: () => void;
+  onReveal: () => void;
 }
 
-function ProcessRow({ project, index, open, onToggle }: ProcessRowProps) {
+function ProcessRow({ project, index, open, onToggle, onReveal }: ProcessRowProps) {
   const panelId = `panel-${project.slug}`;
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // React's types only allow a boolean `hidden`, so set the attribute directly.
+  useLayoutEffect(() => {
+    const el = panelRef.current;
+    if (!el) return;
+    if (open) el.removeAttribute('hidden');
+    else el.setAttribute('hidden', 'until-found');
+  }, [open]);
+
+  // hidden="until-found" lets find-in-page match closed text; the browser then
+  // fires `beforematch` and removes the attribute, so open the row to match.
+  useEffect(() => {
+    const el = panelRef.current;
+    if (!el) return;
+    el.addEventListener('beforematch', onReveal);
+    return () => {
+      el.removeEventListener('beforematch', onReveal);
+    };
+  }, [onReveal]);
 
   return (
     <li id={`project-${project.slug}`} className={styles.row}>
@@ -39,13 +60,11 @@ function ProcessRow({ project, index, open, onToggle }: ProcessRowProps) {
         >
           <span className={cx(styles.pid, 'muted')}>{project.pid}</span>
           <span className={styles.name}>{project.name}</span>
-          <span className={cx(styles.stack, 'muted')}>{project.stack.join(' ')}</span>
-          <ProcessBar fill={project.barFill} index={index} />
+          <ProcessBar index={index} />
           <span className={styles.metric}>{project.metric}</span>
         </button>
       </h3>
-      <p className={styles.summary}>{project.summary}</p>
-      <div id={panelId} hidden={!open} className={styles.panel}>
+      <div id={panelId} ref={panelRef} className={styles.panel}>
         <p className={cx(styles.label, 'muted')}>{project.title}</p>
         <ul className={styles.bullets}>
           {project.bullets.map((b) => (
@@ -91,6 +110,10 @@ export function ProcessList() {
     };
   }, []);
 
+  const reveal = (slug: string) => {
+    setOpenSlugs((s) => (s.has(slug) ? s : new Set(s).add(slug)));
+  };
+
   const toggle = (slug: string) => {
     setOpenSlugs((s) => {
       const next = new Set(s);
@@ -102,11 +125,14 @@ export function ProcessList() {
   return (
     <Section id="projects" title="what I'm building">
       <div className={styles.list}>
+        <p className={cx(styles.status, 'muted')}>
+          {`Tasks: ${String(projects.length)} total, ${String(projects.length)} complete; sorted by impact`}
+        </p>
         <div aria-hidden="true" className={cx(styles.header, 'muted')}>
           <span>PID</span>
           <span>NAME</span>
-          <span className={styles.stack}>STACK</span>
-          <span className={styles.metricHead}>METRIC</span>
+          <span>STATE</span>
+          <span>METRIC</span>
         </div>
         <ul>
           {projects.map((p, i) => (
@@ -118,24 +144,31 @@ export function ProcessList() {
               onToggle={() => {
                 toggle(p.slug);
               }}
+              onReveal={() => {
+                reveal(p.slug);
+              }}
             />
           ))}
         </ul>
-        <h3 className={styles.archiveHeading}>archive</h3>
-        <ul className={styles.archive}>
-          {archive.map((a) => (
-            <li key={a.name}>
-              {a.repo ? (
-                <a href={a.repo} rel="noreferrer">
-                  {a.name}
-                </a>
-              ) : (
-                a.name
-              )}
-              {a.description ? <span className="muted">{` · ${a.description}`}</span> : null}
-            </li>
-          ))}
-        </ul>
+        <details className={styles.archive}>
+          <summary
+            className={styles.archiveSummary}
+          >{`archive (${String(archive.length)})`}</summary>
+          <ul>
+            {archive.map((a) => (
+              <li key={a.name}>
+                {a.repo ? (
+                  <a href={a.repo} rel="noreferrer">
+                    {a.name}
+                  </a>
+                ) : (
+                  a.name
+                )}
+                {a.description ? <span className="muted">{` · ${a.description}`}</span> : null}
+              </li>
+            ))}
+          </ul>
+        </details>
       </div>
     </Section>
   );

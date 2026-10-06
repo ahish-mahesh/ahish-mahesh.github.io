@@ -8,11 +8,11 @@ const DURATION_S = 0.8;
 const STAGGER_S = 0.1;
 
 interface ProcessBarProps {
-  fill: number;
   index: number;
 }
 
-export function ProcessBar({ fill, index }: ProcessBarProps) {
+/** Every process here is complete, so the bar always fills from empty to full. */
+export function ProcessBar({ index }: ProcessBarProps) {
   const reduceMotion = useReducedMotion();
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.5 });
@@ -21,7 +21,7 @@ export function ProcessBar({ fill, index }: ProcessBarProps) {
 
   useEffect(() => {
     if (reduceMotion || !inView) return;
-    const controls = animate(value, fill, {
+    const controls = animate(value, 1, {
       duration: DURATION_S,
       ease: 'easeOut',
       delay: index * STAGGER_S,
@@ -29,11 +29,11 @@ export function ProcessBar({ fill, index }: ProcessBarProps) {
     return () => {
       controls.stop();
     };
-  }, [reduceMotion, inView, value, fill, index]);
+  }, [reduceMotion, inView, value, index]);
 
   return (
     <m.span ref={ref} aria-hidden="true" className={styles.bar}>
-      {reduceMotion ? bar(fill) : text}
+      {reduceMotion ? bar(1) : text}
     </m.span>
   );
 }

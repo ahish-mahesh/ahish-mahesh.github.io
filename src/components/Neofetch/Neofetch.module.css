@@ -8,6 +8,10 @@
   color: var(--accent);
   font-size: var(--fs-0);
   font-weight: 700;
+  font-variant-ligatures: none;
+  font-feature-settings:
+    'liga' 0,
+    'calt' 0;
 }
 
 .title {
@@ -24,7 +28,7 @@
 }
 
 .key {
-  color: var(--accent);
+  color: var(--fg);
   font-weight: 700;
 }
 
@@ -46,6 +50,12 @@
   }
 
   .row {
-    grid-template-columns: 11ch 1fr;
+    grid-template-columns: 12ch 1fr;
+  }
+
+  /* Break between items, never inside one. Narrow screens wrap freely: the longest
+     value is wider than a phone. */
+  .value {
+    white-space: nowrap;
   }
 }

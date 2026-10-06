@@ -8,7 +8,7 @@ const logo = String.raw`  ___  __  __
 |  _  | |  | |
 |_| |_|_|  |_|`;
 
-const blocks = ['--fg', '--accent', '--muted', '--border'] as const;
+const blocks = ['--fg', '--accent', '--muted'] as const;
 
 export function Neofetch() {
   return (
@@ -26,11 +26,18 @@ export function Neofetch() {
             {skills.map((s) => (
               <div key={s.key} className={styles.row}>
                 <dt className={styles.key}>{s.key}</dt>
-                <dd>{s.values.join(' · ')}</dd>
+                <dd>
+                  {s.values.map((v, i) => (
+                    <span key={v}>
+                      {i > 0 ? ' · ' : null}
+                      <span className={styles.value}>{v}</span>
+                    </span>
+                  ))}
+                </dd>
               </div>
             ))}
           </dl>
-          <div aria-hidden="true" className={styles.blocks}>
+          <div aria-hidden="true" className={styles.blocks} data-testid="color-blocks">
             {blocks.map((b) => (
               <span key={b} style={{ background: `var(${b})` }} />
             ))}

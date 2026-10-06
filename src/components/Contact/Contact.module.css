@@ -3,8 +3,35 @@
   gap: var(--rhythm);
 }
 
+.email {
+  margin-bottom: var(--rhythm);
+}
+
+.emailLink {
+  color: var(--accent);
+  font-size: var(--fs-2);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.emailLink:hover {
+  text-decoration: underline;
+}
+
+.auth {
+  color: var(--fg);
+  border-left: 1px solid var(--fg);
+  padding-left: 2ch;
+}
+
 .item {
   display: grid;
-  grid-template-columns: 11ch 1fr;
+  grid-template-columns: 12ch 1fr;
   overflow-wrap: anywhere;
+}
+
+@media (min-width: 720px) {
+  .emailLink {
+    font-size: var(--fs-3);
+  }
 }

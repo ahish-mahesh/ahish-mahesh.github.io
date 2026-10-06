@@ -13,17 +13,17 @@
   bottom: 0;
   left: calc(0.5ch - 0.5px);
   width: 1px;
-  height: 100%;
-  overflow: visible;
+  background: var(--muted);
   pointer-events: none;
   z-index: 0;
 }
 
 .fork,
 .graph {
-  color: var(--accent);
+  color: var(--fg);
   white-space: pre;
   font-weight: 700;
+  line-height: var(--rhythm);
 }
 
 .fork {
@@ -59,23 +59,52 @@
   background: var(--bg);
 }
 
-.article {
-  padding-bottom: var(--rhythm);
-}
-
-.meta {
+.heading {
+  margin: 0;
+  font: inherit;
   line-height: var(--rhythm);
 }
 
-.head {
-  display: inline-block;
-  white-space: pre;
-  color: var(--accent);
+.toggle {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: var(--rhythm);
+  text-align: left;
+  cursor: pointer;
+  overflow-wrap: anywhere;
 }
 
 .title {
   text-transform: lowercase;
-  overflow-wrap: anywhere;
+}
+
+.toggle:hover .title {
+  text-decoration: underline;
+}
+
+.head {
+  white-space: pre-wrap;
+  color: var(--accent);
+}
+
+.tag {
+  white-space: pre-wrap;
+  font-weight: 700;
+}
+
+.panel {
+  padding-bottom: var(--rhythm);
+}
+
+/* A hidden="until-found" panel keeps its box, so drop its spacing while closed. */
+.panel[hidden] {
+  padding-bottom: 0;
 }
 
 .bullets li {
@@ -92,11 +121,6 @@
   margin-top: var(--rhythm);
 }
 
-.edu li,
-.award {
+.edu li {
   overflow-wrap: anywhere;
-}
-
-.award {
-  margin-top: var(--rhythm);
 }

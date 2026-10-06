@@ -3,9 +3,12 @@
   grid-template-columns: 1fr;
   gap: var(--rhythm);
   align-items: center;
+  align-content: center;
   width: min(var(--measure), 100%);
+  min-height: calc(100svh - var(--header-h));
   margin: 0 auto;
-  padding: calc(var(--rhythm) * 3) var(--gutter) calc(var(--rhythm) * 2);
+  padding: calc(var(--rhythm) * 2) var(--gutter);
+  scroll-snap-align: start;
 }
 
 .text {
@@ -21,7 +24,7 @@
 .buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 0 var(--space-3);
+  gap: 0 3ch;
 }
 
 .button {
@@ -34,10 +37,24 @@
   color: var(--fg);
 }
 
+/* Quiet pointer to the next section, bottom-left under the text column. */
+.next {
+  justify-self: start;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.next:hover {
+  text-decoration: underline;
+}
+
 .visual {
-  display: none;
   position: relative;
   overflow: hidden;
+  width: min(300px, 100%);
+  aspect-ratio: 1;
+  /* Lets the static frame size its characters to the box (cqw) on narrow screens. */
+  container-type: inline-size;
 }
 
 /* Same character cell as the live ASCII pass (see src/hero3d/AsciiHero.module.css,
@@ -70,17 +87,31 @@
   }
 }
 
+/* Narrow: the 64-column frame is scaled so the whole drawing fits the box. */
+@media (max-width: 719.98px) {
+  .frame {
+    --ascii-cell: calc(100cqw / 64);
+  }
+}
+
 @media (min-width: 720px) {
   .hero {
     grid-template-columns: 1fr 1fr;
     gap: var(--space-4);
   }
 
+  .name {
+    font-size: var(--fs-5);
+    line-height: calc(var(--rhythm) * 3);
+  }
+
   .visual {
-    display: block;
-    aspect-ratio: 1;
     width: 100%;
     max-width: 40ch;
     justify-self: end;
+  }
+
+  .next {
+    grid-column: 1 / -1;
   }
 }

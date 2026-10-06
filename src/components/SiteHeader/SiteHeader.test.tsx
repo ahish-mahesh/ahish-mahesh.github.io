@@ -1,6 +1,7 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { ActiveSectionContext } from '../../hooks/ActiveSectionContext.ts';
 import { mockReducedMotion } from '../../test/matchMedia.ts';
 import { ThemeProvider } from '../../theme/ThemeProvider.tsx';
 import { SiteHeader } from './SiteHeader.tsx';
@@ -15,6 +16,23 @@ function setup() {
 }
 
 describe('SiteHeader', () => {
+  it('types the active section command from context', () => {
+    mockReducedMotion();
+    render(
+      <ThemeProvider>
+        <ActiveSectionContext value="projects">
+          <SiteHeader />
+        </ActiveSectionContext>
+      </ThemeProvider>,
+    );
+    expect(screen.getByText('htop')).toBeInTheDocument();
+  });
+
+  it('renders without a provider and types nothing', () => {
+    setup();
+    expect(screen.queryByText('htop')).not.toBeInTheDocument();
+  });
+
   it('renders the prompt and nav links', () => {
     setup();
     expect(screen.getByRole('link', { name: 'ahish@montreal' })).toHaveAttribute('href', '#top');

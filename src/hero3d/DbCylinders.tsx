@@ -5,7 +5,7 @@ import { damp } from './motion.ts';
 
 const RADIUS = 1.25;
 const HEIGHT = 0.42;
-const GAP = 0.55;
+const GAP = 0.8;
 const SEGMENTS = 64;
 const MAX_TILT = 0.35;
 const SWAY = 0.08;

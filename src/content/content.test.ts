@@ -69,13 +69,6 @@ describe('projects', () => {
     expect(new Set(projects.map((p) => p.slug)).size).toBe(projects.length);
   });
 
-  it('has barFill in (0, 1]', () => {
-    for (const p of projects) {
-      expect(p.barFill).toBeGreaterThan(0);
-      expect(p.barFill).toBeLessThanOrEqual(1);
-    }
-  });
-
   it('only links to the ahish-mahesh GitHub account', () => {
     const repos = [...projects, ...projectsModule.archive].flatMap((p) =>
       p.repo === undefined ? [] : [p.repo],

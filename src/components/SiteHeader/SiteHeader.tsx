@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { profile } from '../../content/profile.ts';
-import { useActiveSection } from '../../hooks/useActiveSection.ts';
+import { useActiveSectionId } from '../../hooks/ActiveSectionContext.ts';
+import { sectionCommands } from '../sections.ts';
 import { ThemeSwitch } from '../ThemeSwitch/ThemeSwitch.tsx';
 import styles from './SiteHeader.module.css';
 import { TypedCommand } from './TypedCommand.tsx';
 
 // Keep in sync with the `@media (max-width: 880px)` breakpoint in SiteHeader.module.css.
 const MOBILE_QUERY = '(max-width: 880px)';
-
-const sectionIds = ['top', 'projects', 'work', 'about', 'contact'] as const;
 
 const links = [
   { id: 'projects', label: 'projects/', href: '#projects', command: 'cd projects' },
@@ -19,7 +18,7 @@ const links = [
 ] as const;
 
 export function SiteHeader() {
-  const active = useActiveSection(sectionIds);
+  const active = useActiveSectionId() ?? 'top';
   const [hovered, setHovered] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
@@ -60,7 +59,7 @@ export function SiteHeader() {
             ahish@montreal
           </a>
           <span aria-hidden="true">:{cwd}$ </span>
-          <TypedCommand text={hovered} />
+          <TypedCommand text={hovered ?? sectionCommands[active]} />
         </div>
         <button
           type="button"

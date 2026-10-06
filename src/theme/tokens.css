@@ -1,3 +1,16 @@
+/* Registered so the colour tokens can transition (section focus dimming). */
+@property --fg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #c8e6c9;
+}
+
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #39ff88;
+}
+
 :root {
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
   --fs-0: 14px;
@@ -5,6 +18,7 @@
   --fs-2: 20px;
   --fs-3: 28px;
   --fs-4: 40px;
+  --fs-5: 56px;
   --rhythm: 1.5rem;
   --space-1: calc(var(--rhythm) * 0.5);
   --space-2: var(--rhythm);
@@ -12,6 +26,8 @@
   --space-4: calc(var(--rhythm) * 3);
   --measure: 88ch;
   --gutter: 16px;
+  /* One line at the rhythm plus the 1px border. */
+  --header-h: calc(var(--rhythm) + 1px);
 }
 
 :root[data-theme='phosphor'],

@@ -37,6 +37,31 @@
   color: var(--fg);
 }
 
+/* Opens the terminal on tap too, since phones have no backtick key. */
+.hint {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: inherit;
+}
+
+.hint:hover {
+  text-decoration: underline;
+}
+
+.hint kbd {
+  font: inherit;
+  color: var(--accent);
+}
+
+.aside {
+  display: block;
+  font-size: var(--fs-0);
+}
+
 /* Quiet pointer to the next section, bottom-left under the text column. */
 .next {
   justify-self: start;

@@ -129,7 +129,7 @@ Single page, anchor-linked sections. Order matters (recruiter-first):
 3. where I've worked     (git log timeline)
 4. what I reach for      (neofetch skills)
 5. saying hello          (contact + work authorization)
-[ footer: hint "press ` for a terminal" · credits · source link ]
+[ footer: credits · source link ]
 ```
 
 ### 5.1 Hero
@@ -283,7 +283,7 @@ Optional: the classic neofetch color-block row, using theme colors.
 | hidden: `psql` | a fake `postgres=#` prompt where `\q` exits and `SELECT * FROM skills;` prints a table |
 | hidden: `ps5` | `controllers: montreal. console: india. eta: unknown.` |
 
-Hidden commands do not appear in `help` or autocomplete. A footer hint ("press ` for a terminal") tells people it exists.
+Hidden commands do not appear in `help` or autocomplete. A hero hint ("Press ` to skip the frontend. I usually do." plus a "(kidding. I built this one in React.)" aside) tells people it exists; the whole line is a button so touch users can open it too.
 
 ---
 

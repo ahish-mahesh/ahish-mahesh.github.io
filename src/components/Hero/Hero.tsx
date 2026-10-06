@@ -1,5 +1,6 @@
 import { profile } from '../../content/profile.ts';
 import { useActiveSectionId } from '../../hooks/ActiveSectionContext.ts';
+import { useTerminal } from '../../terminal/useTerminal.ts';
 import { DecodeText } from '../DecodeText/DecodeText.tsx';
 import { HeroVisual } from './HeroVisual.tsx';
 import styles from './Hero.module.css';
@@ -11,6 +12,7 @@ const buttons = [
 
 export function Hero() {
   const active = useActiveSectionId();
+  const terminal = useTerminal();
   return (
     <section
       id="top"
@@ -24,6 +26,19 @@ export function Hero() {
         </h1>
         <p>{profile.oneLiner}</p>
         <p className="muted">{profile.subLine}</p>
+        <p className="muted">
+          <button
+            type="button"
+            className={styles.hint}
+            aria-haspopup="dialog"
+            onClick={terminal.openTerminal}
+            onMouseEnter={terminal.preload}
+            onFocus={terminal.preload}
+          >
+            Press <kbd>`</kbd> to skip the frontend. I usually do.
+          </button>
+          <small className={styles.aside}>(kidding. I built this one in React.)</small>
+        </p>
         <ul className={styles.buttons}>
           {buttons.map((b) => (
             <li key={b.label}>

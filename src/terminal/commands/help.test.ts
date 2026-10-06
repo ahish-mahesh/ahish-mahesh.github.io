@@ -37,6 +37,13 @@ describe('help', () => {
     ]);
   });
 
+  it('swaps the keyboard hint for a tap hint on touch devices', () => {
+    const touchOut = helpCommand.run([], fakeCtx({ commands, touch: true }));
+    expect(lineText(touchOut.at(-1) ?? '')).toBe(
+      'tap a command below, or type one. close is top right.',
+    );
+  });
+
   it('lists the real visible commands by default', () => {
     const real = helpCommand.run([], fakeCtx());
     const text = real.map(lineText);

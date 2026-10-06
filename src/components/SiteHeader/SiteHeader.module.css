@@ -195,6 +195,13 @@
   }
 }
 
+/* Smallest phones (320px): the longest typed command still fits beside the buttons. */
+@media (max-width: 359.98px) {
+  .promptArea {
+    font-size: 12px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cursor {
     animation: none;

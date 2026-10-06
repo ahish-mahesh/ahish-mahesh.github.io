@@ -152,6 +152,7 @@ export default function Terminal({ open, crt, setCrt, onClose, goTo }: TerminalP
       history: nextHistory.entries,
       theme,
       themes,
+      touch,
       setTheme,
       crt,
       setCrt,

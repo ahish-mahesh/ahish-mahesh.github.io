@@ -39,6 +39,8 @@ export interface TerminalCtx {
   readonly history: readonly string[];
   readonly theme: Theme;
   readonly themes: readonly Theme[];
+  /** Touch-first device (no Tab, arrows or Esc), so hints talk about tapping. */
+  readonly touch?: boolean;
   setTheme(t: Theme): void;
   readonly crt: boolean;
   setCrt(on: boolean): void;

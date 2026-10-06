@@ -9,11 +9,12 @@ import { SiteHeader } from './components/SiteHeader/SiteHeader.tsx';
 
 import { ActiveSectionContext } from './hooks/ActiveSectionContext.ts';
 import { useActiveSection } from './hooks/useActiveSection.ts';
+import { TerminalLauncher } from './terminal/TerminalLauncher.tsx';
 
 export default function App() {
   const active = useActiveSection(sectionIds);
   return (
-    <>
+    <TerminalLauncher>
       <a className="skip-link" href="#main">
         skip to content
       </a>
@@ -28,6 +29,6 @@ export default function App() {
         </main>
       </ActiveSectionContext>
       <SiteFooter />
-    </>
+    </TerminalLauncher>
   );
 }

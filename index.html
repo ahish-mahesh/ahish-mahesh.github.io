@@ -19,6 +19,9 @@
               : 'phosphor';
         }
         document.documentElement.dataset.theme = theme;
+        try {
+          if (localStorage.getItem('crt') === 'on') document.documentElement.dataset.crt = 'on';
+        } catch (e) {}
       })();
     </script>
     <title>Ahish Mahesh · backend engineer</title>

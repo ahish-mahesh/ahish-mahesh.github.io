@@ -22,7 +22,7 @@ describe('App', () => {
   it('has the section headings in order', () => {
     renderApp();
     const headings = screen.getAllByRole('heading', { level: 2 });
-    const expected = ["what I'm building", "where I've worked", 'what I reach for', 'saying hello'];
+    const expected = ["what I've shipped", "where I've worked", 'what I reach for', 'saying hello'];
     expect(headings).toHaveLength(expected.length);
     headings.forEach((h, i) => {
       expect(h).toHaveAccessibleName(expected[i]);

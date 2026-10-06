@@ -15,3 +15,22 @@
 .inner a {
   color: inherit;
 }
+
+.hint {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: inherit;
+}
+
+.hint:hover {
+  text-decoration: underline;
+}
+
+.hint kbd {
+  font: inherit;
+  color: var(--accent);
+}

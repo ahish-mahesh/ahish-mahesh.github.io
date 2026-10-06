@@ -1,14 +1,13 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { archive, projects } from '../../content/projects.ts';
 import { cx } from '../cx.ts';
+import { PROJECT_HASH_PREFIX as HASH_PREFIX, projectButtonId } from '../sections.ts';
 import type { Project } from '../../content/types.ts';
 import { Section } from '../Section/Section.tsx';
 import { MigrationPanel } from '../MigrationPanel/MigrationPanel.tsx';
 import { PipelineDiagram } from '../PipelineDiagram/PipelineDiagram.tsx';
 import { ProcessBar } from './ProcessBar.tsx';
 import styles from './ProcessList.module.css';
-
-const HASH_PREFIX = '#project-';
 
 function hashSlug(): string | undefined {
   const hash = window.location.hash;
@@ -53,6 +52,7 @@ function ProcessRow({ project, open, started, onToggle, onReveal }: ProcessRowPr
       <h3 className={styles.heading}>
         <button
           type="button"
+          id={projectButtonId(project.slug)}
           className={styles.button}
           aria-expanded={open}
           aria-controls={panelId}
@@ -135,7 +135,7 @@ export function ProcessList() {
   };
 
   return (
-    <Section id="projects" title="what I'm building">
+    <Section id="projects" title="what I've shipped">
       <div className={styles.list}>
         <p className={cx(styles.status, 'muted')}>
           {`Tasks: ${String(projects.length)} total, ${String(started.size)} complete; sorted by impact`}

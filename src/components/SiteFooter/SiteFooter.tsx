@@ -1,12 +1,27 @@
+import { profile } from '../../content/profile.ts';
+import { useTerminal } from '../../terminal/useTerminal.ts';
+import { cx } from '../cx.ts';
 import styles from './SiteFooter.module.css';
 
-import { cx } from '../cx.ts';
 const repo = 'https://github.com/ahish-mahesh/ahish-mahesh.github.io';
 
 export function SiteFooter() {
+  const terminal = useTerminal();
   return (
     <footer className={styles.footer}>
       <div className={cx(styles.inner, 'muted')}>
+        <p>
+          <button
+            type="button"
+            className={styles.hint}
+            aria-haspopup="dialog"
+            onClick={terminal.openTerminal}
+            onMouseEnter={terminal.preload}
+            onFocus={terminal.preload}
+          >
+            press <kbd>`</kbd> for a terminal
+          </button>
+        </p>
         <p>
           <a href={repo} rel="noreferrer">
             source on github
@@ -20,7 +35,7 @@ export function SiteFooter() {
             Claude Code
           </a>
         </p>
-        <p>ps5: controllers: montreal. console: india. eta: unknown.</p>
+        <p>ps5: {profile.signOff}</p>
       </div>
     </footer>
   );

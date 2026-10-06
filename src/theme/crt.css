@@ -1,0 +1,19 @@
+/* Optional CRT layer, off by default (`crt on` in the terminal). Static: no flicker. */
+:root[data-crt='on'] body {
+  text-shadow: 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+:root[data-crt='on'] body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 1px,
+    rgb(0 0 0 / 0.1) 1px,
+    rgb(0 0 0 / 0.1) 2px
+  );
+}

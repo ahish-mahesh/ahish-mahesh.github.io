@@ -16,4 +16,5 @@ export const profile: Profile = {
   workAuthorization:
     "Post-Graduation Work Permit from January 2027. It's an open permit, so there's no sponsorship, no LMIA, and nothing for an employer to file.",
   award: '1st place, KLA Hackathon 2024',
+  signOff: 'controllers: montreal. console: india. eta: unknown.',
 };

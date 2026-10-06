@@ -1,29 +1,34 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import type { ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import { ActiveSectionContext } from '../../hooks/ActiveSectionContext.ts';
 import { mockReducedMotion } from '../../test/matchMedia.ts';
+import { TerminalLauncher } from '../../terminal/TerminalLauncher.tsx';
 import { ThemeProvider } from '../../theme/ThemeProvider.tsx';
 import { SiteHeader } from './SiteHeader.tsx';
 
+function Providers({ children }: { children: ReactNode }) {
+  return (
+    <ThemeProvider>
+      <TerminalLauncher>{children}</TerminalLauncher>
+    </ThemeProvider>
+  );
+}
+
 function setup() {
   mockReducedMotion();
-  return render(
-    <ThemeProvider>
-      <SiteHeader />
-    </ThemeProvider>,
-  );
+  return render(<SiteHeader />, { wrapper: Providers });
 }
 
 describe('SiteHeader', () => {
   it('types the active section command from context', () => {
     mockReducedMotion();
     render(
-      <ThemeProvider>
-        <ActiveSectionContext value="projects">
-          <SiteHeader />
-        </ActiveSectionContext>
-      </ThemeProvider>,
+      <ActiveSectionContext value="projects">
+        <SiteHeader />
+      </ActiveSectionContext>,
+      { wrapper: Providers },
     );
     expect(screen.getByText('htop')).toBeInTheDocument();
   });
@@ -73,7 +78,7 @@ describe('SiteHeader', () => {
   it('toggles the menu and closes on Escape with focus back on the toggle', async () => {
     const user = userEvent.setup();
     setup();
-    const toggle = screen.getByRole('button', { name: /ls/ });
+    const toggle = screen.getByRole('button', { name: /^ls/ });
     expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await user.click(toggle);
     expect(toggle).toHaveAttribute('aria-expanded', 'true');
@@ -85,9 +90,23 @@ describe('SiteHeader', () => {
   it('closes the menu when a link is clicked', async () => {
     const user = userEvent.setup();
     setup();
-    const toggle = screen.getByRole('button', { name: /ls/ });
+    const toggle = screen.getByRole('button', { name: /^ls/ });
     await user.click(toggle);
     await user.click(screen.getByRole('link', { name: 'about/' }));
     expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('has a terminal button that toggles the terminal', async () => {
+    const user = userEvent.setup();
+    setup();
+    const button = screen.getByRole('button', { name: 'open terminal' });
+    expect(button).toHaveAttribute('aria-haspopup', 'dialog');
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+    await user.click(button);
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+    expect(await screen.findByRole('textbox', { name: 'command' })).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+    expect(button).toHaveFocus();
   });
 });

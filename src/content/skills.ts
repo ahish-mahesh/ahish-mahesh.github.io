@@ -2,6 +2,12 @@ import type { SkillRow } from './types.ts';
 
 export const neofetchTitle = 'ahish@montreal';
 
+export const neofetchLogo = String.raw`  ___  __  __
+ / _ \|  \/  |
+| |_| | |\/| |
+|  _  | |  | |
+|_| |_|_|  |_|`;
+
 export const skills: readonly SkillRow[] = [
   { key: 'languages', values: ['C++', 'C#/.NET', 'Python', 'TypeScript', 'Java', 'SQL'] },
   { key: 'data', values: ['PostgreSQL', 'SQL Server', 'schema migration', 'HA', 'REST APIs'] },

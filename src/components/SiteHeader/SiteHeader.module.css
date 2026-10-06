@@ -21,7 +21,8 @@
 
 .promptArea,
 .menu,
-.toggle {
+.toggle,
+.terminal {
   font-size: var(--fs-0);
 }
 
@@ -96,6 +97,23 @@
   border: 0;
   padding: 0;
   cursor: pointer;
+}
+
+/* Always visible, so touch users can reach the terminal too. */
+.terminal {
+  flex: none;
+  font: inherit;
+  font-size: var(--fs-0);
+  font-weight: 700;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.terminal:hover {
+  text-decoration: underline;
 }
 
 @media (max-width: 880px) {

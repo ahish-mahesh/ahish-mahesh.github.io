@@ -12,6 +12,8 @@ export interface Profile {
   readonly availability: string;
   readonly workAuthorization: string;
   readonly award: string;
+  /** The PS5 joke from the README: footer aside and the hidden `ps5` command. */
+  readonly signOff: string;
 }
 
 export interface Project {

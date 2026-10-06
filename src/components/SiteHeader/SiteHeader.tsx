@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { profile } from '../../content/profile.ts';
 import { useActiveSectionId } from '../../hooks/ActiveSectionContext.ts';
+import { TERMINAL_TRIGGER_ID } from '../../terminal/terminalContext.ts';
+import { useTerminal } from '../../terminal/useTerminal.ts';
 import { sectionCommands } from '../sections.ts';
 import { ThemeSwitch } from '../ThemeSwitch/ThemeSwitch.tsx';
 import styles from './SiteHeader.module.css';
@@ -21,6 +23,7 @@ export function SiteHeader() {
   const active = useActiveSectionId() ?? 'top';
   const [hovered, setHovered] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+  const terminal = useTerminal();
   const headerRef = useRef<HTMLElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
@@ -61,6 +64,19 @@ export function SiteHeader() {
           <span aria-hidden="true">:{cwd}$ </span>
           <TypedCommand text={hovered ?? sectionCommands[active]} />
         </div>
+        <button
+          type="button"
+          id={TERMINAL_TRIGGER_ID}
+          className={styles.terminal}
+          aria-label="open terminal"
+          aria-haspopup="dialog"
+          aria-expanded={terminal.open}
+          onClick={terminal.toggle}
+          onMouseEnter={terminal.preload}
+          onFocus={terminal.preload}
+        >
+          <span aria-hidden="true">&gt;_</span>
+        </button>
         <button
           type="button"
           ref={toggleRef}

@@ -1,0 +1,166 @@
+/* Drop-down console. Sits above the sticky header (z-index 10), below the CRT layer. */
+
+.panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  height: 60vh;
+  background: var(--bg);
+  color: var(--fg);
+  border-bottom: 1px solid var(--border);
+  transform: translateY(-100%);
+  visibility: hidden;
+  /* Closing: slide up, then hide so nothing inside stays focusable. */
+  transition:
+    transform 180ms ease-in,
+    visibility 0s linear 180ms;
+}
+
+.panel[data-open='true'] {
+  transform: none;
+  visibility: visible;
+  transition: transform 180ms ease-out;
+}
+
+/* The first open mounts the panel already open; start it from above so it still slides. */
+@starting-style {
+  .panel[data-open='true'] {
+    transform: translateY(-100%);
+  }
+}
+
+/* Small screens: full height, so the on-screen keyboard cannot cover the input. */
+@media (max-width: 719.98px) {
+  .panel {
+    height: 100dvh;
+    border-bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .panel[data-open='true'] {
+    transition: none;
+  }
+}
+
+.bar {
+  flex: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.barInner,
+.column {
+  width: min(var(--measure), 100%);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.barInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 2ch;
+}
+
+/* Smaller text on the children, not the box: `ch` widths must match the output column. */
+.hint,
+.close {
+  font-size: var(--fs-0);
+}
+
+.hint {
+  color: var(--muted);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.close {
+  flex: none;
+  font-family: inherit;
+  line-height: inherit;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.scroller {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Equal gutters keep the column centred under the bar when the scrollbar shows. */
+  scrollbar-gutter: stable both-edges;
+}
+
+.column {
+  padding-top: var(--space-1);
+  padding-bottom: var(--space-1);
+}
+
+/* Long lines scroll sideways inside the log, never the page. */
+.log {
+  overflow-x: auto;
+}
+
+.line,
+.pre {
+  min-height: var(--rhythm);
+  font-variant-ligatures: none;
+}
+
+.line {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.pre {
+  white-space: pre;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.accent {
+  color: var(--accent);
+}
+
+/* No AA-checked red token, so errors are bold foreground. */
+.error {
+  color: var(--fg);
+  font-weight: 700;
+}
+
+.inputRow {
+  display: flex;
+  align-items: baseline;
+}
+
+.prompt {
+  flex: none;
+  color: var(--accent);
+  white-space: pre;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  /* 16px or more stops iOS zooming in on focus. */
+  font: inherit;
+  font-variant-ligatures: none;
+  color: var(--fg);
+  caret-color: var(--accent);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}

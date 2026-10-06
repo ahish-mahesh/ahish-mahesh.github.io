@@ -15,3 +15,5 @@ Every borrowed component or idea, with its source and license. No code is copied
 | ASCII character ramp, from three's AsciiEffect / jsascii (idea only) | https://github.com/mrdoob/three.js/blob/dev/examples/jsm/effects/AsciiEffect.js | MIT     |
 | ASCII-rendered interactive 3D model (idea only)                      | https://github.com/hosseinb1111/ASCII-Character                                 | MIT     |
 | 3D hero that never blocks the text (idea only)                       | https://github.com/HamishMW/portfolio                                           | MIT     |
+| Terminal command registry, autocomplete and history (idea only)      | https://github.com/satnaing/terminal-portfolio                                  | MIT     |
+| Quake-style drop-down console (idea only)                            | https://github.com/1j01/simple-console                                          | MIT     |

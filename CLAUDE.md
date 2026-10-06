@@ -125,7 +125,7 @@ Single page, anchor-linked sections. Order matters (recruiter-first):
 ```
 [ nav: ahish@montreal:~$  · work · projects · about · resume · theme ]
 1. hero
-2. what I'm building     (projects, htop-style)
+2. what I've shipped     (projects, htop-style)
 3. where I've worked     (git log timeline)
 4. what I reach for      (neofetch skills)
 5. saying hello          (contact + work authorization)
@@ -149,7 +149,7 @@ Single page, anchor-linked sections. Order matters (recruiter-first):
 - **Background:** subtle cursor-reactive character/dot grid (react-bits `CursorGrid` or `DotGrid`), low contrast, behind hero only or fixed behind the page. Disabled under reduced motion.
 - **Boot sequence (optional, first visit only):** ~1.2s fake boot log (`[ ok ] mounting postgres cluster`, `[ ok ] loading whisper.cpp`, `[ ok ] ahish.service started`) overlaid on the hero, skippable with any key or click, never shown again (localStorage flag), never shown under reduced motion. **The hero content must already be rendered underneath it.**
 
-### 5.2 Projects: "what I'm building" as an `htop` process list
+### 5.2 Projects: "what I've shipped" as an `htop` process list
 
 Each project is a row like a running process, with bars that animate in (once, on scroll into view) to the project's **real** metric. Click/Enter expands a case study panel (accessible disclosure: `button` + `aria-expanded`).
 
@@ -293,7 +293,7 @@ The site should sound like Ahish's GitHub README: understated, specific, dry hum
 
 - **No em-dashes.** Use commas, periods, or restructure.
 - **No buzzwords or filler**: "passionate", "leverage", "synergy", "results-driven", "cutting-edge", "rockstar", "ninja".
-- Lowercase section headings ("what I'm building", "where I've worked", "what I reach for", "saying hello").
+- Lowercase section headings ("what I've shipped", "where I've worked", "what I reach for", "saying hello").
 - First person, active voice. Collaborative, not solo-hero: credit collaborators where they exist (agent-goal was built with two others; the migration was a team of three).
 - **No invented facts.** Every number on the site comes from §5 of this document. If a new claim is needed, ask Ahish.
 - If the site mentions AI tooling used to build it (e.g. a "built with" footer line), name **Claude Code** explicitly.

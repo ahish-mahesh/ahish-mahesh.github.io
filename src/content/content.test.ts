@@ -83,3 +83,15 @@ describe('projects', () => {
     }
   });
 });
+
+describe('profile facts', () => {
+  const { profile } = profileModule;
+
+  it('lists now, before, school, status in order', () => {
+    expect(profile.facts.map((f) => f.key)).toEqual(['now', 'before', 'school', 'status']);
+  });
+
+  it('reuses the status text exactly', () => {
+    expect(profile.facts[3]?.value).toBe(profile.status);
+  });
+});

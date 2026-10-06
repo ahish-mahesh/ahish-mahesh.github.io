@@ -18,7 +18,25 @@
   text-transform: none;
 }
 
-.dot {
+.facts {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+/* Each row is a two-column grid so the values hang under themselves, not under the key. */
+.fact {
+  display: grid;
+  grid-template-columns: 7ch minmax(0, 1fr);
+  column-gap: 1ch;
+}
+
+.fact dt,
+.fact dd {
+  margin: 0;
+}
+
+.fact[data-key='status'] dt {
   color: var(--accent);
 }
 

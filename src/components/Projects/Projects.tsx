@@ -6,6 +6,7 @@ import { MigrationPanel } from '../MigrationPanel/MigrationPanel.tsx';
 import { PipelineDiagram } from '../PipelineDiagram/PipelineDiagram.tsx';
 import { PROJECT_HASH_PREFIX as HASH_PREFIX, projectButtonId } from '../sections.ts';
 import { Section } from '../Section/Section.tsx';
+import { ProcessBar } from './ProcessBar.tsx';
 import styles from './Projects.module.css';
 
 function hashSlug(): string | undefined {
@@ -15,35 +16,14 @@ function hashSlug(): string | undefined {
   return projects.some((p) => p.slug === slug) ? slug : undefined;
 }
 
-function Bullets({ project }: { project: Project }) {
-  return (
-    <ul className={cx('prose', styles.bullets)}>
-      {project.bullets.map((b) => (
-        <li key={b}>{b}</li>
-      ))}
-    </ul>
-  );
-}
-
-function Featured({ project }: { project: Project }) {
-  const headingId = projectButtonId(project.slug);
-  return (
-    <article id={`project-${project.slug}`} aria-labelledby={headingId} className={styles.featured}>
-      <div className={styles.featuredText}>
-        <p className={cx(styles.label, 'muted')}>KLA Corporation</p>
-        <h3 id={headingId} tabIndex={-1} className={styles.headline}>
-          {project.headline}
-        </h3>
-        <p className={styles.metric}>{project.metric}</p>
-        <Bullets project={project} />
-        <p>
-          <span className="muted">stack: </span>
-          {project.stack.join(' · ')}
-        </p>
-      </div>
-      <MigrationPanel />
-    </article>
-  );
+/** The first project (the KLA migration) is open on first render; a hash adds its row. */
+function initialOpen(): ReadonlySet<string> {
+  const open = new Set<string>();
+  const [first] = projects;
+  if (first) open.add(first.slug);
+  const slug = hashSlug();
+  if (slug) open.add(slug);
+  return open;
 }
 
 interface RowProps {
@@ -78,39 +58,58 @@ function Row({ project, open, onToggle, onReveal }: RowProps) {
 
   return (
     <li id={`project-${project.slug}`} className={styles.row}>
-      <div className={styles.rowText}>
-        <p className={cx(styles.label, 'muted')}>{project.name}</p>
-        <h3 className={styles.headline}>{project.headline}</h3>
-        <p className="prose">{project.summary}</p>
+      <div className={styles.head}>
+        <h3 className={styles.heading}>
+          <button
+            type="button"
+            id={projectButtonId(project.slug)}
+            className={styles.button}
+            aria-expanded={open}
+            aria-controls={panelId}
+            onClick={onToggle}
+          >
+            <span className={cx(styles.pid, 'muted')}>{project.pid}</span>
+            <span className={styles.name}>{project.name}</span>
+            <span aria-hidden="true" className={styles.stack}>
+              {project.stack.join(' ')}
+            </span>
+            <ProcessBar />
+            <span className={styles.metric}>{project.metric}</span>
+          </button>
+        </h3>
+        {/* Outside the button so the heading stays short; the button's ::after stretches over this. */}
+        <div className={styles.describe}>
+          <p className="prose muted">{project.headline}</p>
+        </div>
       </div>
-      <div className={styles.rowMeta}>
-        <p className={styles.metric}>{project.metric}</p>
-        <p className="muted">{(project.fullStack ?? project.stack).join(' · ')}</p>
-        {project.repo ? (
-          <p>
-            <a href={project.repo} rel="noreferrer">
-              source on github
-            </a>
-          </p>
-        ) : null}
-      </div>
-      <button
-        type="button"
-        id={projectButtonId(project.slug)}
-        className={styles.button}
-        aria-expanded={open}
-        aria-controls={panelId}
-        onClick={onToggle}
-      >
-        <span aria-hidden="true">{open ? '[-] ' : '[+] '}</span>
-        details <span className="visually-hidden">{`for ${project.name}`}</span>
-      </button>
       <div
         id={panelId}
         ref={panelRef}
-        className={cx(styles.panel, project.visual === 'pipeline' && styles.panelWithVisual)}
+        className={cx(
+          styles.panel,
+          project.visual === 'migration' && styles.panelMigration,
+          project.visual === 'pipeline' && styles.panelPipeline,
+        )}
       >
-        <Bullets project={project} />
+        <div className={styles.panelText}>
+          <ul className={cx('prose', styles.bullets)}>
+            {project.bullets.map((b) => (
+              <li key={b}>{b}</li>
+            ))}
+          </ul>
+          <p>
+            <span className="muted">stack: </span>
+            {(project.fullStack ?? project.stack).join(' · ')}
+          </p>
+          {project.repo ? (
+            <p>
+              <a href={project.repo} rel="noreferrer">
+                source on github
+              </a>
+            </p>
+          ) : null}
+        </div>
+        {project.visual === 'migration' ? <MigrationPanel /> : null}
         {project.visual === 'pipeline' && project.diagram ? (
           <PipelineDiagram source={project.diagram} caption={project.diagramCaption} />
         ) : null}
@@ -120,11 +119,7 @@ function Row({ project, open, onToggle, onReveal }: RowProps) {
 }
 
 export function Projects() {
-  const [featured, ...rest] = projects;
-  const [openSlugs, setOpenSlugs] = useState<ReadonlySet<string>>(() => {
-    const slug = hashSlug();
-    return new Set(slug ? [slug] : []);
-  });
+  const [openSlugs, setOpenSlugs] = useState<ReadonlySet<string>>(initialOpen);
 
   useEffect(() => {
     const onHashChange = () => {
@@ -151,41 +146,52 @@ export function Projects() {
 
   return (
     <Section id="projects" title="what I've shipped">
-      {featured ? <Featured project={featured} /> : null}
-      <ul className={styles.rows}>
-        {rest.map((p) => (
-          <Row
-            key={p.slug}
-            project={p}
-            open={openSlugs.has(p.slug)}
-            onToggle={() => {
-              toggle(p.slug);
-            }}
-            onReveal={() => {
-              reveal(p.slug);
-            }}
-          />
-        ))}
-      </ul>
-      <details className={styles.archive}>
-        <summary className={styles.archiveSummary}>
-          {`${String(archive.length)} smaller projects`}
-        </summary>
+      <div className={styles.list}>
+        <p className={cx(styles.status, 'muted')}>
+          {`Tasks: ${String(projects.length)} total; sorted by impact`}
+        </p>
+        <div aria-hidden="true" className={cx(styles.header, 'muted')}>
+          <span>PID</span>
+          <span>NAME</span>
+          <span className={styles.headerStack}>STACK</span>
+          <span>STATE</span>
+          <span>METRIC</span>
+        </div>
         <ul>
-          {archive.map((a) => (
-            <li key={a.name}>
-              {a.repo ? (
-                <a href={a.repo} rel="noreferrer">
-                  {a.name}
-                </a>
-              ) : (
-                a.name
-              )}
-              {a.description ? <span className="muted">{` · ${a.description}`}</span> : null}
-            </li>
+          {projects.map((p) => (
+            <Row
+              key={p.slug}
+              project={p}
+              open={openSlugs.has(p.slug)}
+              onToggle={() => {
+                toggle(p.slug);
+              }}
+              onReveal={() => {
+                reveal(p.slug);
+              }}
+            />
           ))}
         </ul>
-      </details>
+        <details className={styles.archive}>
+          <summary className={styles.archiveSummary}>
+            {`${String(archive.length)} smaller projects`}
+          </summary>
+          <ul>
+            {archive.map((a) => (
+              <li key={a.name}>
+                {a.repo ? (
+                  <a href={a.repo} rel="noreferrer">
+                    {a.name}
+                  </a>
+                ) : (
+                  a.name
+                )}
+                {a.description ? <span className="muted">{` · ${a.description}`}</span> : null}
+              </li>
+            ))}
+          </ul>
+        </details>
+      </div>
     </Section>
   );
 }

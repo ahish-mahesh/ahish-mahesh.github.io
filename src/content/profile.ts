@@ -1,12 +1,20 @@
 import type { Profile } from './types.ts';
 
+const status =
+  'Open to full-time roles from January 2027 in Montreal or Ontario. Open work permit, no sponsorship needed.';
+
 export const profile: Profile = {
   name: 'Ahish Mahesh',
   oneLiner: 'Backend engineer. C++ and C#/.NET in production, plus the database tier underneath.',
   background:
     "Back end developer at Vffice. Software engineer at KLA from 2021 to 2024. CS master's at Concordia, finishing December 2026.",
-  status:
-    'Open to full-time roles from January 2027 in Montreal or Ontario. Open work permit, no sponsorship needed.',
+  status,
+  facts: [
+    { key: 'now', value: 'back end developer, Vffice' },
+    { key: 'before', value: 'software engineer, KLA, 2021 to 2024' },
+    { key: 'school', value: "CS master's, Concordia, finishing December 2026" },
+    { key: 'status', value: status },
+  ],
   email: 'ahish.mahesh@gmail.com',
   links: {
     github: 'https://github.com/ahish-mahesh',

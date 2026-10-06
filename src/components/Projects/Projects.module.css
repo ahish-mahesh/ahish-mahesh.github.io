@@ -1,33 +1,133 @@
-.featured {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-4);
-  padding-bottom: var(--space-3);
+.list {
+  container-type: inline-size;
+  /* Whole-ch columns so the table lines up on the character grid. */
+  --col-pid: 4ch;
+  --col-name: 17ch;
+  --col-stack: 28ch;
+  --col-bar: 20ch;
+  --col-gap: 2ch;
+  --row-pad: 1ch;
+  --indent: calc(var(--row-pad) + var(--col-pid) + var(--col-gap));
+  --row-hi: var(--accent);
+  --row-ring: var(--fg);
 }
 
-.featuredText {
-  display: grid;
-  gap: var(--rhythm);
-  align-content: start;
+.status {
+  padding-bottom: var(--space-1);
 }
 
-.featured > * {
-  min-width: 0;
+/* Desktop only; the stacked layout has no columns to label. */
+.header {
+  display: none;
 }
 
-.label {
-  font-size: var(--fs-0);
+.heading {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
 }
 
-.headline {
-  font-size: var(--fs-3);
-  line-height: calc(var(--rhythm) * 1.5);
-  text-transform: none;
+.row {
+  padding-block: calc(var(--rhythm) / 2);
+}
+
+.head {
+  position: relative;
+}
+
+/* Stacked (narrow) layout: line 1 pid + name, line 2 bar + metric. */
+.button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  /* The ::after hit area anchors to .head, so it also covers the description. */
+  position: static;
+}
+
+.button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* htop-style selection: reverse video on hover, focus and when expanded. Stacked rows
+   highlight the pid + name line only, so an open row is not a solid block on a phone. */
+.button:hover :is(.pid, .name),
+.button:focus-visible :is(.pid, .name),
+.button[aria-expanded='true'] :is(.pid, .name) {
+  background: var(--row-hi);
+  color: var(--bg);
+}
+
+.button:focus-visible {
+  outline-color: var(--row-ring);
+}
+
+.pid,
+.name {
+  padding-right: 1ch;
+}
+
+.name {
+  color: var(--accent);
   overflow-wrap: anywhere;
 }
 
-.metric {
+.stack,
+.headerStack {
+  display: none;
+}
+
+.bar {
+  white-space: pre;
   color: var(--accent);
+  margin-right: 1ch;
+}
+
+/* Force the bar onto its own line, under the name. */
+.bar::before {
+  content: '\A';
+  white-space: pre;
+}
+
+/* One unit: wraps under the bar, flush left, rather than splitting mid-phrase. */
+.metric {
+  display: inline-block;
+  color: var(--fg);
+}
+
+.describe p {
+  margin: 0;
+}
+
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--rhythm) var(--space-3);
+  margin: var(--rhythm) 0;
+}
+
+/* A hidden="until-found" panel keeps its box (find-in-page needs it), so drop its spacing while closed. */
+.panel[hidden] {
+  margin: 0;
+  gap: 0;
+}
+
+/* Let wide figures scroll inside themselves instead of stretching the grid. */
+.panel > * {
+  min-width: 0;
+}
+
+.panelText {
+  display: grid;
+  gap: var(--rhythm);
+  align-content: start;
 }
 
 .bullets li {
@@ -44,57 +144,8 @@
   color: var(--muted);
 }
 
-.rows {
-  display: block;
-}
-
-.row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--rhythm) var(--space-4);
-  padding: var(--space-2) 0;
-  border-top: 1px solid var(--border);
-}
-
-.row > * {
-  min-width: 0;
-}
-
-.rowText,
-.rowMeta {
-  display: grid;
-  gap: var(--rhythm);
-  align-content: start;
-}
-
-.button {
-  justify-self: start;
-  padding: 0;
-  background: none;
-  border: 0;
-  font: inherit;
-  color: var(--accent);
-  cursor: pointer;
-  text-align: left;
-}
-
-.button:hover {
-  color: var(--fg);
-}
-
-.panel {
-  display: grid;
-  gap: var(--rhythm);
-}
-
-/* A hidden="until-found" panel keeps its box (find-in-page needs it), so cancel its row gap while closed. */
-.panel[hidden] {
-  margin-top: calc(var(--rhythm) * -1);
-}
-
 .archive {
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--border);
+  margin-top: calc(var(--rhythm) * 2);
 }
 
 .archiveSummary {
@@ -125,49 +176,104 @@
   color: var(--muted);
 }
 
-@media (max-width: 719.98px) {
-  .headline {
-    font-size: var(--fs-2);
-    line-height: var(--rhythm);
+/* Table layout without the STACK column. */
+@container (min-width: 64ch) {
+  .header,
+  .button {
+    display: grid;
+    grid-template-columns: var(--col-pid) var(--col-name) var(--col-bar) minmax(0, 1fr);
+    column-gap: var(--col-gap);
+    padding-inline: var(--row-pad);
   }
 
+  .header {
+    padding-bottom: var(--space-1);
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Table rows: the whole row is the selection bar. */
+  .button:hover,
+  .button:focus-visible,
+  .button[aria-expanded='true'] {
+    background: var(--row-hi);
+    color: var(--bg);
+    --fg: var(--bg);
+    --accent: var(--bg);
+    --muted: var(--bg);
+  }
+
+  .pid,
+  .name,
+  .bar {
+    padding-right: 0;
+    margin-right: 0;
+  }
+
+  .bar::before {
+    content: none;
+  }
+
+  .metric {
+    display: block;
+  }
+
+  .describe {
+    margin-left: var(--indent);
+  }
+
+  .panel {
+    margin-left: var(--indent);
+  }
+
+  .panel[hidden] {
+    margin: 0;
+  }
+}
+
+/* All five columns once the container is wide enough for the stack tokens and a metric. */
+@container (min-width: 100ch) {
+  .header,
+  .button {
+    grid-template-columns:
+      var(--col-pid) var(--col-name) var(--col-stack) var(--col-bar)
+      minmax(0, 1fr);
+  }
+
+  .stack,
+  .headerStack {
+    display: block;
+  }
+}
+
+@media (max-width: 719.98px) {
   /* 44px tap targets without changing the line rhythm. */
-  .button,
+  .button {
+    min-height: 44px;
+  }
+
   .archiveSummary {
     display: block;
     min-height: 44px;
     padding-block: calc((44px - var(--rhythm)) / 2);
   }
 
-  .archive li {
-    padding-block: calc((44px - var(--rhythm)) / 2);
-  }
-
+  .archive li,
   .archive a {
     padding-block: calc((44px - var(--rhythm)) / 2);
   }
 }
 
 @media (min-width: 1000px) {
-  .featured {
+  .panelMigration {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-
-  .row {
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-  }
-
-  .button,
-  .panel {
-    grid-column: 1 / -1;
+    align-items: start;
   }
 }
 
 /* Bullets beside the diagram once the wide (78ch) pipeline fits next to readable prose. */
 @media (min-width: 1100px) {
-  .panelWithVisual {
+  .panelPipeline {
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: var(--rhythm) var(--space-3);
     align-items: start;
   }
 }

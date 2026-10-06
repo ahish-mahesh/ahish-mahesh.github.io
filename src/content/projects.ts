@@ -14,7 +14,7 @@ export const projects: readonly Project[] = [
     slug: 'kla-pg-migration',
     name: 'kla-pg-migration',
     title: 'KLA: MSSQL to multi-node PostgreSQL migration',
-    headline: 'KLA: MSSQL to multi-node PostgreSQL migration',
+    headline: 'A zero-code move from an MSSQL high-availability cluster to multi-node PostgreSQL.',
     stack: ['PostgreSQL', 'Babelfish', 'T-SQL'],
     metric: '1,200 queries, -25% cost',
     visual: 'migration',
@@ -31,14 +31,13 @@ export const projects: readonly Project[] = [
     slug: 'agent-notes-cpp',
     name: 'agent-notes-cpp',
     title: 'agent-notes-cpp',
-    headline: 'Lecture and meeting summaries that never leave your laptop',
+    headline: 'Records a lecture or meeting and returns a summary, entirely on your laptop.',
     stack: ['C++17', 'whisper.cpp', 'llama.cpp'],
     fullStack: ['C++17', 'whisper.cpp', 'llama.cpp', 'SQLite', 'RtAudio/PortAudio', 'CMake'],
     metric: '16x real-time',
     summary:
       'Records a lecture or meeting and returns a summary. Nothing leaves the machine: Whisper and Qwen 2.5 0.5B run locally.',
     bullets: [
-      'Records a lecture or meeting and returns a summary.',
       'Nothing leaves the machine: Whisper and Qwen 2.5 0.5B run locally.',
       '16x real-time transcription via a multi-threaded pipeline.',
       'Audio to summary in under 2 seconds on an M-series MacBook.',
@@ -55,14 +54,14 @@ export const projects: readonly Project[] = [
     slug: 'agent-goal',
     name: 'agent-goal',
     title: 'agent-goal',
-    headline: 'Goal tracker with a planning agent',
+    headline:
+      'A goal tracker whose planning agent argues you down from "get fit" to something you can do on a Tuesday.',
     stack: ['React Native', 'Supabase', 'Gemini'],
     fullStack: ['React Native/Expo', 'TypeScript', 'Supabase (Auth + RLS)', 'Gemini API'],
     metric: '<100ms sync',
     summary:
       'A goal tracker with a planning agent that argues you down from "get fit" to something you can do on a Tuesday. iOS and Android.',
     bullets: [
-      'A goal tracker with a planning agent that argues you down from "get fit" to something you can do on a Tuesday.',
       'Runs on iOS and Android.',
       'Built with two other people; the Supabase schema, the row-level security policies and the sync layer are mine.',
       '<100ms cross-device sync for 1,000+ goals and analytics events.',
@@ -74,14 +73,13 @@ export const projects: readonly Project[] = [
     slug: 'project5k-bot',
     name: 'project5k-bot',
     title: 'project5k-bot',
-    headline: 'A Discord bot that nags friends about the gym',
+    headline: 'A Discord bot that nags friends about the gym, running TinyLlama on the host.',
     stack: ['Python', 'llama-cpp', 'TinyLlama'],
     fullStack: ['Python', 'discord.py', 'llama-cpp-python', 'Firebase Firestore'],
     metric: '3s -> 900ms',
     summary:
       'A Discord bot that nags friends about the gym. Runs TinyLlama on the host rather than calling an API.',
     bullets: [
-      'A Discord bot that nags friends about the gym.',
       "Runs TinyLlama on the host rather than calling an API, so nobody's workout log goes anywhere.",
       'Metal acceleration on Apple Silicon took inference from 3s to 900ms.',
     ],

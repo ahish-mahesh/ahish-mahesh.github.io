@@ -1,5 +1,4 @@
 import { profile } from '../../content/profile.ts';
-import { cx } from '../cx.ts';
 import { DecodeText } from '../DecodeText/DecodeText.tsx';
 import { HeroVisual } from './HeroVisual.tsx';
 import styles from './Hero.module.css';
@@ -18,13 +17,14 @@ export function Hero() {
           <DecodeText text={profile.name} />
         </h1>
         <p>{profile.oneLiner}</p>
-        <p className="muted">{profile.background}</p>
-        <p className={cx('prose', styles.status)}>
-          <span aria-hidden="true" className={styles.dot}>
-            ●
-          </span>{' '}
-          {profile.status}
-        </p>
+        <dl className={styles.facts}>
+          {profile.facts.map((f) => (
+            <div key={f.key} className={styles.fact} data-key={f.key}>
+              <dt className="muted">{f.key}</dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))}
+        </dl>
         <ul className={styles.buttons}>
           {buttons.map((b) => (
             <li key={b.label}>

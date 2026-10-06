@@ -5,6 +5,8 @@ export interface Profile {
   readonly background: string;
   /** Hiring status: when, where, and work authorization in one sentence. */
   readonly status: string;
+  /** Hero key/value block. */
+  readonly facts: readonly { readonly key: string; readonly value: string }[];
   readonly email: string;
   readonly links: {
     readonly github: string;

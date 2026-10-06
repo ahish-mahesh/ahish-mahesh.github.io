@@ -2,6 +2,8 @@ import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 import { archive, projects } from '../../content/projects.ts';
+import { mockReducedMotion } from '../../test/matchMedia.ts';
+import { bar } from '../MigrationPanel/bar.ts';
 import { Projects } from './Projects.tsx';
 
 afterEach(() => {
@@ -11,38 +13,45 @@ afterEach(() => {
 const [kla, ...rest] = projects;
 if (!kla) throw new Error('no projects');
 
+function rowButton(name: string): HTMLElement {
+  return screen.getByRole('button', { name: new RegExp(name) });
+}
+
+function panelOf(button: HTMLElement): HTMLElement {
+  const panel = document.getElementById(button.getAttribute('aria-controls') ?? '');
+  if (!panel) throw new Error('missing panel');
+  return panel;
+}
+
 describe('Projects', () => {
-  it.each(projects)('shows the $name headline and metric without interaction', (project) => {
+  it('shows the status line', () => {
     render(<Projects />);
-    expect(screen.getByRole('heading', { name: project.headline, level: 3 })).toBeVisible();
-    expect(screen.getAllByText(project.metric)[0]).toBeVisible();
+    expect(screen.getByText('Tasks: 4 total; sorted by impact')).toBeVisible();
   });
 
-  it.each(rest)('shows the $name summary without interaction', (project) => {
+  it.each(projects)('shows the $name name, metric and headline without interaction', (project) => {
     render(<Projects />);
-    expect(screen.getByText(project.summary)).toBeVisible();
+    expect(rowButton(project.name)).toHaveTextContent(project.name);
+    expect(rowButton(project.name)).toHaveTextContent(project.metric);
+    expect(screen.getByText(project.headline)).toBeVisible();
   });
 
-  it('shows the KLA bullets and migration panel without interaction', () => {
+  it('opens the KLA row by default, with bullets and the migration figure', () => {
     render(<Projects />);
-    for (const b of kla.bullets) expect(screen.getByText(b)).toBeVisible();
-    const figure = screen.getByRole('figure');
-    expect(within(figure).getByText(/^illustrative:/)).toBeVisible();
-    expect(screen.queryByRole('button', { name: /kla-pg-migration/ })).not.toBeInTheDocument();
+    const button = rowButton(kla.name);
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+    const panel = panelOf(button);
+    expect(panel).not.toHaveAttribute('hidden');
+    for (const b of kla.bullets) expect(within(panel).getByText(b)).toBeVisible();
+    expect(within(panel).getByText(/^illustrative:/)).toBeVisible();
   });
 
-  it('labels the featured article with the headline', () => {
-    render(<Projects />);
-    expect(screen.getByRole('article', { name: kla.headline })).toBeInTheDocument();
-  });
-
-  it.each(rest)('toggles the $name details panel', async (project) => {
+  it.each(rest)('starts $name closed and toggles it', async (project) => {
     const user = userEvent.setup();
     render(<Projects />);
-    const button = screen.getByRole('button', { name: new RegExp(`details for ${project.name}`) });
+    const button = rowButton(project.name);
+    const panel = panelOf(button);
     expect(button).toHaveAttribute('aria-expanded', 'false');
-    const panel = document.getElementById(button.getAttribute('aria-controls') ?? '');
-    if (!panel) throw new Error('missing panel');
     expect(panel).toHaveAttribute('hidden', 'until-found');
     await user.click(button);
     expect(button).toHaveAttribute('aria-expanded', 'true');
@@ -56,7 +65,7 @@ describe('Projects', () => {
   it('toggles with the keyboard', async () => {
     const user = userEvent.setup();
     render(<Projects />);
-    const button = screen.getByRole('button', { name: /details for agent-goal/ });
+    const button = rowButton('agent-goal');
     button.focus();
     await user.keyboard('{Enter}');
     expect(button).toHaveAttribute('aria-expanded', 'true');
@@ -65,24 +74,30 @@ describe('Projects', () => {
   it('shows the pipeline figure in the agent-notes panel', async () => {
     const user = userEvent.setup();
     render(<Projects />);
-    await user.click(screen.getByRole('button', { name: /details for agent-notes-cpp/ }));
-    const figure = within(
-      document.getElementById('panel-agent-notes-cpp') ?? document.body,
-    ).getByRole('figure');
-    expect(within(figure).getByText(/^pipeline:/)).toBeVisible();
+    const button = rowButton('agent-notes-cpp');
+    await user.click(button);
+    expect(within(panelOf(button)).getByText(/^pipeline:/)).toBeVisible();
+  });
+
+  it('lists the full stack and source link in an open panel', () => {
+    render(<Projects />);
+    window.location.hash = '#project-agent-goal';
+    act(() => {
+      window.dispatchEvent(new HashChangeEvent('hashchange'));
+    });
+    const panel = panelOf(rowButton('agent-goal'));
+    expect(within(panel).getByText(/Supabase \(Auth \+ RLS\)/)).toBeVisible();
+    expect(within(panel).getByRole('link', { name: 'source on github' })).toHaveAttribute(
+      'href',
+      'https://github.com/ahish-mahesh/agent-goal',
+    );
   });
 
   it('opens the row named in the hash on load', () => {
     window.location.hash = '#project-agent-goal';
     render(<Projects />);
-    expect(screen.getByRole('button', { name: /details for agent-goal/ })).toHaveAttribute(
-      'aria-expanded',
-      'true',
-    );
-    expect(screen.getByRole('button', { name: /details for project5k-bot/ })).toHaveAttribute(
-      'aria-expanded',
-      'false',
-    );
+    expect(rowButton('agent-goal')).toHaveAttribute('aria-expanded', 'true');
+    expect(rowButton('project5k-bot')).toHaveAttribute('aria-expanded', 'false');
   });
 
   it('opens a row on hashchange', () => {
@@ -91,21 +106,34 @@ describe('Projects', () => {
       window.location.hash = '#project-project5k-bot';
       window.dispatchEvent(new HashChangeEvent('hashchange'));
     });
-    expect(screen.getByRole('button', { name: /details for project5k-bot/ })).toHaveAttribute(
-      'aria-expanded',
-      'true',
-    );
+    expect(rowButton('project5k-bot')).toHaveAttribute('aria-expanded', 'true');
   });
 
   it('opens a closed row when the browser finds text inside it', () => {
     render(<Projects />);
-    const button = screen.getByRole('button', { name: /details for agent-goal/ });
-    const panel = document.getElementById(button.getAttribute('aria-controls') ?? '');
-    if (!panel) throw new Error('missing panel');
+    const button = rowButton('agent-goal');
     act(() => {
-      panel.dispatchEvent(new Event('beforematch'));
+      panelOf(button).dispatchEvent(new Event('beforematch'));
     });
     expect(button).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('renders every bar full under reduced motion', () => {
+    mockReducedMotion();
+    render(<Projects />);
+    for (const p of projects) {
+      const barEl = rowButton(p.name).querySelector('span[aria-hidden]:not([class*="stack"])');
+      expect(barEl?.textContent).toBe(bar(1));
+    }
+  });
+
+  it('starts bars empty, at full width, before they scroll into view', () => {
+    render(<Projects />);
+    for (const p of projects) {
+      const barEl = rowButton(p.name).querySelector('span[aria-hidden]:not([class*="stack"])');
+      expect(barEl?.textContent).toBe(bar(0));
+      expect(barEl?.textContent).toHaveLength(bar(1).length);
+    }
   });
 
   it('keeps the archive collapsed until its summary is clicked', async () => {

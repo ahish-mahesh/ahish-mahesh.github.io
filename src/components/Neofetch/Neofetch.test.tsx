@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { skills } from '../../content/skills.ts';
+import { neofetchTitle, skills } from '../../content/skills.ts';
 import { Neofetch } from './Neofetch.tsx';
 
 describe('Neofetch', () => {
@@ -27,8 +27,19 @@ describe('Neofetch', () => {
     expect(pre).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('renders exactly 3 colour blocks', () => {
+  it('renders the title', () => {
     render(<Neofetch />);
-    expect(screen.getByTestId('color-blocks').children).toHaveLength(3);
+    expect(screen.getByText(neofetchTitle)).toBeInTheDocument();
+  });
+
+  it('renders 7 colour blocks in theme order', () => {
+    render(<Neofetch />);
+    const kids = Array.from(screen.getByTestId('color-blocks').children) as HTMLElement[];
+    expect(kids).toHaveLength(7);
+    expect(kids.map((k) => k.getAttribute('style'))).toEqual(
+      ['--bg', '--fg', '--muted', '--accent', '--num', '--ident', '--border'].map(
+        (v) => `background: var(${v});`,
+      ),
+    );
   });
 });

@@ -24,10 +24,18 @@
   text-decoration: underline;
 }
 
+/* A comment line in contact.txt: `# note:` in mono, the permit itself in prose so it reads
+   easily. The text hangs under itself, not under the marker. */
 .auth {
-  color: var(--fg);
-  border-left: 1px solid var(--fg);
-  padding-left: 2ch;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 1ch;
+  align-items: baseline;
+}
+
+.comment {
+  color: var(--muted);
+  white-space: nowrap;
 }
 
 .item {

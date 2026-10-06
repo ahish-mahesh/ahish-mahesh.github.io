@@ -37,10 +37,51 @@ describe('GitLogTimeline', () => {
     expect(screen.getByText(experience[0]?.bullets[0] ?? '')).toBeVisible();
   });
 
-  it('marks the newest entry as now, without git decorations', () => {
+  it('renders each graph label in a <time> element', () => {
+    const { container } = render(<GitLogTimeline />);
+    const times = [...container.querySelectorAll('button time')];
+    expect(times.map((t) => t.textContent)).toEqual(experience.map((e) => e.graphLabel));
+    experience.forEach((e, i) => {
+      expect(times[i]?.getAttribute('datetime')).toBe(e.start);
+    });
+  });
+
+  it('decorates the first commit with HEAD -> main and the award with a tag, aria-hidden', () => {
+    const { container } = render(<GitLogTimeline />);
+    const decor = [...container.querySelectorAll('button [aria-hidden="true"]')].filter((el) =>
+      /^\(.*\)\s*$/.test(el.textContent),
+    );
+    expect(decor.map((el) => el.textContent.trim())).toEqual([
+      '(HEAD -> main)',
+      '(tag: hackathon-2024)',
+    ]);
+    expect(toggleAt('vffice').textContent).not.toContain('now');
+  });
+
+  it('shows the date range and location in the expanded panel', () => {
+    render(<GitLogTimeline />);
+    const panel = panelOf(toggleAt('vffice'));
+    const first = panel.querySelector('p');
+    expect(first?.querySelector('time')?.textContent).toBe(experience[0]?.dateLabel);
+    expect(first?.textContent).toContain(experience[0]?.location ?? '');
+  });
+
+  it('shows a [+] / [-] marker on desktop rows that flips with aria-expanded', () => {
+    render(<GitLogTimeline />);
+    const closed = toggleAt('concordia-ta');
+    const open = toggleAt('vffice');
+    const marker = (b: HTMLElement) => b.querySelector('[aria-hidden="true"]:last-child');
+    expect(marker(closed)?.textContent).toBe('[+]');
+    expect(marker(open)?.textContent).toBe('[-]');
+    fireEvent.click(closed);
+    expect(marker(closed)?.textContent).toBe('[-]');
+  });
+
+  it('keeps the now suffix and HEAD decoration on the narrow first commit', () => {
+    mockMatchMedia((q) => q === NARROW_QUERY);
     const { container } = render(<GitLogTimeline />);
     expect(screen.getAllByText(/· now/)).toHaveLength(1);
-    expect(container.textContent).not.toContain('HEAD');
+    expect(toggleAt('vffice').textContent).toContain('(HEAD -> main)');
     expect(container.textContent).not.toContain('tag:');
   });
 
@@ -55,9 +96,9 @@ describe('GitLogTimeline', () => {
     });
   });
 
-  it('shows an aria-hidden [+] / [-] marker on a narrow screen only', () => {
+  it('shows an aria-hidden [+] / [-] marker on a narrow screen too', () => {
     mockMatchMedia((q) => q === NARROW_QUERY);
-    const { container, unmount } = render(<GitLogTimeline />);
+    const { container } = render(<GitLogTimeline />);
     const markers = () =>
       [...container.querySelectorAll('button [aria-hidden="true"]')].filter((el) =>
         /^\[[+-]\]$/.test(el.textContent),
@@ -67,11 +108,6 @@ describe('GitLogTimeline', () => {
     const btn = toggleAt('concordia-ta');
     fireEvent.click(btn);
     expect(btn.querySelector('[aria-hidden="true"]')?.textContent).toBe('[-]');
-    unmount();
-
-    mockMatchMedia(() => false);
-    const desktop = render(<GitLogTimeline />);
-    expect(desktop.container.textContent).not.toMatch(/\[[+-]\]/);
   });
 
   it('keeps find-in-page working on a narrow screen', () => {
@@ -111,10 +147,13 @@ describe('GitLogTimeline', () => {
     );
   });
 
-  it('draws fork and merge rows around the side branch', () => {
+  it('draws an aria-hidden fork and merge diagonal around the side branch', () => {
     const { container } = render(<GitLogTimeline />);
-    expect(container.textContent).toContain(' \\');
-    expect(container.textContent).toContain(' /');
+    const forks = container.querySelectorAll('svg');
+    expect(forks).toHaveLength(2);
+    forks.forEach((f) => {
+      expect(f.getAttribute('aria-hidden')).toBe('true');
+    });
   });
 
   it('renders an aria-hidden spine', () => {

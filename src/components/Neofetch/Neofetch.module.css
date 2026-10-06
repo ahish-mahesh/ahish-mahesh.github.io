@@ -1,3 +1,8 @@
+/* Size container for the grid (a container cannot query itself). */
+.wrap {
+  container-type: inline-size;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -8,6 +13,10 @@
   color: var(--accent);
   font-size: var(--fs-0);
   font-weight: 700;
+  white-space: pre;
+  /* ~15ch wide: fits in 288px of content at 320px viewport with room to spare. */
+  max-width: 100%;
+  overflow: hidden;
   font-variant-ligatures: none;
   font-feature-settings:
     'liga' 0,
@@ -36,13 +45,13 @@
 
 .blocks span {
   display: block;
-  width: 2ch;
+  width: 3ch;
   height: 1lh;
 }
 
-/* The logo shows only in the single-column layout (720-1099px); beside the timeline it costs a third of the column. */
-.logo {
-  display: none;
+/* bg swatch gets an outline so it shows against the page background. */
+.blocks span:first-child {
+  box-shadow: inset 0 0 0 1px var(--border);
 }
 
 .row {
@@ -59,19 +68,21 @@
   overflow-wrap: anywhere;
 }
 
-@media (max-width: 479.98px) {
+/* Narrow column (a phone, or beside the timeline on desktop): key above its values, so the
+   values get the full width instead of wrapping one item per line. */
+@container (max-width: 47.99ch) {
   .row {
     grid-template-columns: 1fr;
   }
 }
 
-@media (min-width: 720px) and (max-width: 1099.98px) {
-  .logo {
-    display: block;
-  }
-
+/* Logo (15ch) + 3ch gap + info (11ch key column + values) needs about 60ch;
+   below that the logo stacks above the title. Queries the .wrap container, not the
+   viewport, because the section sits in a narrow column beside the timeline on desktop. */
+@container (min-width: 60ch) {
   .grid {
     grid-template-columns: auto 1fr;
-    column-gap: var(--space-2);
+    column-gap: 3ch;
+    align-items: start;
   }
 }

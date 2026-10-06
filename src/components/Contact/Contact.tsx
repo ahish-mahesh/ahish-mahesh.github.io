@@ -1,5 +1,4 @@
 import { profile } from '../../content/profile.ts';
-import { cx } from '../cx.ts';
 import { sectionPrompts } from '../sections.ts';
 import { Section } from '../Section/Section.tsx';
 import styles from './Contact.module.css';
@@ -37,7 +36,12 @@ export function Contact() {
           </p>
           <p className="prose">{profile.location}</p>
           <p className="prose">{profile.availability}</p>
-          <p className={cx('prose', styles.auth)}>{profile.workAuthorization}</p>
+          <p className={styles.auth}>
+            <span aria-hidden="true" className={styles.comment}>
+              # note:
+            </span>
+            <span className="prose">{profile.workAuthorization}</span>
+          </p>
         </div>
         <ul className={styles.links}>
           {links.map((l) => (

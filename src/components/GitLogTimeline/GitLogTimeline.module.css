@@ -18,7 +18,6 @@
   z-index: 0;
 }
 
-.fork,
 .graph {
   color: var(--accent);
   white-space: pre;
@@ -26,9 +25,16 @@
   line-height: var(--rhythm);
 }
 
+/* |\ and |/ rows. The diagonal joins the spine's x (0.5ch) to the side column's x (2.5ch)
+   over exactly one rhythm row, so it meets both lines with no gap. */
 .fork {
   display: block;
-  width: 4ch;
+  width: 3ch;
+  height: var(--rhythm);
+  overflow: visible;
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1px;
 }
 
 .commit {
@@ -42,12 +48,13 @@
   z-index: 1;
 }
 
-/* The spine is the main branch, so side rows draw no | glyphs of their own.
-   A side commit gets a short line from its * down to the closing /. */
+/* The spine is the main branch, so side rows draw no | glyphs of their own (that would
+   double the line). The side branch gets its own 1px line, full row height, from the opening
+   diagonal to the closing one; the * has a bg and covers it. */
 .side::after {
   content: '';
   position: absolute;
-  top: var(--rhythm);
+  top: 0;
   bottom: 0;
   left: calc(2.5ch - 0.5px);
   border-left: 1px solid var(--muted);
@@ -66,9 +73,7 @@
 }
 
 .toggle {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-2);
+  display: block;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -92,17 +97,42 @@
   text-decoration: underline;
 }
 
-/* Desktop: org · role on the left, the dates on the right, one line each. */
+/* Desktop: `<hash> (refs) org · role [+]`. The hash column is 8ch + a 1ch space, and wrapped
+   lines hang at 9ch so the message never runs back under the *. */
 .titleRow {
+  display: block;
   min-width: 0;
+  padding-left: 9ch;
+  text-indent: -9ch;
 }
 
-.date {
-  white-space: nowrap;
+.hash {
+  display: inline-block;
+  min-width: 8ch;
+  text-indent: 0;
+}
+
+.decor {
+  white-space: pre-wrap;
+}
+
+.head {
+  color: var(--ident);
+  font-weight: 700;
+}
+
+.branch {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.tagLabel {
+  color: var(--num);
 }
 
 /* Number role: dates. Extra specificity beats the global .muted class. */
-.toggle .date,
+.hash,
+.tagLabel,
 .sub2 .nowrap {
   color: var(--num);
 }
@@ -141,7 +171,14 @@
 /* Phone: two-line commits, a 2ch graph column, and a visible [+] / [-] marker.
    Line 1: org (decorations) [+]. Line 2: role · date, muted. The component renders
    this markup only when the narrow media query matches (see GitLogTimeline.tsx). */
-.disclosure,
+.disclosure {
+  display: inline-block;
+  margin-left: 1ch;
+  text-indent: 0;
+  white-space: nowrap;
+  color: var(--accent);
+}
+
 .line {
   display: none;
 }
@@ -156,16 +193,8 @@
   }
 
   .toggle {
-    display: block;
     min-height: calc(var(--rhythm) * 2);
     overflow-wrap: normal;
-  }
-
-  .disclosure {
-    display: inline;
-    margin-left: 1ch;
-    white-space: nowrap;
-    color: var(--accent);
   }
 
   .line {

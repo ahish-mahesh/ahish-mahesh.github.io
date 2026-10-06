@@ -39,18 +39,17 @@ Each phase ends with `bun run check`, headless-Chrome screenshots of all three t
 - Weight scale: 700 headings, 500 labels/commands, 400 everything else.
 - Plex only for long prose (case-study bullets, contact paragraphs), never in the hero.
 
-## Phase C: tmux status bar (desktop, min-width 881px)
+## Phase C: tmux status bar (skipped)
 
-- Fixed bottom bar: `[ahish] 0:shipped* 1:worked 2:tools 3:hello` (window list doubles as
-  section nav + active state), right side: live Montreal time and the deployed short git hash
-  (Vite `define` at build time).
-- Replaces SiteFooter on desktop; phones keep the footer. Footer landmark for screen readers.
-  Reserve its height so it never covers content (CLS < 0.05).
+Dropped on 2026-10-06: the sticky header prompt (`ahish@montreal:~/work$ git log`) already
+shows the current section and doubles as navigation, so a bottom bar would repeat it.
 
 ## Phase D: section-specific details
 
-- Git log: full `*`, `|`, `|\`, `|/` graph drawn on scroll; dates in the hash column.
-- Neofetch: mini ASCII cylinder logo at every width; 8-swatch colour row from Phase B tokens.
+- Git log: `* <date> (decorations) org · role` oneline rows, connected `|\` / `|/` side
+  branch, full date range moved into the expanded panel.
+- Neofetch: `AM` logo at every width (beside or above via container query); 7-swatch
+  palette row from the theme tokens.
 - Contact: `cat contact.txt` framing; work permit line as a `# note:` comment.
 
 ## Phase E: polish

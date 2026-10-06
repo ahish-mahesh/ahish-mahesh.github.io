@@ -17,6 +17,53 @@ const FADE_IN = {
 
 const DEFAULT_OPEN: readonly string[] = ['vffice', 'kla-engineer'];
 
+/** Git-style ref decorations, e.g. (HEAD -> main, tag: hackathon-2024). Decorative only. */
+function Decorations({ head = false, tag }: { head?: boolean; tag?: string | undefined }) {
+  if (!head && !tag) return null;
+  return (
+    <span aria-hidden="true" className={styles.decor}>
+      <span className="muted">(</span>
+      {head ? (
+        <>
+          <span className={styles.head}>HEAD</span>
+          <span className="muted">{' -> '}</span>
+          <span className={styles.branch}>main</span>
+        </>
+      ) : null}
+      {head && tag ? <span className="muted">, </span> : null}
+      {tag ? (
+        <>
+          <span className="muted">tag: </span>
+          <span className={styles.tagLabel}>{tag}</span>
+        </>
+      ) : null}
+      <span className="muted">)</span>{' '}
+    </span>
+  );
+}
+
+/** The |\ and |/ rows: a diagonal from the spine (0.5ch) to the side column (2.5ch). */
+function Fork({ dir }: { dir: 'open' | 'close' }) {
+  const open = dir === 'open';
+  return (
+    <svg
+      aria-hidden="true"
+      focusable="false"
+      className={styles.fork}
+      viewBox="0 0 3 1"
+      preserveAspectRatio="none"
+    >
+      <line
+        x1={open ? 0.5 : 2.5}
+        y1="0"
+        x2={open ? 2.5 : 0.5}
+        y2="1"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}
+
 export function GitLogTimeline() {
   const reduced = useReducedMotion();
   const listRef = useRef<HTMLOListElement>(null);
@@ -75,14 +122,10 @@ export function GitLogTimeline() {
             const headingId = `exp-${e.id}`;
             const panelId = `exp-panel-${e.id}`;
             const isOpen = open.has(e.id);
-            const now = i === 0 ? <span className="muted">{' · now'}</span> : null;
+            const now = i === 0 && narrow ? <span className="muted">{' · now'}</span> : null;
             return (
               <li key={e.id} className={styles.item}>
-                {opens ? (
-                  <span aria-hidden="true" className={styles.fork}>
-                    {' \\'}
-                  </span>
-                ) : null}
+                {opens ? <Fork dir="open" /> : null}
                 <div className={cx(styles.commit, e.branch === 'side' && styles.sideCommit)}>
                   <span
                     aria-hidden="true"
@@ -108,35 +151,43 @@ export function GitLogTimeline() {
                           <>
                             <span className={styles.line}>
                               <span className={styles.org}>{e.org}</span>
+                              {i === 0 ? (
+                                <>
+                                  {' '}
+                                  <Decorations head />
+                                </>
+                              ) : null}
                               <span aria-hidden="true" className={styles.disclosure}>
                                 {isOpen ? '[-]' : '[+]'}
                               </span>
                             </span>
                             <span className={cx(styles.line, styles.sub2)}>
-                              {e.role}&nbsp;· <span className={styles.nowrap}>{e.graphLabel}</span>
+                              {e.role}&nbsp;·{' '}
+                              <time dateTime={e.start} className={styles.nowrap}>
+                                {e.graphLabel}
+                              </time>
                               {now}
                             </span>
                           </>
                         ) : (
-                          <>
-                            <span className={styles.titleRow}>
-                              <span className={styles.org}>{e.org}</span> · {e.role}
-                              {now}
+                          <span className={styles.titleRow}>
+                            <time dateTime={e.start} className={styles.hash}>
+                              {e.graphLabel}
+                            </time>{' '}
+                            <Decorations head={i === 0} tag={e.tag?.label} />
+                            <span className={styles.org}>{e.org}</span> · {e.role}
+                            <span aria-hidden="true" className={styles.disclosure}>
+                              {isOpen ? '[-]' : '[+]'}
                             </span>
-                            <span className={cx(styles.date, 'muted')}>{e.dateLabel}</span>
-                          </>
+                          </span>
                         )}
                       </button>
                     </h3>
                     <div id={panelId} ref={panelRef(e.id, isOpen)} className={styles.panel}>
-                      {narrow ? (
-                        <p>
-                          <time dateTime={e.start}>{e.dateLabel}</time>
-                          {e.location ? <span className="muted">{` · ${e.location}`}</span> : null}
-                        </p>
-                      ) : e.location ? (
-                        <p className="muted">{e.location}</p>
-                      ) : null}
+                      <p>
+                        <time dateTime={e.start}>{e.dateLabel}</time>
+                        {e.location ? <span className="muted">{` · ${e.location}`}</span> : null}
+                      </p>
                       {e.note ? <p className="muted">{e.note}</p> : null}
                       <ul className={cx('prose', styles.bullets)}>
                         {e.bullets.map((b) => (
@@ -157,11 +208,7 @@ export function GitLogTimeline() {
                     </div>
                   </article>
                 </div>
-                {closes ? (
-                  <span aria-hidden="true" className={styles.fork}>
-                    {' /'}
-                  </span>
-                ) : null}
+                {closes ? <Fork dir="close" /> : null}
               </li>
             );
           })}

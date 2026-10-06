@@ -201,6 +201,13 @@
     display: block;
   }
 
+  /* 44px tap target (24 + 21 = 45) without changing the line rhythm. */
+  .article p > a {
+    display: inline-block;
+    padding-block: calc((44px - var(--rhythm)) / 2);
+    margin-block: calc((44px - var(--rhythm)) / -2);
+  }
+
   .nowrap {
     white-space: nowrap;
   }

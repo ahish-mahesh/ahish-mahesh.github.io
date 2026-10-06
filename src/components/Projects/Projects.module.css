@@ -261,9 +261,17 @@
     padding-block: calc((44px - var(--rhythm)) / 2);
   }
 
-  .archive li,
-  .archive a {
+  .archive li {
     padding-block: calc((44px - var(--rhythm)) / 2);
+  }
+
+  /* Inline padding does not grow the line box, so the link becomes inline-block (24 + 21 = 45). */
+  .archive a,
+  .panelText p a {
+    display: inline-block;
+    text-indent: 0;
+    padding-block: calc((44px - var(--rhythm)) / 2);
+    margin-block: calc((44px - var(--rhythm)) / -2);
   }
 }
 

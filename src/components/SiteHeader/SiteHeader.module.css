@@ -133,6 +133,7 @@
     display: inline-flex;
     align-items: center;
     align-self: stretch;
+    min-width: 44px;
   }
 
   .cwd {

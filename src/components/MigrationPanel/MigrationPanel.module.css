@@ -58,6 +58,12 @@
 
 /* Phones: the label wraps above its value, and the code shrinks to fit its longest line. */
 @media (max-width: 719.98px) {
+  /* 44px tap target (24 + 2 x 10.5 = 45) without changing the line rhythm. */
+  .replay {
+    padding-block: calc((44px - var(--rhythm)) / 2);
+    margin-block: calc((44px - var(--rhythm)) / -2);
+  }
+
   .figure {
     container-type: inline-size;
   }

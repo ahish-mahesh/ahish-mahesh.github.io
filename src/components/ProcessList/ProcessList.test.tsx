@@ -1,4 +1,5 @@
-import { act, render, screen, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
+import { LazyMotion, domAnimation } from 'motion/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 import { archive, projects } from '../../content/projects.ts';
@@ -96,7 +97,7 @@ describe('ProcessList', () => {
 
   it('shows the task count status line', () => {
     render(<ProcessList />);
-    expect(screen.getByText(/^Tasks: 4 total, 4 complete; sorted by impact$/)).toBeVisible();
+    expect(screen.getByText(/^Tasks: 4 total, 0 complete; sorted by impact$/)).toBeVisible();
   });
 
   describe('bars', () => {
@@ -106,17 +107,92 @@ describe('ProcessList', () => {
       ).map((el) => el.textContent);
     }
 
-    it('shows the full bar immediately under reduced motion', () => {
-      mockReducedMotion();
-      const { container } = render(<ProcessList />);
-      expect(barTexts(container)).toEqual(projects.map(() => bar(1)));
-    });
+    const KLA = 0;
 
-    it('starts empty, at full width, until the row scrolls into view', () => {
+    function rowButton(name: RegExp): HTMLElement {
+      return screen.getByRole('button', { name });
+    }
+
+    it('starts every bar empty, at full width', () => {
       const { container } = render(<ProcessList />);
       const texts = barTexts(container);
       expect(texts).toEqual(projects.map(() => bar(0)));
       expect(texts[0]).toHaveLength(bar(1).length);
+    });
+
+    it('starts every bar empty under reduced motion', () => {
+      mockReducedMotion();
+      const { container } = render(<ProcessList />);
+      expect(barTexts(container)).toEqual(projects.map(() => bar(0)));
+    });
+
+    it('fills only the opened row and keeps it full after collapsing and reopening', async () => {
+      mockReducedMotion();
+      const user = userEvent.setup();
+      const { container } = render(<ProcessList />);
+      const button = rowButton(/kla-pg-migration/);
+      const expected = projects.map((_, i) => (i === KLA ? bar(1) : bar(0)));
+      await user.click(button);
+      expect(barTexts(container)).toEqual(expected);
+      await user.click(button);
+      expect(button).toHaveAttribute('aria-expanded', 'false');
+      expect(barTexts(container)).toEqual(expected);
+      await user.click(button);
+      expect(button).toHaveAttribute('aria-expanded', 'true');
+      expect(barTexts(container)).toEqual(expected);
+    });
+
+    it('counts opened rows in the status line, and keeps counting after collapse', async () => {
+      const user = userEvent.setup();
+      render(<ProcessList />);
+      expect(screen.getByText(/^Tasks: 4 total, 0 complete;/)).toBeVisible();
+      const button = rowButton(/kla-pg-migration/);
+      await user.click(button);
+      expect(screen.getByText(/^Tasks: 4 total, 1 complete;/)).toBeVisible();
+      await user.click(button);
+      expect(screen.getByText(/^Tasks: 4 total, 1 complete;/)).toBeVisible();
+    });
+
+    it('fills the bar when the browser finds text inside a closed row', () => {
+      mockReducedMotion();
+      const { container } = render(<ProcessList />);
+      const panel = document.getElementById('panel-kla-pg-migration');
+      if (!panel) throw new Error('missing panel');
+      act(() => {
+        panel.dispatchEvent(new Event('beforematch'));
+      });
+      expect(barTexts(container)[KLA]).toBe(bar(1));
+    });
+
+    it('fills the bar of a row opened by the hash on load', () => {
+      mockReducedMotion();
+      window.location.hash = '#project-kla-pg-migration';
+      const { container } = render(<ProcessList />);
+      expect(barTexts(container)).toEqual(projects.map((_, i) => (i === KLA ? bar(1) : bar(0))));
+      expect(screen.getByText(/^Tasks: 4 total, 1 complete;/)).toBeVisible();
+    });
+
+    it('animates to full after opening a row when motion is on', async () => {
+      const user = userEvent.setup();
+      const { container } = render(
+        <LazyMotion features={domAnimation} strict>
+          <ProcessList />
+        </LazyMotion>,
+      );
+      const seen: string[] = [];
+      const observer = new MutationObserver(() => {
+        seen.push(barTexts(container)[KLA] ?? '');
+      });
+      observer.observe(container, { childList: true, characterData: true, subtree: true });
+      await user.click(rowButton(/kla-pg-migration/));
+      await waitFor(
+        () => {
+          expect(barTexts(container)[KLA]).toBe(bar(1));
+        },
+        { timeout: 2000 },
+      );
+      observer.disconnect();
+      for (const text of seen) expect(text).toHaveLength(bar(1).length);
     });
   });
 });

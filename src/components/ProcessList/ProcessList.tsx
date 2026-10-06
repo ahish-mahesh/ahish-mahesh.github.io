@@ -19,13 +19,13 @@ function hashSlug(): string | undefined {
 
 interface ProcessRowProps {
   project: Project;
-  index: number;
   open: boolean;
+  started: boolean;
   onToggle: () => void;
   onReveal: () => void;
 }
 
-function ProcessRow({ project, index, open, onToggle, onReveal }: ProcessRowProps) {
+function ProcessRow({ project, open, started, onToggle, onReveal }: ProcessRowProps) {
   const panelId = `panel-${project.slug}`;
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -60,7 +60,7 @@ function ProcessRow({ project, index, open, onToggle, onReveal }: ProcessRowProp
         >
           <span className={cx(styles.pid, 'muted')}>{project.pid}</span>
           <span className={styles.name}>{project.name}</span>
-          <ProcessBar index={index} />
+          <ProcessBar run={started} />
           <span className={styles.metric}>{project.metric}</span>
         </button>
       </h3>
@@ -96,12 +96,22 @@ export function ProcessList() {
     const slug = hashSlug();
     return new Set(slug ? [slug] : []);
   });
+  // Slugs opened at least once this visit; their bars stay full.
+  const [started, setStarted] = useState<ReadonlySet<string>>(() => {
+    const slug = hashSlug();
+    return new Set(slug ? [slug] : []);
+  });
+
+  const markStarted = (slug: string) => {
+    setStarted((s) => (s.has(slug) ? s : new Set(s).add(slug)));
+  };
 
   useEffect(() => {
     const onHashChange = () => {
       const slug = hashSlug();
       if (slug) {
         setOpenSlugs((s) => new Set(s).add(slug));
+        setStarted((s) => (s.has(slug) ? s : new Set(s).add(slug)));
       }
     };
     window.addEventListener('hashchange', onHashChange);
@@ -111,10 +121,12 @@ export function ProcessList() {
   }, []);
 
   const reveal = (slug: string) => {
+    markStarted(slug);
     setOpenSlugs((s) => (s.has(slug) ? s : new Set(s).add(slug)));
   };
 
   const toggle = (slug: string) => {
+    if (!openSlugs.has(slug)) markStarted(slug);
     setOpenSlugs((s) => {
       const next = new Set(s);
       if (!next.delete(slug)) next.add(slug);
@@ -126,7 +138,7 @@ export function ProcessList() {
     <Section id="projects" title="what I'm building">
       <div className={styles.list}>
         <p className={cx(styles.status, 'muted')}>
-          {`Tasks: ${String(projects.length)} total, ${String(projects.length)} complete; sorted by impact`}
+          {`Tasks: ${String(projects.length)} total, ${String(started.size)} complete; sorted by impact`}
         </p>
         <div aria-hidden="true" className={cx(styles.header, 'muted')}>
           <span>PID</span>
@@ -135,12 +147,12 @@ export function ProcessList() {
           <span>METRIC</span>
         </div>
         <ul>
-          {projects.map((p, i) => (
+          {projects.map((p) => (
             <ProcessRow
               key={p.slug}
               project={p}
-              index={i}
               open={openSlugs.has(p.slug)}
+              started={started.has(p.slug)}
               onToggle={() => {
                 toggle(p.slug);
               }}

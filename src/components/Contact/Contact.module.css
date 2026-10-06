@@ -30,6 +30,25 @@
   overflow-wrap: anywhere;
 }
 
+/* Phones: label above the link so a URL never breaks mid-word, and 44px tap targets. */
+@media (max-width: 719.98px) {
+  .item {
+    grid-template-columns: 1fr;
+  }
+
+  /* The extra tap height hangs below the text, so each label stays next to its link. */
+  .item > a {
+    display: flex;
+    align-items: flex-start;
+    min-height: 44px;
+  }
+
+  .emailLink {
+    display: inline-block;
+    padding-block: 10px;
+  }
+}
+
 @media (min-width: 720px) {
   .emailLink {
     font-size: var(--fs-3);

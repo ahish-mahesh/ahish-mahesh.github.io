@@ -1,43 +1,33 @@
-import { lazy, Suspense, useCallback, useEffect, useState, useSyncExternalStore } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { isSlowDevice, supportsWebGL } from '../../hero3d/capabilities.ts';
 import { StaticFallback } from '../../hero3d/StaticFallback.tsx';
+import { NARROW_QUERY, useMediaQuery } from '../../hooks/useMediaQuery.ts';
 import { useReducedMotion } from '../../hooks/useReducedMotion.ts';
 import styles from './Hero.module.css';
 
 const AsciiHero = lazy(() => import('../../hero3d/AsciiHero.tsx'));
 
-const WIDE_QUERY = '(min-width: 720px)';
-
-function subscribeWide(onChange: () => void): () => void {
-  if (typeof window.matchMedia !== 'function') return () => undefined;
-  const mql = window.matchMedia(WIDE_QUERY);
-  mql.addEventListener('change', onChange);
-  return () => {
-    mql.removeEventListener('change', onChange);
-  };
-}
-
-function getWide(): boolean {
-  return typeof window.matchMedia === 'function' && window.matchMedia(WIDE_QUERY).matches;
-}
-
-function useWide(): boolean {
-  return useSyncExternalStore(subscribeWide, getWide, () => false);
-}
+/**
+ * Characters per CSS pixel. Keep in sync with --ascii-res in Hero.module.css: the static
+ * frame and the live render must share one cell size or the crossfade jumps.
+ * Phones use twice the desktop density on a half-size stage, so the grid is the same.
+ */
+const WIDE_RESOLUTION = 0.15;
+const NARROW_RESOLUTION = 0.3;
 
 // A demotion (frame budget blown) lasts the rest of the session.
 let demotedForSession = false;
 
 /** Decorative hero art: a static ASCII frame, upgraded to the live 3D render when it is safe to. */
 export function HeroVisual({ className }: { className?: string }) {
-  const wide = useWide();
+  const narrow = useMediaQuery(NARROW_QUERY);
   const reduceMotion = useReducedMotion();
   const [demoted, setDemoted] = useState(demotedForSession);
   const [capable] = useState(() => supportsWebGL() && !isSlowDevice());
   const [ready, setReady] = useState(false);
   const [live, setLive] = useState(false);
 
-  const want3d = wide && !reduceMotion && !demoted && capable;
+  const want3d = !reduceMotion && !demoted && capable;
 
   useEffect(() => {
     if (!want3d) return;
@@ -82,12 +72,18 @@ export function HeroVisual({ className }: { className?: string }) {
 
   return (
     <div aria-hidden="true" className={className}>
-      <StaticFallback hidden={live} className={styles.frame} />
-      {want3d && ready ? (
-        <Suspense fallback={null}>
-          <AsciiHero onFirstFrame={onFirstFrame} onDemote={onDemote} />
-        </Suspense>
-      ) : null}
+      <div className={styles.stage}>
+        <StaticFallback hidden={live} className={styles.frame} />
+        {want3d && ready ? (
+          <Suspense fallback={null}>
+            <AsciiHero
+              onFirstFrame={onFirstFrame}
+              onDemote={onDemote}
+              resolution={narrow ? NARROW_RESOLUTION : WIDE_RESOLUTION}
+            />
+          </Suspense>
+        ) : null}
+      </div>
     </div>
   );
 }

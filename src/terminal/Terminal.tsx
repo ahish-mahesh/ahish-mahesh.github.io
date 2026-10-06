@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { useFocusTrap } from '../hooks/useFocusTrap.ts';
+import { TOUCH_QUERY, useMediaQuery } from '../hooks/useMediaQuery.ts';
 import { useTheme } from '../theme/useTheme.ts';
 import { execute } from './execute.ts';
 import { emptyHistory, historyNext, historyPrev, pushHistory } from './history.ts';
@@ -14,6 +15,12 @@ const PROMPT = 'ahish@montreal:~$ ';
 const BANNER: Line = [
   { text: 'type help to see commands. tab completes, esc closes.', tone: 'muted' },
 ];
+const TOUCH_BANNER: Line = [
+  { text: 'type help to see commands, or tap one below.', tone: 'muted' },
+];
+
+/** Real, non-hidden commands. Tapping one runs it as if typed. */
+const CHIPS = ['help', 'ls', 'whoami', 'experience', 'contact'] as const;
 
 interface Entry {
   readonly id: number;
@@ -69,7 +76,16 @@ function LineView({ line }: { line: Line }) {
 /** The drop-down console. Lazy-loaded; stays mounted once opened so scrollback survives. */
 export default function Terminal({ open, crt, setCrt, onClose, goTo }: TerminalProps) {
   const { theme, themes, setTheme } = useTheme();
-  const [entries, setEntries] = useState<readonly Entry[]>(() => [{ id: 0, line: BANNER }]);
+  const touch = useMediaQuery(TOUCH_QUERY);
+  const [entries, setEntries] = useState<readonly Entry[]>(() => [
+    {
+      id: 0,
+      line:
+        typeof window.matchMedia === 'function' && window.matchMedia(TOUCH_QUERY).matches
+          ? TOUCH_BANNER
+          : BANNER,
+    },
+  ]);
   const [value, setValue] = useState('');
   const [history, setHistory] = useState(emptyHistory);
   const [session, setSession] = useState<Session | null>(null);
@@ -127,8 +143,7 @@ export default function Terminal({ open, crt, setCrt, onClose, goTo }: TerminalP
     { text: input },
   ];
 
-  const run = () => {
-    const input = value;
+  const run = (input: string = value) => {
     const nextHistory = pushHistory(history, input);
     let cleared = false;
     let nextSession = session;
@@ -167,7 +182,13 @@ export default function Terminal({ open, crt, setCrt, onClose, goTo }: TerminalP
     setEntries((prev) => (cleared || !echoed ? rest : [...prev, echoed, ...rest]));
     setHistory(nextHistory);
     setSession(nextSession);
-    setValue('');
+    // A chip tap leaves a half-typed command alone.
+    if (input === value) setValue('');
+  };
+
+  const runChip = (name: string) => {
+    run(name);
+    inputRef.current?.focus({ preventScroll: true });
   };
 
   const onKeyDown = (e: ReactKeyboardEvent<HTMLInputElement>) => {
@@ -218,10 +239,10 @@ export default function Terminal({ open, crt, setCrt, onClose, goTo }: TerminalP
             terminal
           </h2>
           <p id="terminal-hint" className={styles.hint}>
-            tab completes, escape closes
+            {touch ? 'tap a command or type one' : 'tab completes, escape closes'}
           </p>
           <button type="button" className={styles.close} onClick={onClose}>
-            <span aria-hidden="true">[esc] </span>close
+            {touch ? null : <span aria-hidden="true">[esc] </span>}close
           </button>
         </div>
       </div>
@@ -232,6 +253,24 @@ export default function Terminal({ open, crt, setCrt, onClose, goTo }: TerminalP
               <LineView key={entry.id} line={entry.line} />
             ))}
           </div>
+          {touch && !session ? (
+            <div role="group" aria-label="commands" className={styles.chips}>
+              {CHIPS.map((name) => (
+                <button
+                  key={name}
+                  type="button"
+                  className={styles.chip}
+                  onClick={() => {
+                    runChip(name);
+                  }}
+                >
+                  <span aria-hidden="true">[ </span>
+                  {name}
+                  <span aria-hidden="true"> ]</span>
+                </button>
+              ))}
+            </div>
+          ) : null}
           <div className={styles.inputRow}>
             <label htmlFor="terminal-input" className="visually-hidden">
               command

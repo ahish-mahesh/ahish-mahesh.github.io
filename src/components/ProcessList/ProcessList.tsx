@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { archive, projects } from '../../content/projects.ts';
+import { NARROW_QUERY, useMediaQuery } from '../../hooks/useMediaQuery.ts';
 import { cx } from '../cx.ts';
 import { PROJECT_HASH_PREFIX as HASH_PREFIX, projectButtonId } from '../sections.ts';
 import type { Project } from '../../content/types.ts';
@@ -20,11 +21,22 @@ interface ProcessRowProps {
   project: Project;
   open: boolean;
   started: boolean;
+  /** Phone layout: the summary shows and the bar fills when it scrolls into view. */
+  narrow: boolean;
   onToggle: () => void;
   onReveal: () => void;
+  onSeen: () => void;
 }
 
-function ProcessRow({ project, open, started, onToggle, onReveal }: ProcessRowProps) {
+function ProcessRow({
+  project,
+  open,
+  started,
+  narrow,
+  onToggle,
+  onReveal,
+  onSeen,
+}: ProcessRowProps) {
   const panelId = `panel-${project.slug}`;
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -49,21 +61,25 @@ function ProcessRow({ project, open, started, onToggle, onReveal }: ProcessRowPr
 
   return (
     <li id={`project-${project.slug}`} className={styles.row}>
-      <h3 className={styles.heading}>
-        <button
-          type="button"
-          id={projectButtonId(project.slug)}
-          className={styles.button}
-          aria-expanded={open}
-          aria-controls={panelId}
-          onClick={onToggle}
-        >
-          <span className={cx(styles.pid, 'muted')}>{project.pid}</span>
-          <span className={styles.name}>{project.name}</span>
-          <ProcessBar run={started} />
-          <span className={styles.metric}>{project.metric}</span>
-        </button>
-      </h3>
+      <div className={styles.head}>
+        <h3 className={styles.heading}>
+          <button
+            type="button"
+            id={projectButtonId(project.slug)}
+            className={styles.button}
+            aria-expanded={open}
+            aria-controls={panelId}
+            onClick={onToggle}
+          >
+            <span className={cx(styles.pid, 'muted')}>{project.pid}</span>
+            <span className={styles.name}>{project.name}</span>
+            <ProcessBar run={started} onSeen={narrow ? onSeen : undefined} />
+            <span className={styles.metric}>{project.metric}</span>
+          </button>
+        </h3>
+        {/* Outside the button so the heading stays short; the button's ::after stretches over this. */}
+        {narrow ? <p className={cx(styles.summary, 'muted')}>{project.summary}</p> : null}
+      </div>
       <div id={panelId} ref={panelRef} className={styles.panel}>
         <p className={cx(styles.label, 'muted')}>{project.title}</p>
         <ul className={styles.bullets}>
@@ -92,6 +108,7 @@ function ProcessRow({ project, open, started, onToggle, onReveal }: ProcessRowPr
 }
 
 export function ProcessList() {
+  const narrow = useMediaQuery(NARROW_QUERY);
   const [openSlugs, setOpenSlugs] = useState<ReadonlySet<string>>(() => {
     const slug = hashSlug();
     return new Set(slug ? [slug] : []);
@@ -136,7 +153,7 @@ export function ProcessList() {
 
   return (
     <Section id="projects" title="what I've shipped">
-      <div className={styles.list}>
+      <div className={cx(styles.list, narrow && styles.narrow)}>
         <p className={cx(styles.status, 'muted')}>
           {`Tasks: ${String(projects.length)} total, ${String(started.size)} complete; sorted by impact`}
         </p>
@@ -153,11 +170,15 @@ export function ProcessList() {
               project={p}
               open={openSlugs.has(p.slug)}
               started={started.has(p.slug)}
+              narrow={narrow}
               onToggle={() => {
                 toggle(p.slug);
               }}
               onReveal={() => {
                 reveal(p.slug);
+              }}
+              onSeen={() => {
+                markStarted(p.slug);
               }}
             />
           ))}

@@ -124,3 +124,50 @@
 .edu li {
   overflow-wrap: anywhere;
 }
+
+/* Phone: two-line commits, a 2ch graph column, and a visible [+] / [-] marker.
+   Line 1: org (decorations) [+]. Line 2: role · date, muted. The component renders
+   this markup only when the narrow media query matches (see GitLogTimeline.tsx). */
+.disclosure,
+.line {
+  display: none;
+}
+
+@media (max-width: 719.98px) {
+  .commit {
+    grid-template-columns: 2ch 1fr;
+  }
+
+  .sideCommit {
+    grid-template-columns: 4ch 1fr;
+  }
+
+  .toggle {
+    min-height: calc(var(--rhythm) * 2);
+    overflow-wrap: normal;
+  }
+
+  .disclosure {
+    display: inline;
+    margin-left: 1ch;
+    white-space: nowrap;
+    color: var(--accent);
+  }
+
+  .line {
+    display: block;
+  }
+
+  .head,
+  .tag {
+    white-space: normal;
+  }
+
+  .nowrap {
+    white-space: nowrap;
+  }
+
+  .sub2 {
+    color: var(--muted);
+  }
+}

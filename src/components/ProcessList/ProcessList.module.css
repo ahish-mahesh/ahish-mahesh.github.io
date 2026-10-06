@@ -155,3 +155,123 @@
     grid-row: auto;
   }
 }
+
+/*
+ * Phone layout (viewport < 720px, set by the `narrow` class). Declared last so it
+ * wins over the container-query desktop rules at equal specificity.
+ * Line 1: pid + name. Line 2: bar + metric (the metric wraps under the bar if it
+ * does not fit). Line 3: the summary. No gutter, no hanging indent.
+ */
+.narrow .head {
+  position: relative;
+  padding: var(--space-1) 0;
+}
+
+.narrow .button {
+  display: block;
+  /* Whole row stays a tap target, even though the summary sits outside the button. */
+  position: static;
+}
+
+/* Stretched hit area: tapping the summary or the padding opens the row too. */
+.narrow .button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* Selection is quiet on a phone: reverse video on the name line only. */
+.narrow .button:hover,
+.narrow .button:focus-visible,
+.narrow .button[aria-expanded='true'] {
+  background: none;
+  color: inherit;
+  --fg: inherit;
+  --accent: inherit;
+  --muted: inherit;
+}
+
+.narrow .pid,
+.narrow .name {
+  display: inline;
+  grid-column: auto;
+}
+
+.narrow .pid {
+  padding-right: 1ch;
+}
+
+.narrow .name {
+  padding-right: 1ch;
+}
+
+.narrow .bar,
+.narrow .metric {
+  grid-column: auto;
+  grid-row: auto;
+}
+
+/* Force the bar onto its own line, under the name. */
+.narrow .bar::before {
+  content: '\A';
+  white-space: pre;
+}
+
+.narrow .bar {
+  margin-right: 1ch;
+}
+
+/* One unit: wraps under the bar, flush left, rather than splitting mid-phrase. */
+.narrow .metric {
+  display: inline-block;
+}
+
+.narrow .button[aria-expanded='true'] .pid,
+.narrow .button[aria-expanded='true'] .name,
+.narrow .button:focus-visible .pid,
+.narrow .button:focus-visible .name {
+  background: var(--row-hi);
+  color: var(--bg);
+}
+
+@media (hover: hover) {
+  .narrow .button:hover .pid,
+  .narrow .button:hover .name {
+    background: var(--row-hi);
+    color: var(--bg);
+  }
+}
+
+.narrow .summary {
+  margin: 0;
+}
+
+/* Keyboard focus ring around the whole row where :has() exists; otherwise the button keeps its own. */
+@supports selector(:has(*)) {
+  .narrow .button:focus-visible {
+    outline: none;
+  }
+
+  .narrow .head:has(.button:focus-visible) {
+    outline: 2px solid var(--row-ring);
+    outline-offset: 2px;
+  }
+}
+
+.narrow .panel {
+  margin-left: 0;
+}
+
+/* Archive: 44px tap targets. */
+.narrow .archiveSummary {
+  padding: calc((44px - var(--rhythm)) / 2) 0;
+}
+
+.narrow .archive li {
+  padding-block: calc((44px - var(--rhythm)) / 2);
+}
+
+/* Inline padding grows the hit area to 44px without changing the line layout. */
+.narrow .archive a {
+  padding-block: calc((44px - var(--rhythm)) / 2);
+}

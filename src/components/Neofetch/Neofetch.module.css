@@ -43,6 +43,13 @@
   height: 1lh;
 }
 
+/* Phones: five lines of logo cost ~130px and say nothing the title does not. */
+@media (max-width: 719.98px) {
+  .logo {
+    display: none;
+  }
+}
+
 @media (min-width: 720px) {
   .grid {
     grid-template-columns: auto 1fr;

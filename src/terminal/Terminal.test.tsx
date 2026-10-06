@@ -2,7 +2,8 @@ import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 import { SiteHeader } from '../components/SiteHeader/SiteHeader.tsx';
-import { mockReducedMotion } from '../test/matchMedia.ts';
+import { mockMatchMedia, mockReducedMotion } from '../test/matchMedia.ts';
+import { TOUCH_QUERY } from '../hooks/useMediaQuery.ts';
 import { ThemeProvider } from '../theme/ThemeProvider.tsx';
 import { TerminalLauncher } from './TerminalLauncher.tsx';
 
@@ -13,8 +14,12 @@ afterEach(() => {
   window.history.replaceState(null, '', window.location.pathname);
 });
 
-function setup() {
-  mockReducedMotion();
+function setup(touch = false) {
+  if (touch) {
+    mockMatchMedia((q) => q === TOUCH_QUERY || q.includes('prefers-reduced-motion: reduce'));
+  } else {
+    mockReducedMotion();
+  }
   const root = document.createElement('div');
   root.id = 'root';
   document.body.append(root);
@@ -246,5 +251,65 @@ describe('Terminal', () => {
     ).toBeNull();
     await user.keyboard('{ArrowUp}');
     expect(input).toHaveValue('\\q');
+  });
+
+  describe('on touch devices', () => {
+    it('shows chips for real commands, a touch hint and no [esc] prefix', async () => {
+      const { user } = setup(true);
+      await user.click(trigger());
+      await commandInput();
+      const group = screen.getByRole('group', { name: 'commands' });
+      const names = within(group)
+        .getAllByRole('button')
+        .map((b) => b.textContent.replace(/[[\]\s]+/g, ' ').trim());
+      expect(names).toEqual(['help', 'ls', 'whoami', 'experience', 'contact']);
+      expect(screen.getByRole('dialog')).toHaveAccessibleDescription('tap a command or type one');
+      expect(screen.getByRole('button', { name: 'close' })).toHaveTextContent(/^close$/);
+    });
+
+    it('runs a command when its chip is tapped and returns focus to the input', async () => {
+      const { user } = setup(true);
+      await user.click(trigger());
+      const input = await commandInput();
+      await user.click(
+        within(screen.getByRole('group', { name: 'commands' })).getByRole('button', {
+          name: 'whoami',
+        }),
+      );
+      expect(log()).toHaveTextContent('ahish@montreal:~$ whoami');
+      expect(input).toHaveFocus();
+      await user.keyboard('{ArrowUp}');
+      expect(input).toHaveValue('whoami');
+    });
+
+    it('keeps a half-typed command when a chip is tapped', async () => {
+      const { user } = setup(true);
+      await user.click(trigger());
+      const input = await commandInput();
+      await user.keyboard('the');
+      await user.click(
+        within(screen.getByRole('group', { name: 'commands' })).getByRole('button', {
+          name: 'help',
+        }),
+      );
+      expect(input).toHaveValue('the');
+    });
+
+    it('hides the chips during a psql session', async () => {
+      const { user } = setup(true);
+      await user.click(trigger());
+      await commandInput();
+      await run(user, 'psql');
+      expect(screen.queryByRole('group', { name: 'commands' })).toBeNull();
+      await run(user, String.raw`\q`);
+      expect(screen.getByRole('group', { name: 'commands' })).toBeInTheDocument();
+    });
+
+    it('does not render chips without touch', async () => {
+      const { user } = setup();
+      await user.keyboard('`');
+      await commandInput();
+      expect(screen.queryByRole('group', { name: 'commands' })).toBeNull();
+    });
   });
 });

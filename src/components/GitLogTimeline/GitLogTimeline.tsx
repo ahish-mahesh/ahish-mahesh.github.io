@@ -1,6 +1,7 @@
 import { m, useScroll, useSpring } from 'motion/react';
 import { useCallback, useRef, useState } from 'react';
 import { education, experience } from '../../content/experience.ts';
+import { NARROW_QUERY, useMediaQuery } from '../../hooks/useMediaQuery.ts';
 import { useReducedMotion } from '../../hooks/useReducedMotion.ts';
 import { cx } from '../cx.ts';
 import { Section } from '../Section/Section.tsx';
@@ -22,8 +23,11 @@ export function GitLogTimeline() {
   });
   const drawn = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
   const fade = reduced ? {} : FADE_IN;
+  const narrow = useMediaQuery(NARROW_QUERY);
+  // Desktop opens the newest commit. A phone starts fully collapsed so the whole
+  // career fits on one screen. Only the first render decides; later resizes keep the state.
   const [open, setOpen] = useState<ReadonlySet<string>>(
-    () => new Set(experience.slice(0, 1).map((e) => e.id)),
+    () => new Set(narrow ? [] : experience.slice(0, 1).map((e) => e.id)),
   );
 
   const toggle = useCallback((id: string) => {
@@ -70,6 +74,20 @@ export function GitLogTimeline() {
             const headingId = `exp-${e.id}`;
             const panelId = `exp-panel-${e.id}`;
             const isOpen = open.has(e.id);
+            const decorations = (
+              <>
+                {i === 0 ? (
+                  <span aria-hidden="true" className={styles.head}>
+                    {' (HEAD -> main)'}
+                  </span>
+                ) : null}
+                {e.tag ? (
+                  <span aria-hidden="true" className={styles.tag}>
+                    {` (tag: ${e.tag.label})`}
+                  </span>
+                ) : null}
+              </>
+            );
             return (
               <li key={e.id} className={styles.item}>
                 {opens ? (
@@ -77,7 +95,7 @@ export function GitLogTimeline() {
                     {' \\'}
                   </span>
                 ) : null}
-                <div className={styles.commit}>
+                <div className={cx(styles.commit, e.branch === 'side' && styles.sideCommit)}>
                   <span
                     aria-hidden="true"
                     className={cx(styles.graph, e.branch === 'side' && styles.side)}
@@ -98,20 +116,28 @@ export function GitLogTimeline() {
                           toggle(e.id);
                         }}
                       >
-                        <span className="muted">{e.graphLabel}</span>{' '}
-                        <span className={styles.title}>
-                          {e.org} · {e.role}
-                        </span>
-                        {i === 0 ? (
-                          <span aria-hidden="true" className={styles.head}>
-                            {' (HEAD -> main)'}
-                          </span>
-                        ) : null}
-                        {e.tag ? (
-                          <span aria-hidden="true" className={styles.tag}>
-                            {` (tag: ${e.tag.label})`}
-                          </span>
-                        ) : null}
+                        {narrow ? (
+                          <>
+                            <span className={styles.line}>
+                              <span className={styles.title}>{e.org}</span>
+                              {decorations}
+                              <span aria-hidden="true" className={styles.disclosure}>
+                                {isOpen ? '[-]' : '[+]'}
+                              </span>
+                            </span>
+                            <span className={cx(styles.line, styles.sub2, styles.title)}>
+                              {e.role}&nbsp;· <span className={styles.nowrap}>{e.graphLabel}</span>
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="muted">{e.graphLabel}</span>{' '}
+                            <span className={styles.title}>
+                              {e.org} · {e.role}
+                            </span>
+                            {decorations}
+                          </>
+                        )}
                       </button>
                     </h3>
                     <div id={panelId} ref={panelRef(e.id, isOpen)} className={styles.panel}>

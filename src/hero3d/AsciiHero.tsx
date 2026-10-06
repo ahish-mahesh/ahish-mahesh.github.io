@@ -7,7 +7,8 @@ import { DbCylinders } from './DbCylinders.tsx';
 import { FrameStats, shouldDemote, shouldRender } from './motion.ts';
 import styles from './AsciiHero.module.css';
 
-const RESOLUTION = 0.15;
+/** Characters per CSS pixel across. Desktop default; HeroVisual passes a finer one on phones. */
+const DEFAULT_RESOLUTION = 0.15;
 const WARMUP_FRAMES = 10;
 const RESUME_SKIP = 2;
 const PERF_LOG_MS = 2000;
@@ -16,12 +17,17 @@ const search = window.location.search;
 const PERF = search.includes('perf');
 const SNAPSHOT = import.meta.env.DEV && search.includes('snapshot');
 
-export interface AsciiHeroProps {
+interface Callbacks {
   onFirstFrame: () => void;
   onDemote: () => void;
 }
 
-interface DriverProps extends AsciiHeroProps {
+export interface AsciiHeroProps extends Callbacks {
+  /** Characters per CSS pixel; must match the static frame's cell (Hero.module.css --ascii-res). */
+  resolution?: number;
+}
+
+interface DriverProps extends Callbacks {
   inView: boolean;
 }
 
@@ -96,7 +102,11 @@ function Driver({ inView, onFirstFrame, onDemote }: DriverProps) {
   return null;
 }
 
-export default function AsciiHero({ onFirstFrame, onDemote }: AsciiHeroProps) {
+export default function AsciiHero({
+  onFirstFrame,
+  onDemote,
+  resolution = DEFAULT_RESOLUTION,
+}: AsciiHeroProps) {
   const wrap = useRef<HTMLDivElement>(null);
   const pre = useRef<HTMLPreElement>(null);
   const inView = useInView(wrap);
@@ -108,7 +118,7 @@ export default function AsciiHero({ onFirstFrame, onDemote }: AsciiHeroProps) {
     <div
       ref={wrap}
       className={styles.wrap}
-      style={{ '--ascii-res': String(RESOLUTION) } as CSSProperties}
+      style={{ '--ascii-res': String(resolution) } as CSSProperties}
     >
       <Canvas
         frameloop="never"
@@ -125,7 +135,7 @@ export default function AsciiHero({ onFirstFrame, onDemote }: AsciiHeroProps) {
         <AsciiPass
           write={write}
           activeClass={styles.active ?? ''}
-          resolution={RESOLUTION}
+          resolution={resolution}
           snapshot={SNAPSHOT}
         />
         <Driver inView={inView} onFirstFrame={onFirstFrame} onDemote={onDemote} />

@@ -11,6 +11,13 @@ html {
   scroll-padding-top: var(--header-h);
 }
 
+@media (max-width: 719.98px) {
+  /* Phones: sections size to their content and scroll freely. */
+  html {
+    scroll-snap-type: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -113,14 +120,20 @@ a {
    --muted (AA on --bg in every theme). Set on the section so children inherit. */
 [data-dim] {
   color: var(--fg);
-  transition:
-    --fg 300ms ease,
-    --accent 300ms ease;
 }
 
-[data-dim='true'] {
-  --fg: var(--muted);
-  --accent: var(--muted);
+/* Narrow screens stay in full colour: half the visible text greyed out reads as broken. */
+@media (min-width: 720px) {
+  [data-dim] {
+    transition:
+      --fg 300ms ease,
+      --accent 300ms ease;
+  }
+
+  [data-dim='true'] {
+    --fg: var(--muted);
+    --accent: var(--muted);
+  }
 }
 
 .muted {

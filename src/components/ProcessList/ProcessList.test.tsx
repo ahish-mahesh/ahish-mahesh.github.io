@@ -1,9 +1,10 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { LazyMotion, domAnimation } from 'motion/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { archive, projects } from '../../content/projects.ts';
-import { mockReducedMotion } from '../../test/matchMedia.ts';
+import { NARROW_QUERY } from '../../hooks/useMediaQuery.ts';
+import { mockMatchMedia, mockReducedMotion } from '../../test/matchMedia.ts';
 import { bar } from './bar.ts';
 import { ProcessList } from './ProcessList.tsx';
 
@@ -193,6 +194,96 @@ describe('ProcessList', () => {
       );
       observer.disconnect();
       for (const text of seen) expect(text).toHaveLength(bar(1).length);
+    });
+  });
+  describe('narrow layout', () => {
+    interface FakeObserver {
+      callback: IntersectionObserverCallback;
+      targets: Element[];
+    }
+
+    /** Swap in an IntersectionObserver the test can fire by hand. */
+    function fakeObservers(): { instances: FakeObserver[]; enter: (el: Element) => void } {
+      const instances: FakeObserver[] = [];
+      const original = globalThis.IntersectionObserver;
+      class Fake implements Partial<IntersectionObserver> {
+        private readonly record: FakeObserver;
+        constructor(callback: IntersectionObserverCallback) {
+          this.record = { callback, targets: [] };
+          instances.push(this.record);
+        }
+        observe = (el: Element) => {
+          this.record.targets.push(el);
+        };
+        unobserve = vi.fn();
+        disconnect = vi.fn();
+      }
+      globalThis.IntersectionObserver = Fake as unknown as typeof IntersectionObserver;
+      restore = () => {
+        globalThis.IntersectionObserver = original;
+      };
+      return {
+        instances,
+        enter: (el) => {
+          const obs = instances.find((i) => i.targets.includes(el));
+          if (!obs) throw new Error('element is not observed');
+          act(() => {
+            obs.callback(
+              [{ target: el, isIntersecting: true } as IntersectionObserverEntry],
+              {} as IntersectionObserver,
+            );
+          });
+        },
+      };
+    }
+
+    let restore: () => void = () => undefined;
+    afterEach(() => {
+      restore();
+      restore = () => undefined;
+    });
+
+    function barOf(slug: string): HTMLElement {
+      const bar = document
+        .getElementById(`project-${slug}`)
+        ?.querySelector<HTMLElement>('button > span[aria-hidden]');
+      if (!bar) throw new Error('missing bar');
+      return bar;
+    }
+
+    it('renders each project summary under its row', () => {
+      mockMatchMedia((q) => q === NARROW_QUERY);
+      render(<ProcessList />);
+      for (const p of projects) {
+        const summary = screen.getByText(p.summary);
+        expect(summary).toBeVisible();
+        expect(summary.closest('button')).toBeNull();
+      }
+    });
+
+    it('marks a row complete and fills its bar when the bar scrolls into view', () => {
+      mockMatchMedia((q) => q === NARROW_QUERY || q.includes('prefers-reduced-motion: reduce'));
+      const { enter } = fakeObservers();
+      render(<ProcessList />);
+      expect(screen.getByText(/^Tasks: 4 total, 0 complete;/)).toBeVisible();
+      expect(barOf('agent-goal')).toHaveTextContent(bar(0), { normalizeWhitespace: false });
+      enter(barOf('agent-goal'));
+      expect(barOf('agent-goal').textContent).toBe(bar(1));
+      expect(barOf('kla-pg-migration').textContent).toBe(bar(0));
+      expect(screen.getByText(/^Tasks: 4 total, 1 complete;/)).toBeVisible();
+      expect(screen.getByRole('button', { name: /agent-goal/ })).toHaveAttribute(
+        'aria-expanded',
+        'false',
+      );
+    });
+
+    it('leaves bars empty on scroll when the layout is wide', () => {
+      mockReducedMotion();
+      const { enter } = fakeObservers();
+      render(<ProcessList />);
+      enter(barOf('agent-goal'));
+      expect(barOf('agent-goal').textContent).toBe(bar(0));
+      expect(screen.getByText(/^Tasks: 4 total, 0 complete;/)).toBeVisible();
     });
   });
 });

@@ -57,6 +57,22 @@
   color: var(--accent);
 }
 
+/* Phones have no backtick key. Both variants are rendered and CSS picks one, so there is
+   no flip after hydration; display:none also keeps the other out of the accessibility tree. */
+.hintTouch {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .hintKeys {
+    display: none;
+  }
+
+  .hintTouch {
+    display: inline;
+  }
+}
+
 .aside {
   display: block;
   font-size: var(--fs-0);
@@ -78,14 +94,22 @@
   overflow: hidden;
   width: min(300px, 100%);
   aspect-ratio: 1;
-  /* Lets the static frame size its characters to the box (cqw) on narrow screens. */
-  container-type: inline-size;
 }
 
-/* Same character cell as the live ASCII pass (see src/hero3d/AsciiHero.module.css,
-   resolution 0.15), so the static frame and the 3D render line up when they swap. */
+/* What the static frame and the live render are laid out on. On desktop it is the box
+   itself; on narrow screens it is a larger square that the box crops (see below).
+   --ascii-res must match the resolution HeroVisual passes to AsciiHero. */
+.stage {
+  --ascii-res: 0.15;
+
+  position: absolute;
+  inset: 0;
+}
+
+/* Same character cell as the live ASCII pass (see src/hero3d/AsciiHero.module.css),
+   so the static frame and the 3D render line up when they swap. */
 .frame {
-  --ascii-cell: calc(1px / 0.15);
+  --ascii-cell: calc(1px / var(--ascii-res));
 
   position: absolute;
   inset: 0;
@@ -112,10 +136,70 @@
   }
 }
 
-/* Narrow: the 64-column frame is scaled so the whole drawing fits the box. */
+/* Narrow: the name breaks onto two lines with a small cylinder beside it, and the rest of
+   the text runs full width underneath. The hero is only as tall as its content, so the
+   projects section starts on the first screen. */
 @media (max-width: 719.98px) {
-  .frame {
-    --ascii-cell: calc(100cqw / 64);
+  .hero {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'name visual';
+    gap: var(--rhythm) 2ch;
+    min-height: 0;
+    padding-block: var(--rhythm);
+    scroll-snap-align: none;
+  }
+
+  /* The text's children join the hero grid, so the name can share a row with the visual. */
+  .text {
+    display: contents;
+  }
+
+  .text > :not(.name) {
+    grid-column: 1 / -1;
+  }
+
+  /* Same 1:1.5 size to line-height ratio as body text; two lines are 3 rhythm units each. */
+  .name {
+    grid-area: name;
+    width: min-content;
+    font-size: min(48px, 13vw);
+    line-height: calc(var(--rhythm) * 3);
+  }
+
+  /* About the height of the two-line name; it crops the stage down to the drawing. */
+  .visual {
+    grid-area: visual;
+    justify-self: end;
+    width: min(140px, 100%);
+    height: 164px;
+    aspect-ratio: auto;
+  }
+
+  /* Twice the desktop character density on half the desktop stage (185px, about half the
+     ~370px desktop box), so the grid is the same 55 columns the static frame was captured
+     at and the cylinder fills the box. Centred, so the drawing sits in the middle of the crop. */
+  .stage {
+    --ascii-res: 0.3;
+    --stage: 185px;
+
+    inset: auto;
+    top: calc(50% - var(--stage) / 2);
+    left: calc(50% - var(--stage) / 2);
+    width: var(--stage);
+    height: var(--stage);
+  }
+
+  /* 44px tap targets without changing the line rhythm: the padding grows the hit area and
+     the negative margin gives the space back. */
+  .hint,
+  .button {
+    display: inline-block;
+    padding-block: 10px;
+    margin-block: -10px;
+  }
+
+  .next {
+    display: none;
   }
 }
 

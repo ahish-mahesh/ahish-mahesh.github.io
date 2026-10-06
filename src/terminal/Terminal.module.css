@@ -164,3 +164,31 @@
   border-radius: 0;
   padding: 0;
 }
+
+/* Touch: no Tab or Esc, so offer tappable commands and bigger targets. */
+@media (hover: none) and (pointer: coarse) {
+  .close {
+    min-height: 44px;
+    padding-inline: 1ch;
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 2ch;
+  padding-top: var(--space-1);
+}
+
+.chip {
+  min-height: 44px;
+  font: inherit;
+  font-size: var(--fs-0);
+  color: var(--accent);
+  background: none;
+  border: 0;
+  padding: 0 1ch;
+  margin-inline: -1ch;
+  cursor: pointer;
+  white-space: pre;
+}

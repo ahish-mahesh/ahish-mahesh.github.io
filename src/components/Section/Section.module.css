@@ -20,3 +20,16 @@
 .prompt {
   color: var(--muted);
 }
+
+@media (max-width: 719.98px) {
+  .section {
+    min-height: auto;
+    justify-content: flex-start;
+    padding-block: calc(var(--rhythm) * 1.5);
+  }
+
+  .heading {
+    font-size: var(--fs-2);
+    line-height: calc(var(--rhythm) * 1.5);
+  }
+}

@@ -35,7 +35,11 @@ export function Hero() {
             onMouseEnter={terminal.preload}
             onFocus={terminal.preload}
           >
-            Press <kbd>`</kbd> for the backend of this site.
+            {/* One variant is display:none per device, so only one is ever announced. */}
+            <span className={styles.hintKeys}>
+              Press <kbd>`</kbd> for the backend of this site.
+            </span>
+            <span className={styles.hintTouch}>Tap here for the backend of this site.</span>
           </button>
         </p>
         <ul className={styles.buttons}>

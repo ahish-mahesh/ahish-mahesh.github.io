@@ -58,10 +58,12 @@ export function SiteHeader() {
     <header className={styles.header} ref={headerRef}>
       <nav aria-label="primary" className={styles.nav}>
         <div className={styles.promptArea}>
-          <a href="#top" className={styles.prompt}>
-            ahish@montreal
+          <a href="#top" className={styles.prompt} aria-label="ahish@montreal">
+            ahish<span className={styles.host}>@montreal</span>
           </a>
-          <span aria-hidden="true">:{cwd}$ </span>
+          <span aria-hidden="true" className={styles.cwd}>
+            :{cwd}${' '}
+          </span>
           <TypedCommand text={hovered ?? sectionCommands[active]} />
         </div>
         <button

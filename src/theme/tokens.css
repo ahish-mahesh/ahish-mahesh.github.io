@@ -58,6 +58,13 @@
   --border: var(--muted);
 }
 
+/* Touch-sized header bar (44px) plus the 1px border. Keep in sync with SiteHeader.module.css. */
+@media (max-width: 880px) {
+  :root {
+    --header-h: 45px;
+  }
+}
+
 @media (prefers-color-scheme: light) {
   :root:not([data-theme]) {
     color-scheme: light;

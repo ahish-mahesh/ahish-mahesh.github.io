@@ -14,8 +14,9 @@ describe('Neofetch', () => {
   it('renders every value', () => {
     render(<Neofetch />);
     for (const s of skills) {
+      const dd = screen.getByText(s.key, { selector: 'dt' }).nextElementSibling;
       for (const v of s.values) {
-        expect(screen.getAllByText(v).length).toBeGreaterThan(0);
+        expect(dd?.textContent).toContain(v);
       }
     }
   });

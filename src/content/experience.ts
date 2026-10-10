@@ -15,9 +15,9 @@ export const experience: readonly ExperienceEntry[] = [
     note: 'started as the co-op, stayed on',
     bullets: [
       'Co-op May-Aug 2026, then part time from September.',
-      'AL development on Microsoft Dynamics 365 Business Central: order sync, workflow validation, financial logic for invoicing and inventory.',
-      'Built the secured REST API external systems integrate through.',
-      '23 PRs across 3 repos; I own review and release for what I ship.',
+      'Designed a secured REST API connecting a production Microsoft Dynamics 365 Business Central ERP to external systems; extended AL modules for order sync and workflow validation.',
+      "I build with Claude Code, Codex and Antigravity, and run Azure DevOps (Repos, Boards, Pipelines) daily through Microsoft's Azure DevOps MCP server.",
+      '23 PRs across 3 repos, owning code review, testing and release. Piloted Graphify knowledge-graph documentation, which I now use across my projects.',
     ],
   },
   {
@@ -45,8 +45,8 @@ export const experience: readonly ExperienceEntry[] = [
     graphLabel: '2021-07',
     branch: 'main',
     bullets: [
-      'C++/.NET metrology applications and the SQL Server HA tier (+30% query performance and reliability).',
-      'Led the PostgreSQL migration.',
+      'C++/.NET metrology applications and the SQL Server HA tier (30% better query performance).',
+      'Led the PostgreSQL migration, a team of three including me.',
       'Jenkins + MSTest pipeline: quarterly to weekly releases, -40% deployment time, -95% production bugs.',
       'Mentored four engineers; ran the division\'s weekly "Tech Junction" talks for ~80 people.',
       'On-site escalations and deployments in Korea, Japan and Singapore.',

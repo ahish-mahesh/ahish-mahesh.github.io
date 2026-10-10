@@ -5,7 +5,8 @@ const status =
 
 export const profile: Profile = {
   name: 'Ahish Mahesh',
-  oneLiner: 'Backend engineer. C++ and C#/.NET in production, plus the database tier underneath.',
+  oneLiner:
+    'Software engineer. LLM features on a production backend, plus the database tier underneath.',
   background:
     "Back end developer at Vffice. Software engineer at KLA from 2021 to 2024. CS master's at Concordia, finishing December 2026.",
   status,

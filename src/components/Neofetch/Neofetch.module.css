@@ -63,9 +63,14 @@
   min-width: 0;
 }
 
-/* Values wrap inside the narrow column: the longest one is wider than it. */
+/* Values wrap inside the narrow column (the longest one is wider than it), but only at spaces:
+   Phi-2 and Google Sign-In never split at their hyphens. */
 .value {
   overflow-wrap: anywhere;
+}
+
+.word {
+  white-space: nowrap;
 }
 
 /* Narrow column (a phone, or beside the timeline on desktop): key above its values, so the

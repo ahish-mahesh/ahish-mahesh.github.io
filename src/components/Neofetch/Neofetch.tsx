@@ -27,7 +27,14 @@ export function Neofetch() {
                     {s.values.map((v, i) => (
                       <span key={v}>
                         {i > 0 ? ' · ' : null}
-                        <span className={styles.value}>{v}</span>
+                        <span className={styles.value}>
+                          {v.split(' ').map((w, j) => (
+                            <span key={j}>
+                              {j > 0 ? ' ' : null}
+                              <span className={styles.word}>{w}</span>
+                            </span>
+                          ))}
+                        </span>
                       </span>
                     ))}
                   </dd>

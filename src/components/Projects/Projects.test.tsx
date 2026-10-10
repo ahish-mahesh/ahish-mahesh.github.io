@@ -86,7 +86,7 @@ describe('Projects', () => {
       window.dispatchEvent(new HashChangeEvent('hashchange'));
     });
     const panel = panelOf(rowButton('agent-goal'));
-    expect(within(panel).getByText(/Supabase \(Auth \+ RLS\)/)).toBeVisible();
+    expect(within(panel).getByText(/Supabase \(Auth, Edge Functions\)/)).toBeVisible();
     expect(within(panel).getByRole('link', { name: 'source on github' })).toHaveAttribute(
       'href',
       'https://github.com/ahish-mahesh/agent-goal',

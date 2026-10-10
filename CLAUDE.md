@@ -37,7 +37,7 @@ Goal: spend Opus where judgment matters, use cheaper models where the work is we
 
 ## 1. The goal
 
-A personal portfolio for **Ahish Mahesh**, a backend engineer (C++, C#/.NET, the database tier underneath, on-device AI), hosted on **GitHub Pages** at `https://ahish-mahesh.github.io`.
+A personal portfolio for **Ahish Mahesh**, a software engineer who builds LLM features on a production backend (Gemini and local models on top of C++, C#/.NET, Python and the database tier underneath), hosted on **GitHub Pages** at `https://ahish-mahesh.github.io`.
 
 - **Primary job: recruiter-first showcase.** A hiring manager in Montreal or Toronto should see who Ahish is, what he has shipped, and how to contact him within **one second** of load and **thirty seconds** of scrolling. Everything else is secondary.
 - **Secondary job: a learning project.** Ahish is building this in React to grow front-end skills (React + TypeScript, animation, WebGL via React Three Fiber, performance work, testing, CI/CD). Prefer approaches that teach something over approaches that hide everything in a dependency, but do not reinvent things that are not worth learning.
@@ -136,7 +136,7 @@ Single page, anchor-linked sections. Order matters (recruiter-first):
 
 - **Left / top (HTML, renders instantly):**
   - Name: `Ahish Mahesh`, revealed with a **decode effect** (react-bits `DecryptedText` or HamishMW's `decoder-text`). Plain text is in the DOM from the start so screen readers and crawlers see it.
-  - One-liner: *Backend engineer. C++ and C#/.NET in production, plus the database tier underneath.*
+  - One-liner: *Software engineer. LLM features on a production backend, plus the database tier underneath.*
   - Sub-line: *Back end developer at Vffice · CS master's at Concordia, Dec 2026 · Montreal*
   - Buttons: `[ view projects ]` `[ resume.pdf ]` `[ email ]`
 - **Right / behind (lazy, decorative, `aria-hidden`):** **an ASCII-rendered 3D database cylinder stack.**
@@ -155,23 +155,32 @@ Each project is a row like a running process, with bars that animate in (once, o
 
 ```
 PID  NAME              STACK                         METRIC
-101  agent-notes-cpp   C++17 whisper.cpp llama.cpp   [||||||||||||||||  ] 16x real-time
-102  kla-pg-migration  PostgreSQL Babelfish T-SQL     [||||||||||||||    ] 1,200 queries, -25% cost
-103  agent-goal        React Native Supabase Gemini   [|||||||||||||||   ] <100ms sync
-104  project5k-bot     Python llama-cpp TinyLlama     [||||||||||||      ] 3s -> 900ms
+101  kla-pg-migration  PostgreSQL Babelfish T-SQL     [||||||||||||||    ] 1,200 queries, -25% cost
+102  agent-goal        React Native Supabase Gemini   [|||||||||||||||   ] gemini 2.5 flash
+103  agent-notes-cpp   C++17 whisper.cpp llama.cpp   [||||||||||||||||  ] 16x real-time
+104  project5k-bot     Python llama-cpp Gemini        [||||||||||||      ] local llm + gemini
 ```
 
-Featured (expanded case studies, in this order):
+Featured (expanded case studies, in this order). Every project fact below was checked against the repo code on 2026-10-10 and matches the Softchoice resume (`ai-job-search/cv/main_softchoice_software_engineer_ai.tex`, fact-check commit `683f416`). See the "never claim" list in §6.
 
 1. **KLA: MSSQL to multi-node PostgreSQL migration** (no public repo; this is the strongest story)
    - Analysed 30+ product cost components; the MSSQL high-availability cluster was ~20% of product cost.
-   - Led three engineers through a zero-code migration to a multi-node PostgreSQL cluster using Babelfish, translating 1,200+ queries.
+   - Led a three-person team (Ahish included) through a zero-code migration to a multi-node PostgreSQL cluster using Babelfish, translating 1,200+ queries.
    - Product cost down 25%; opened the product to smaller customers; ~$2M annual revenue from 3 new customers.
    - **Signature animation:** a scroll-driven panel where a query counter runs to 1,200 while a T-SQL snippet morphs into PL/pgSQL, then a cost bar drops by 25%. Use a *generic illustrative* query, never real KLA code.
-2. **agent-notes-cpp** ([repo](https://github.com/ahish-mahesh/agent-notes-cpp))
-   - Records a lecture or meeting and returns a summary. Nothing leaves the machine: Whisper and Qwen 2.5 0.5B run locally.
-   - 16x real-time transcription via a multi-threaded pipeline; audio to summary in under 2 seconds on an M-series MacBook; 92% transcription accuracy across 8 languages.
-   - Stack: C++17 · whisper.cpp · llama.cpp · SQLite · RtAudio/PortAudio · CMake
+2. **agent-goal** (Goal Genie) ([repo](https://github.com/ahish-mahesh/agent-goal))
+   - A goal tracker with a planning agent that argues you down from "get fit" to something you can do on a Tuesday. iOS and Android (Expo).
+   - A Supabase Edge Function (Deno) calls Gemini 2.5 Flash with an engineered SMART-goal mentor prompt.
+   - Per-chat Gemini context caching: the cache name is saved in Supabase, with a full-prompt fallback below a token threshold.
+   - Supabase Auth with Google Sign-In; a daily push-notification edge function.
+   - Built with two other people; Ahish was the only engineer and wrote all of the code. (Do not name the collaborators or their roles.)
+   - Stack: React Native/Expo · TypeScript · Supabase (Auth, Edge Functions) · Deno · Gemini API
+3. **agent-notes-cpp** ([repo](https://github.com/ahish-mahesh/agent-notes-cpp))
+   - Records a lecture or meeting and returns a structured summary. Nothing leaves the machine: Whisper and Qwen 2.5 0.5B run locally.
+   - whisper.cpp transcribes microphone audio in real time on a dedicated processing thread; 16x real-time (Whisper base.en on a MacBook Air M2, the README benchmark).
+   - Qwen 2.5 0.5B runs through a background llama.cpp server that the app manages, and writes structured summaries from an engineered system and format prompt.
+   - SQLite stores transcripts and summaries.
+   - Stack: C++17 · whisper.cpp · llama.cpp (server) · SQLite · RtAudio/PortAudio · CMake
    - **Animated pipeline diagram** (see §5.4), from the README:
      ```
       mic ──▶ AudioCapture ──▶ ring buffer ──▶ WhisperTranscriber
@@ -180,21 +189,18 @@ Featured (expanded case studies, in this order):
                                                 transcript
                                                      │
                                                      ▼
-      SQLite ◀── DBHelper ◀── summary ◀── LLMClient (llama.cpp, Qwen 2.5 0.5B)
+      SQLite ◀── DBHelper ◀── summary ◀── LLMClient (llama.cpp server, Qwen 2.5 0.5B)
      ```
-3. **agent-goal** ([repo](https://github.com/ahish-mahesh/agent-goal))
-   - A goal tracker with a planning agent that argues you down from "get fit" to something you can do on a Tuesday. iOS and Android.
-   - Built with two other people; the Supabase schema, the row-level security policies and the sync layer are Ahish's.
-   - <100ms cross-device sync for 1,000+ goals and analytics events.
-   - Stack: React Native/Expo · TypeScript · Supabase (Auth + RLS) · Gemini API
 4. **project5k-bot** ([repo](https://github.com/ahish-mahesh/project5k-bot))
-   - A Discord bot that nags friends about the gym. Runs TinyLlama on the host rather than calling an API, so nobody's workout log goes anywhere.
-   - Metal acceleration on Apple Silicon took inference from 3s to 900ms.
-   - Stack: Python · discord.py · llama-cpp-python · Firebase Firestore
+   - A Discord bot that nags friends about the gym: slash commands, streak tracking on scheduled jobs (APScheduler), and workout plans scheduled to Google Calendar.
+   - LLM coaching from local models through llama-cpp-python (Mistral 7B, then TinyLlama, then Phi-2 on the `v1` branch), with prompts written for small models. A separate branch swaps in the Gemini API.
+   - Stack: Python · discord.py · llama-cpp-python · Gemini API · Firebase Firestore · APScheduler · Google Calendar API
 
 Archive (compact list, no animation): EchoNews (LSI/SVD news recommender), SMS-Classification (FIEL semi-supervised, 91% accuracy), Newsify, Outlander (C++/Arduino rocker-bogie robot). Optional "coming soon" row: the job-application workflow (private until his own data is untangled from it).
 
-> **Ask Ahish before publishing:** whether `agent-notes` (Swift), `agent-notes-frontend` (Tauri) and `agent-notes-backend` (Rust) should be listed as part of the agent-notes story, and whether any Concordia coursework repos (`multi-modal-detection-framework`, `notilytics-hufflebuffers`) belong in the archive.
+Agent Notes is presented through the C++ repo only; the Swift, Tauri and Rust variants are not listed (decided 2026-10-10). The portfolio site itself is not listed as a project.
+
+> **Ask Ahish before publishing:** whether any Concordia coursework repos (`multi-modal-detection-framework`, `notilytics-hufflebuffers`) belong in the archive.
 
 ### 5.3 Experience: "where I've worked" as `git log --graph`
 
@@ -213,9 +219,12 @@ The branch line draws itself as you scroll (Motion `pathLength`); commits fade i
 
 Content:
 
-- **Vffice**, Montreal/Brossard. Back end developer, May 2026 to now (co-op May-Aug 2026, then part time from September). AL development on Microsoft Dynamics 365 Business Central: order sync, workflow validation, financial logic for invoicing and inventory. Built the secured REST API external systems integrate through. 23 PRs across 3 repos; owns review and release for what he ships.
+- **Vffice**, Montreal/Brossard. Back end developer, May 2026 to now (co-op May-Aug 2026, then part time from September).
+  - Designed a secured REST API connecting a production Microsoft Dynamics 365 Business Central ERP to external systems; extended AL modules for order sync and workflow validation.
+  - Builds with Claude Code, Codex and Antigravity, and runs Azure DevOps (Repos, Boards, Pipelines) daily through Microsoft's Azure DevOps MCP server.
+  - 23 PRs across 3 repos, owning code review, testing and release; piloted Graphify knowledge-graph documentation, now used across his projects.
 - **Concordia University**. Teaching assistant, Winter 2026: Data Structures and Algorithms (COMP 352), Programming and Problem Solving (COMP 6481).
-- **KLA Corporation**, Chennai. Software engineer, Jul 2021 to Nov 2024. C++/.NET metrology applications and the SQL Server HA tier (+30% query performance and reliability). Led the PostgreSQL migration (link to case study). Jenkins + MSTest pipeline: quarterly to weekly releases, -40% deployment time, -95% production bugs. Mentored four engineers; ran the division's weekly "Tech Junction" talks for ~80 people. On-site escalations and deployments in Korea, Japan and Singapore.
+- **KLA Corporation**, Chennai. Software engineer, Jul 2021 to Nov 2024. C++/.NET metrology applications and the SQL Server HA tier (30% better query performance). Led the PostgreSQL migration (link to case study). Jenkins + MSTest pipeline: quarterly to weekly releases, -40% deployment time, -95% production bugs. Mentored four engineers; ran the division's weekly "Tech Junction" talks for ~80 people. On-site escalations and deployments in Korea, Japan and Singapore.
 - **KLA Corporation**. Software engineering intern, 2019-2021 (multiple terms). Migrated a legacy Windows data-management system to a web platform (ReactJS, Three.js, C# REST API, MSSQL): 500+ users, -25% maintenance cost. Placement offer, 8 of 70+ candidates.
 - **Code Khadi**, Coimbatore. ML intern, May-Jul 2018. Medical assistant chatbot (Dialogflow, Python, NLP).
 
@@ -234,17 +243,19 @@ Either way, the ASCII source stays in the DOM as a visually hidden `<pre>` or `f
 
 ### 5.5 Skills: "what I reach for" as `neofetch`
 
-Left: small ASCII logo (initials `AM` or a mini cylinder). Right: key/value list, straight from the README:
+Left: small ASCII logo (initials `AM` or a mini cylinder). Right: key/value list, matching the Skills section of the Softchoice resume:
 
 ```
 ahish@montreal
 --------------
-languages   C++ · C#/.NET · Python · TypeScript · Java · SQL
-data        PostgreSQL · SQL Server · schema migration · HA · REST APIs
-services    Supabase · Firebase · GCP
-models      whisper.cpp · llama.cpp · Gemini API · on-device inference
+languages   Python · TypeScript/JavaScript · C#/.NET · C++ · SQL · AL
+llm         Gemini API · context caching · prompt engineering · llama.cpp · llama-cpp-python
+models      Qwen 2.5 · TinyLlama · Phi-2 · Whisper
+backend     REST APIs · Supabase Edge Functions (Deno) · Supabase Auth · Google Sign-In · event-driven apps
+data        PostgreSQL · SQL Server (HA) · SQLite · Firestore · schema migration
 interfaces  React · React Native · Three.js
-tooling     Git · Jenkins · CMake · MSTest
+devops      Azure DevOps · Google Cloud · Docker · Git · Jenkins · CI/CD · MSTest
+ai tooling  Claude Code · Codex · Antigravity · MCP servers · Graphify · custom agent skills
 erp         Microsoft Dynamics 365 Business Central (AL)
 spoken      English · Tamil · Malayalam (conversational) · French (A1/A2)
 ```
@@ -294,8 +305,9 @@ The site should sound like Ahish's GitHub README: understated, specific, dry hum
 - **No em-dashes.** Use commas, periods, or restructure.
 - **No buzzwords or filler**: "passionate", "leverage", "synergy", "results-driven", "cutting-edge", "rockstar", "ninja".
 - Lowercase section headings ("what I've shipped", "where I've worked", "what I reach for", "saying hello").
-- First person, active voice. Collaborative, not solo-hero: credit collaborators where they exist (agent-goal was built with two others; the migration was a team of three).
+- First person, active voice. Collaborative, not solo-hero: credit collaborators where they exist (agent-goal was built with two others; the migration was a team of three, Ahish included).
 - **No invented facts.** Every number on the site comes from §5 of this document. If a new claim is needed, ask Ahish.
+- **Never claim** (checked against the repo code on 2026-10-10 and not supported; fact-check commit `683f416` in `ai-job-search`): RAG, embeddings, vector or semantic search, or Q&A in Agent Notes (planning docs only); direct OpenAI or Anthropic API use; Supabase row-level security; <100ms sync or 1,000+ goals; 92% accuracy, 8 languages, 100+ hours, or audio-to-summary under 2s; Metal acceleration or 3s to 900ms in Project5K; "Azure" on its own (Azure DevOps is fine). Do not bring these back without new evidence from Ahish.
 - If the site mentions AI tooling used to build it (e.g. a "built with" footer line), name **Claude Code** explicitly.
 - English only for v1. An `fr` toggle is a possible later addition (Montreal market) but Ahish's French is A1/A2, so the site must not imply French working proficiency.
 
@@ -379,7 +391,7 @@ Launch on `ahish-mahesh.github.io` first. When a domain is bought:
 
 ### Resume PDF
 
-Ahish copies his current CV PDF to `public/resume.pdf`. **Before committing, check that it contains no phone number or home address** (the site is public and indexed); if it does, export a web version without them. The CV source lives in the `ai-job-search` repo (LaTeX, compiled with lualatex).
+The site serves the Softchoice resume: source `ai-job-search/cv/main_softchoice_software_engineer_ai.tex` (LaTeX, sb2nov template). **The source has a phone number; the site copy must not** (the site is public and indexed). To build the web copy: copy the `.tex` to a scratch folder, delete the `Mobile: \href{tel:...}{...}` cell from the header (leave the `& \\`), compile twice with `pdflatex`, then check that it is still one page, that `pdftotext` finds no phone number or home address, and that the text below the header matches the original PDF. Copy the result to `public/resume.pdf`. When the resume changes, update §5 to match before changing the site.
 
 ---
 
@@ -400,7 +412,6 @@ Each milestone ends with a deploy to Pages and a short self-review against §7.
 
 ## 11. Open questions for Ahish (resolve as they come up)
 
-- Which agent-notes variants (C++, Swift, Tauri frontend, Rust backend) to present, and how.
 - Whether any Concordia coursework repos belong in the archive.
 - A photo/avatar, or keep the site fully typographic? (Default: no photo; ASCII cylinder is the visual identity.)
 - Exact domain name when the time comes.

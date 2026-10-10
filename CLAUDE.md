@@ -189,7 +189,7 @@ Featured (expanded case studies, in this order). Every project fact below was ch
                                                 transcript
                                                      │
                                                      ▼
-      SQLite ◀── DBHelper ◀── summary ◀── LLMClient (llama.cpp server, Qwen 2.5 0.5B)
+      SQLite ◀── DBHelper ◀── summary ◀── LLMClient (llama.cpp, Qwen 2.5 0.5B)
      ```
 4. **project5k-bot** ([repo](https://github.com/ahish-mahesh/project5k-bot))
    - A Discord bot that nags friends about the gym: slash commands, streak tracking on scheduled jobs (APScheduler), and workout plans scheduled to Google Calendar.

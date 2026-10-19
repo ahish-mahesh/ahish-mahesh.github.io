@@ -48,15 +48,9 @@ describe('theme tokens', () => {
     }
   });
 
-  it('light-scheme fallback matches the paper theme', () => {
-    const m = /@media \(prefers-color-scheme: light\)\s*\{[^{]*\{([^}]*)\}/.exec(css);
-    expect(m).not.toBeNull();
-    const fallback: Record<string, string> = {};
-    for (const c of (m?.[1] ?? '').matchAll(/--([a-z]+):\s*(#[0-9a-fA-F]{6})\s*;/g)) {
-      fallback[c[1] ?? ''] = c[2] ?? '';
-    }
-    expect(Object.keys(fallback).length).toBeGreaterThanOrEqual(6);
-    expect(fallback).toEqual(themeBlock('paper'));
+  it('the no-theme fallback is the paper block', () => {
+    expect(css).toMatch(/:root\[data-theme='paper'\],\s*:root:not\(\[data-theme\]\)\s*\{/);
+    expect(Object.keys(themeBlock('paper')).length).toBeGreaterThanOrEqual(6);
   });
 
   it('index.html bootstrap theme list matches THEMES', () => {

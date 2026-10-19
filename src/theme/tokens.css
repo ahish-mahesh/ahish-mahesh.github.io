@@ -47,8 +47,7 @@
 
 /* Colour roles: --accent = interactive (links, buttons, prompts), --num = numbers and
    metrics, --ident = names and identifiers, --fg = prose, --muted = secondary. */
-:root[data-theme='phosphor'],
-:root:not([data-theme]) {
+:root[data-theme='phosphor'] {
   color-scheme: dark;
   --bg: #0b0f0c;
   --fg: #c8e6c9;
@@ -70,7 +69,8 @@
   --border: var(--muted);
 }
 
-:root[data-theme='paper'] {
+:root[data-theme='paper'],
+:root:not([data-theme]) {
   color-scheme: light;
   --bg: #f4f1ea;
   --fg: #1d1d1b;
@@ -85,18 +85,5 @@
 @media (max-width: 880px) {
   :root {
     --header-h: 45px;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme]) {
-    color-scheme: light;
-    --bg: #f4f1ea;
-    --fg: #1d1d1b;
-    --accent: #0b4f8a;
-    --num: #8a4b08;
-    --ident: #2c6e3f;
-    --muted: #686763;
-    --border: var(--muted);
   }
 }

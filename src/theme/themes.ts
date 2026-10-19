@@ -23,7 +23,4 @@ export function writeStoredTheme(t: Theme): void {
   }
 }
 
-export function systemTheme(): Theme {
-  if (typeof window.matchMedia !== 'function') return 'phosphor';
-  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'paper' : 'phosphor';
-}
+export const DEFAULT_THEME: Theme = 'paper';

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="dark light" />
+    <meta name="color-scheme" content="light dark" />
     <script>
       (function () {
         var themes = ['phosphor', 'amber', 'paper'];
@@ -12,12 +12,7 @@
           var stored = localStorage.getItem('theme');
           if (themes.indexOf(stored) !== -1) theme = stored;
         } catch (e) {}
-        if (!theme) {
-          theme =
-            window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches
-              ? 'paper'
-              : 'phosphor';
-        }
+        if (!theme) theme = 'paper';
         document.documentElement.dataset.theme = theme;
         try {
           if (localStorage.getItem('crt') === 'on') document.documentElement.dataset.crt = 'on';

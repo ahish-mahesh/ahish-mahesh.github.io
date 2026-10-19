@@ -44,6 +44,10 @@ describe('ThemeProvider', () => {
     const user = userEvent.setup();
     renderSwitch();
     const button = () => screen.getByRole('button', { name: /^theme:/ });
+    expect(button()).toHaveAccessibleName(/theme: paper, switch to phosphor/);
+    await user.click(button());
+    expect(document.documentElement.dataset.theme).toBe('phosphor');
+    expect(localStorage.getItem('theme')).toBe('phosphor');
     expect(button()).toHaveAccessibleName(/theme: phosphor, switch to amber/);
     await user.click(button());
     expect(document.documentElement.dataset.theme).toBe('amber');
@@ -52,10 +56,6 @@ describe('ThemeProvider', () => {
     await user.click(button());
     expect(document.documentElement.dataset.theme).toBe('paper');
     expect(localStorage.getItem('theme')).toBe('paper');
-    expect(button()).toHaveAccessibleName(/theme: paper, switch to phosphor/);
-    await user.click(button());
-    expect(document.documentElement.dataset.theme).toBe('phosphor');
-    expect(localStorage.getItem('theme')).toBe('phosphor');
   });
 
   it('still works when storage throws', async () => {
@@ -68,7 +68,7 @@ describe('ThemeProvider', () => {
     const user = userEvent.setup();
     renderSwitch();
     await user.click(screen.getByRole('button', { name: /^theme:/ }));
-    expect(document.documentElement.dataset.theme).toBe('amber');
+    expect(document.documentElement.dataset.theme).toBe('phosphor');
   });
 
   it('useTheme throws outside a provider', () => {
@@ -86,7 +86,7 @@ describe('ThemeProvider', () => {
     renderSwitch();
     await user.click(screen.getByRole('button', { name: /^theme:/ }));
     expect(stub).toHaveBeenCalledTimes(1);
-    expect(document.documentElement.dataset.theme).toBe('amber');
+    expect(document.documentElement.dataset.theme).toBe('phosphor');
   });
 
   it('skips the view transition under reduced motion', async () => {
@@ -96,6 +96,6 @@ describe('ThemeProvider', () => {
     renderSwitch();
     await user.click(screen.getByRole('button', { name: /^theme:/ }));
     expect(stub).not.toHaveBeenCalled();
-    expect(document.documentElement.dataset.theme).toBe('amber');
+    expect(document.documentElement.dataset.theme).toBe('phosphor');
   });
 });

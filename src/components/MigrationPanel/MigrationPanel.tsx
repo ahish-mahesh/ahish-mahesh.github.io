@@ -33,9 +33,10 @@ const span = (t: number, from: number, to: number) =>
 function viewAt(t: number): View {
   const morph = span(t, MORPH_START, MORPH_END);
   const cost = span(t, COST_START, 1);
-  let code = migration.postgres;
+  let code = migration.translated;
   if (morph <= 0) code = migration.tsql;
-  else if (morph < 1) code = scrambleFrame(migration.tsql, migration.postgres, morph, randomGlyph);
+  else if (morph < 1)
+    code = scrambleFrame(migration.tsql, migration.translated, morph, randomGlyph);
   return {
     count: Math.round(span(t, 0, COUNT_END) * migration.queries),
     code,
@@ -93,7 +94,7 @@ export function MigrationPanel() {
 
   const finalView: View = {
     count: migration.queries,
-    code: migration.postgres,
+    code: migration.translated,
     fill: END_FILL,
     done: true,
   };
@@ -104,7 +105,7 @@ export function MigrationPanel() {
       <div className="visually-hidden">
         <p>{fmt(migration.queries)} queries translated</p>
         <pre>{migration.tsql}</pre>
-        <pre>{migration.postgres}</pre>
+        <pre>{migration.translated}</pre>
         <p>product cost down 25%</p>
       </div>
       <figcaption className="muted">{migration.label}</figcaption>

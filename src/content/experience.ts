@@ -45,9 +45,9 @@ export const experience: readonly ExperienceEntry[] = [
     graphLabel: '2021-07',
     branch: 'main',
     bullets: [
-      'C++/.NET metrology applications and the SQL Server HA tier (30% better query performance).',
+      'C++/.NET metrology applications and the SQL Server HA tier: index and query tuning cut average execution time on the slowest, most-used queries by 30%.',
       'Led the PostgreSQL migration, a team of three including me.',
-      'Jenkins + MSTest pipeline: quarterly to weekly releases, -40% deployment time, -95% production bugs.',
+      'Jenkins + MSTest pipeline: quarterly to weekly releases, -40% deployment time, -95% production-escaped defects per release.',
       'Mentored four engineers; ran the division\'s weekly "Tech Junction" talks for ~80 people.',
       'On-site escalations and deployments in Korea, Japan and Singapore.',
     ],

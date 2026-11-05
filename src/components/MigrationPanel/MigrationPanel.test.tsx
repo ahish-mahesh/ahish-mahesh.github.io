@@ -18,7 +18,7 @@ describe('MigrationPanel', () => {
     const { container } = render(<MigrationPanel />);
     const text = animated(container).textContent;
     expect(text).toContain('1,200 / 1,200');
-    expect(text).toContain("WHERE o.created > now() - interval '7 days'");
+    expect(text).toContain('FROM stock AS t');
     expect(text).toContain('-25%');
     expect(screen.queryByRole('button', { name: /replay/ })).toBeNull();
   });
@@ -30,8 +30,8 @@ describe('MigrationPanel', () => {
       const hidden = container.querySelector('.visually-hidden');
       const text = norm(hidden?.textContent ?? '');
       expect(text).toContain('1,200 queries translated');
-      expect(text).toContain('SELECT TOP 10');
-      expect(text).toContain('LIMIT 10;');
+      expect(text).toContain('MERGE stock AS t');
+      expect(text).toContain('JOIN incoming AS s');
       expect(text).toContain('product cost down 25%');
       unmount();
     }
@@ -51,7 +51,7 @@ describe('MigrationPanel', () => {
 
   it('keeps both snippets the same shape', () => {
     const a = migration.tsql.split('\n');
-    const b = migration.postgres.split('\n');
+    const b = migration.translated.split('\n');
     expect(a.length).toBe(b.length);
     expect(new Set([...a, ...b].map((l) => l.length)).size).toBe(1);
   });

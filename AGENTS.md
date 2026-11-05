@@ -164,10 +164,10 @@ PID  NAME              STACK                         METRIC
 Featured (expanded case studies, in this order). Every project fact below was checked against the repo code on 2026-10-10 and matches the Softchoice resume (`ai-job-search/cv/main_softchoice_software_engineer_ai.tex`, fact-check commit `683f416`). See the "never claim" list in §6.
 
 1. **KLA: MSSQL to multi-node PostgreSQL migration** (no public repo; this is the strongest story)
-   - Analysed 30+ product cost components; the MSSQL high-availability cluster was ~20% of product cost.
-   - Led a three-person team (Ahish included) through a zero-code migration to a multi-node PostgreSQL cluster using Babelfish, translating 1,200+ queries.
-   - Product cost down 25%; opened the product to smaller customers; ~$2M annual revenue from 3 new customers.
-   - **Signature animation:** a scroll-driven panel where a query counter runs to 1,200 while a T-SQL snippet morphs into PL/pgSQL, then a cost bar drops by 25%. Use a *generic illustrative* query, never real KLA code.
+   - Analysed 30+ product cost components; the MSSQL high-availability cluster was ~20% of product cost (~25% counting its SQL Server Enterprise licences).
+   - Led a three-person team (Ahish included) through a low-code migration to a multi-node PostgreSQL cluster on Babelfish, writing a middle layer that translated 1,200+ MSSQL queries into Babelfish-supported form.
+   - Per-unit product cost down 25% (SQL Server Enterprise licences plus HA hardware removed); the cheaper edition won 3 smaller customers worth ~$2M in annual contract value. The migration enabled these deals; never phrase it as revenue Ahish generated.
+   - **Signature animation:** a scroll-driven panel where a query counter runs to 1,200 while a T-SQL snippet passes through the translation layer into Babelfish-supported T-SQL, then a cost bar drops by 25%. Use a *generic illustrative* query, never real KLA code.
 2. **agent-goal** (Goal Genie) ([repo](https://github.com/ahish-mahesh/agent-goal))
    - A goal tracker with a planning agent that argues you down from "get fit" to something you can do on a Tuesday. iOS and Android (Expo).
    - A Supabase Edge Function (Deno) calls Gemini 2.5 Flash with an engineered SMART-goal mentor prompt.
@@ -224,7 +224,7 @@ Content:
   - Builds with Codex, Codex and Antigravity, and runs Azure DevOps (Repos, Boards, Pipelines) daily through Microsoft's Azure DevOps MCP server.
   - 23 PRs across 3 repos, owning code review, testing and release; piloted Graphify knowledge-graph documentation, now used across his projects.
 - **Concordia University**. Teaching assistant, Winter 2026: Data Structures and Algorithms (COMP 352), Programming and Problem Solving (COMP 6481).
-- **KLA Corporation**, Chennai. Software engineer, Jul 2021 to Nov 2024. C++/.NET metrology applications and the SQL Server HA tier (30% better query performance). Led the PostgreSQL migration (link to case study). Jenkins + MSTest pipeline: quarterly to weekly releases, -40% deployment time, -95% production bugs. Mentored four engineers; ran the division's weekly "Tech Junction" talks for ~80 people. On-site escalations and deployments in Korea, Japan and Singapore.
+- **KLA Corporation**, Chennai. Software engineer, Jul 2021 to Nov 2024. C++/.NET metrology applications and the SQL Server HA tier (-30% average execution time on the slowest, most-used queries through index and query tuning). Led the PostgreSQL migration (link to case study). Jenkins + MSTest pipeline: quarterly to weekly releases, -40% deployment time, -95% production-escaped defects per release. Mentored four engineers; ran the division's weekly "Tech Junction" talks for ~80 people. On-site escalations and deployments in Korea, Japan and Singapore.
 - **KLA Corporation**. Software engineering intern, 2019-2021 (multiple terms). Migrated a legacy Windows data-management system to a web platform (ReactJS, Three.js, C# REST API, MSSQL): 500+ users, -25% maintenance cost. Placement offer, 8 of 70+ candidates.
 - **Code Khadi**, Coimbatore. ML intern, May-Jul 2018. Medical assistant chatbot (Dialogflow, Python, NLP).
 

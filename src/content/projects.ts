@@ -14,16 +14,17 @@ export const projects: readonly Project[] = [
     slug: 'kla-pg-migration',
     name: 'kla-pg-migration',
     title: 'KLA: MSSQL to multi-node PostgreSQL migration',
-    headline: 'A zero-code move from an MSSQL high-availability cluster to multi-node PostgreSQL.',
+    headline:
+      'A low-code move from an MSSQL high-availability cluster to multi-node PostgreSQL on Babelfish.',
     stack: ['PostgreSQL', 'Babelfish', 'T-SQL'],
     metric: '1,200 queries, -25% cost',
     visual: 'migration',
     summary:
-      'I analysed 30+ product cost components and found the MSSQL high-availability cluster was ~20% of product cost.',
+      'I analysed 30+ product cost components. The MSSQL high-availability cluster was ~20% of product cost, ~25% counting its SQL Server Enterprise licences.',
     bullets: [
-      'Analysed 30+ product cost components; the MSSQL high-availability cluster was ~20% of product cost.',
-      'Led a team of three, me included, through a zero-code migration to a multi-node PostgreSQL cluster using Babelfish, translating 1,200+ queries.',
-      'Product cost down 25%; opened the product to smaller customers; ~$2M annual revenue from 3 new customers.',
+      'Analysed 30+ product cost components: the MSSQL high-availability cluster was ~20% of product cost, ~25% counting its SQL Server Enterprise licences.',
+      'Led a team of three, me included, through a low-code migration to a multi-node PostgreSQL cluster on Babelfish. We wrote a middle layer that translated 1,200+ MSSQL queries into Babelfish-supported form.',
+      'Per-unit product cost down 25%, with the SQL Server Enterprise licences and HA hardware gone. The cheaper edition let 3 smaller customers sign, ~$2M in annual contract value.',
     ],
   },
   {

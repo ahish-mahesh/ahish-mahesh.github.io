@@ -106,7 +106,7 @@ One saturated accent per theme on a near-black or off-white ground, with two qui
 
 ### Secondary
 
-- **Metric Gold** (#d7c46a): numbers and metrics only (query counts, percentages, bar values). Amber: #ffe2a8. Paper: Burnt Umber (#8a4b08).
+- **Metric Gold** (#d7c46a): numbers and metrics only (query counts, percentages). Amber: #ffe2a8. Paper: Burnt Umber (#8a4b08).
 - **Identifier Cyan** (#6fc3df): names and identifiers (project names, commands). Amber: #e8a33d. Paper: Forest Green (#2c6e3f).
 
 ### Neutral
@@ -147,7 +147,7 @@ One saturated accent per theme on a near-black or off-white ground, with two qui
 
 Single page, anchor-linked sections, content column max 1200px with a 16px gutter, aligned to the same left edge as the sticky header. Sections are separated by 6rem (3rem on phones) and introduced by a muted command line with an accent `$` prompt. The hero is two columns from 720px (text 1.3fr, ASCII visual 1fr) and collapses on mobile to the name beside a small cylinder, so projects start on the first screen.
 
-The projects list uses whole-`ch` columns (pid 4, name 17, stack 28, bar 20) and container queries: stacked below 64ch, table from 64ch, with the stack column from 100ch. Header nav collapses to a menu at 880px; touch targets reach 44px without changing line rhythm (padding with negative margin).
+The projects list uses whole-`ch` columns (pid 4, name 21, stack 28) and container queries: stacked below 64ch, table from 64ch, with the stack column from 88ch. Header nav collapses to a menu at 880px; touch targets reach 44px; stacked controls take real 44px rows so hit areas never overlap.
 
 ## Elevation & Depth
 
@@ -159,7 +159,7 @@ Flat. No shadows. Depth is conveyed by 1px rules in the muted colour, indentatio
 
 ## Shapes
 
-Sharp. Border radius is 0 everywhere. Borders are 1px in the muted colour; the only filled shapes are the reverse-video selection bars and the current-nav highlight. Buttons are bracketed text (`[ view projects ]`), not boxes. ASCII is the ornament: the hero cylinder, the pipeline diagram, the git-log graph.
+Sharp. Border radius is 0 everywhere. Borders are 1px in the muted colour; the only filled shapes are the reverse-video selection bars and the current-nav highlight. Buttons are bracketed text (`[ view projects ]`), not boxes; the one primary action (the hero email) is set in reverse video. ASCII is the ornament: the hero cylinder, the pipeline diagram, the git-log graph.
 
 ## Components
 
@@ -172,7 +172,7 @@ Sharp. Border radius is 0 everywhere. Borders are 1px in the muted colour; the o
 
 ### Process List (signature)
 
-- **Style:** htop table on whole-`ch` columns; metric bars drawn in `|` characters in accent, metrics in Metric Gold, names in Identifier Cyan.
+- **Style:** htop table on whole-`ch` columns; highlights in Metric Gold, names in Identifier Cyan, each followed by an accent `[+]` / `[-]` marker.
 - **State:** hover, focus and expanded invert the whole row to accent background with the page colour as text. On mobile only the pid and name line inverts.
 - **Behavior:** each row is a `button` with `aria-expanded` that opens a case-study panel.
 

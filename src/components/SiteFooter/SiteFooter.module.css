@@ -18,6 +18,10 @@
   color: inherit;
 }
 
+.credit {
+  white-space: nowrap;
+}
+
 .hint {
   font: inherit;
   color: inherit;
@@ -57,11 +61,11 @@
     margin-top: var(--space-3);
   }
 
-  /* 44px tap target without changing the line rhythm. */
+  /* 44px tap targets that take real space, so stacked lines never overlap. */
   .hint,
   .inner a {
-    display: inline-block;
-    padding-block: 12px;
-    margin-block: -12px;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
 }

@@ -133,8 +133,8 @@
       "kind": "custom",
       "refersTo": "process-row-selected",
       "description": "htop-style project row. Selection inverts the whole row.",
-      "html": "<button class=\"ds-row\" aria-expanded=\"true\"><span>101</span><span class=\"ds-name\">kla-pg-migration</span><span>[||||||||||||||    ]</span><span>1,200 queries</span></button>",
-      "css": ".ds-row { display: grid; grid-template-columns: 4ch 17ch 20ch 1fr; column-gap: 2ch; width: 100%; padding: 0 1ch; font: inherit; text-align: left; border: 0; cursor: pointer; background: var(--accent); color: var(--bg); } .ds-row:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }"
+      "html": "<button class=\"ds-row\" aria-expanded=\"true\"><span>101</span><span class=\"ds-name\">kla-pg-migration</span><span>1,200 queries</span></button>",
+      "css": ".ds-row { display: grid; grid-template-columns: 4ch 21ch 1fr; column-gap: 2ch; width: 100%; padding: 0 1ch; font: inherit; text-align: left; border: 0; cursor: pointer; background: var(--accent); color: var(--bg); } .ds-row:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }"
     },
     {
       "name": "Section Command Line",

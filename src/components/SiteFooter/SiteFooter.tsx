@@ -34,10 +34,13 @@ export function SiteFooter() {
           <a href={`${repo}/blob/main/CREDITS.md`} rel="noreferrer">
             credits
           </a>
-          {' · built with '}
-          <a href="https://claude.com/claude-code" rel="noreferrer">
-            Claude Code
-          </a>
+          {' · '}
+          <span className={styles.credit}>
+            {'built with '}
+            <a href="https://claude.com/claude-code" rel="noreferrer">
+              Claude Code
+            </a>
+          </span>
         </p>
         <p>ps5: {profile.signOff}</p>
       </div>

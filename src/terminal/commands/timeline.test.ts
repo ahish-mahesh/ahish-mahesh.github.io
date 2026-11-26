@@ -98,10 +98,29 @@ describe('skills', () => {
       `${(logo[0] ?? '').padEnd(Math.max(...logo.map((l) => l.length)) + 3)}${neofetchTitle}`,
     );
     expect(text[1]).toContain('-'.repeat(neofetchTitle.length));
+    // Wrapped rows read back as one string once the logo, keys and line breaks are folded out.
+    const keyStart = Math.max(...logo.map((l) => l.length)) + 3;
+    const valueStart = keyStart + Math.max(...skills.map((s) => s.key.length)) + 2;
+    const values = text
+      .slice(2)
+      .map((l) => l.slice(valueStart))
+      .join(' ');
     for (const s of skills) {
-      expect(text.some((l) => l.includes(s.key) && l.includes(s.values.join(' · ')))).toBe(true);
+      expect(text.some((l) => l.slice(keyStart).startsWith(s.key))).toBe(true);
+      expect(values).toContain(s.values.join(' · '));
     }
-    expect(text).toHaveLength(2 + skills.length);
+  });
+
+  it('fits every line in the terminal column', () => {
+    for (const l of text) expect(l.length).toBeLessThanOrEqual(68);
+  });
+
+  it('stacks each key above its values on a phone, without the logo', () => {
+    const narrow = outputText(skillsCommand.run([], fakeCtx({ narrow: true })));
+    expect(narrow[0]).toBe(neofetchTitle);
+    for (const s of skills) {
+      expect(narrow[narrow.indexOf(s.key) + 1]).toBe(` ${s.values.join(' · ')}`);
+    }
   });
 
   it('draws the logo down the left edge', () => {

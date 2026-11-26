@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { useFocusTrap } from '../hooks/useFocusTrap.ts';
-import { TOUCH_QUERY, useMediaQuery } from '../hooks/useMediaQuery.ts';
+import { NARROW_QUERY, TOUCH_QUERY, useMediaQuery } from '../hooks/useMediaQuery.ts';
 import { useTheme } from '../theme/useTheme.ts';
 import { execute } from './execute.ts';
 import { emptyHistory, historyNext, historyPrev, pushHistory } from './history.ts';
@@ -77,6 +77,7 @@ function LineView({ line }: { line: Line }) {
 export default function Terminal({ open, crt, setCrt, onClose, goTo }: TerminalProps) {
   const { theme, themes, setTheme } = useTheme();
   const touch = useMediaQuery(TOUCH_QUERY);
+  const narrow = useMediaQuery(NARROW_QUERY);
   const [entries, setEntries] = useState<readonly Entry[]>(() => [
     {
       id: 0,
@@ -153,6 +154,7 @@ export default function Terminal({ open, crt, setCrt, onClose, goTo }: TerminalP
       theme,
       themes,
       touch,
+      narrow,
       setTheme,
       crt,
       setCrt,

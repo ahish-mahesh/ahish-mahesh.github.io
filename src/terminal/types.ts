@@ -41,6 +41,8 @@ export interface TerminalCtx {
   readonly themes: readonly Theme[];
   /** Touch-first device (no Tab, arrows or Esc), so hints talk about tapping. */
   readonly touch?: boolean;
+  /** Phone width, where columns do not fit, so tables are printed stacked. */
+  readonly narrow?: boolean;
   setTheme(t: Theme): void;
   readonly crt: boolean;
   setCrt(on: boolean): void;

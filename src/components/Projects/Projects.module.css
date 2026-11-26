@@ -2,9 +2,9 @@
   container-type: inline-size;
   /* Whole-ch columns so the table lines up on the character grid. */
   --col-pid: 4ch;
-  --col-name: 17ch;
+  /* Longest project name plus the [+] marker. */
+  --col-name: 21ch;
   --col-stack: 28ch;
-  --col-bar: 20ch;
   --col-gap: 2ch;
   --row-pad: 1ch;
   --indent: calc(var(--row-pad) + var(--col-pid) + var(--col-gap));
@@ -35,7 +35,7 @@
   position: relative;
 }
 
-/* Stacked (narrow) layout: line 1 pid + name, line 2 bar + metric. */
+/* Stacked (narrow) layout: line 1 pid + name, line 2 metric. */
 .button {
   display: block;
   width: 100%;
@@ -80,26 +80,22 @@
   overflow-wrap: anywhere;
 }
 
+.marker {
+  color: var(--accent);
+  white-space: pre;
+}
+
+.button:is(:hover, :focus-visible, [aria-expanded='true']) .marker {
+  color: inherit;
+}
+
 .stack,
 .headerStack {
   display: none;
 }
 
-.bar {
-  white-space: pre;
-  color: var(--accent);
-  margin-right: 1ch;
-}
-
-/* Force the bar onto its own line, under the name. */
-.bar::before {
-  content: '\A';
-  white-space: pre;
-}
-
-/* One unit: wraps under the bar, flush left, rather than splitting mid-phrase. */
 .metric {
-  display: inline-block;
+  display: block;
   /* Number role. */
   color: var(--num);
 }
@@ -183,7 +179,7 @@
   .header,
   .button {
     display: grid;
-    grid-template-columns: var(--col-pid) var(--col-name) var(--col-bar) minmax(0, 1fr);
+    grid-template-columns: var(--col-pid) var(--col-name) minmax(0, 1fr);
     column-gap: var(--col-gap);
     padding-inline: var(--row-pad);
   }
@@ -207,18 +203,8 @@
   }
 
   .pid,
-  .name,
-  .bar {
+  .name {
     padding-right: 0;
-    margin-right: 0;
-  }
-
-  .bar::before {
-    content: none;
-  }
-
-  .metric {
-    display: block;
   }
 
   .describe {
@@ -234,13 +220,11 @@
   }
 }
 
-/* All five columns once the container is wide enough for the stack tokens and a metric. */
-@container (min-width: 100ch) {
+/* All four columns once the container is wide enough for the stack tokens and a metric. */
+@container (min-width: 88ch) {
   .header,
   .button {
-    grid-template-columns:
-      var(--col-pid) var(--col-name) var(--col-stack) var(--col-bar)
-      minmax(0, 1fr);
+    grid-template-columns: var(--col-pid) var(--col-name) var(--col-stack) minmax(0, 1fr);
   }
 
   .stack,

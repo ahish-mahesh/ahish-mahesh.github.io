@@ -3,3 +3,5 @@ coverage
 package-lock.json
 CLAUDE.md
 AGENTS.md
+.claude/skills
+.claude/agents

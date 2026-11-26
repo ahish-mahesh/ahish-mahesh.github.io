@@ -3,9 +3,9 @@ import { useFrame } from '@react-three/fiber';
 import { Color, CylinderGeometry, MeshLambertMaterial, type Group } from 'three';
 import { damp } from './motion.ts';
 
-const RADIUS = 1.3;
-const HEIGHT = 0.34;
-const GAP = 1.45;
+const RADIUS = 1.6;
+const HEIGHT = 0.64;
+const GAP = 1.05;
 const SEGMENTS = 64;
 const MAX_TILT = 0.35;
 const SWAY = 0.08;

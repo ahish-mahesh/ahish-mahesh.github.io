@@ -190,8 +190,10 @@
   }
 }
 
+/* No room for the typed command beside the buttons; the prompt and cursor stay. */
 @media (max-width: 479.98px) {
-  .host {
+  .host,
+  .typed {
     display: none;
   }
 }

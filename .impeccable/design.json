@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-26T00:00:00Z",
+  "title": "Design System: Ahish Mahesh Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "phosphor-accent": {
+        "role": "primary",
+        "displayName": "Phosphor Green",
+        "canonical": "#39ff88",
+        "tonalRamp": [
+          "#04210f",
+          "#0a4a24",
+          "#117a3a",
+          "#1ba852",
+          "#39ff88",
+          "#7affb0",
+          "#b4ffd2",
+          "#e4fff0"
+        ]
+      },
+      "phosphor-num": {
+        "role": "secondary",
+        "displayName": "Metric Gold",
+        "canonical": "#d7c46a",
+        "tonalRamp": [
+          "#2a2410",
+          "#4f4419",
+          "#7b6b25",
+          "#a88f32",
+          "#d7c46a",
+          "#e5d68f",
+          "#f0e5b5",
+          "#faf5de"
+        ]
+      },
+      "phosphor-ident": {
+        "role": "secondary",
+        "displayName": "Identifier Cyan",
+        "canonical": "#6fc3df",
+        "tonalRamp": [
+          "#0b2630",
+          "#154356",
+          "#1f6379",
+          "#2f869f",
+          "#6fc3df",
+          "#99d6e9",
+          "#c2e7f3",
+          "#e6f5fa"
+        ]
+      },
+      "phosphor-bg": {
+        "role": "neutral",
+        "displayName": "Phosphor Black",
+        "canonical": "#0b0f0c",
+        "tonalRamp": [
+          "#0b0f0c",
+          "#141a15",
+          "#1e261f",
+          "#2a352c",
+          "#3a483c",
+          "#55665a",
+          "#7c907d",
+          "#c8e6c9"
+        ]
+      },
+      "phosphor-muted": {
+        "role": "neutral",
+        "displayName": "Dim Phosphor",
+        "canonical": "#7c907d",
+        "tonalRamp": [
+          "#1a211b",
+          "#2b362c",
+          "#3f4d40",
+          "#566757",
+          "#7c907d",
+          "#9aae9b",
+          "#bccbbd",
+          "#dfeadf"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The name in the hero only." },
+      "prose": {
+        "displayName": "Prose",
+        "purpose": "Readable paragraphs in IBM Plex Sans, 72ch max."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "colour-fade",
+        "value": "150ms ease-out",
+        "purpose": "Links, buttons and summaries fade colour only."
+      },
+      {
+        "name": "theme-scanline-wipe",
+        "value": "350ms steps(24)",
+        "purpose": "Theme switch wipe, disabled under reduced motion."
+      },
+      {
+        "name": "frame-swap",
+        "value": "400ms ease",
+        "purpose": "Static ASCII frame fades out when the live 3D render takes over."
+      }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "720px" },
+      { "name": "nav-collapse", "value": "880px" },
+      { "name": "wide-panels", "value": "1000px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Text Button",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Unboxed bracketed accent text. Hover shifts colour to the prose colour.",
+      "html": "<a class=\"ds-btn\" href=\"#\">[ view projects ]</a>",
+      "css": ".ds-btn { color: var(--accent); text-decoration: none; white-space: nowrap; font-family: var(--font-mono); } .ds-btn:hover { color: var(--fg); } .ds-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }"
+    },
+    {
+      "name": "Nav Link (current)",
+      "kind": "nav",
+      "refersTo": "nav-link-current",
+      "description": "Section link in the sticky header; reverse video when it is the current section.",
+      "html": "<a class=\"ds-nav\" aria-current=\"location\" href=\"#\">projects</a>",
+      "css": ".ds-nav { color: var(--accent); text-decoration: none; font-family: var(--font-mono); font-size: 14px; } .ds-nav:hover { text-decoration: underline; } .ds-nav[aria-current='location'] { background: var(--accent); color: var(--bg); }"
+    },
+    {
+      "name": "Process Row (selected)",
+      "kind": "custom",
+      "refersTo": "process-row-selected",
+      "description": "htop-style project row. Selection inverts the whole row.",
+      "html": "<button class=\"ds-row\" aria-expanded=\"true\"><span>101</span><span class=\"ds-name\">kla-pg-migration</span><span>1,200 queries</span></button>",
+      "css": ".ds-row { display: grid; grid-template-columns: 4ch 21ch 1fr; column-gap: 2ch; width: 100%; padding: 0 1ch; font: inherit; text-align: left; border: 0; cursor: pointer; background: var(--accent); color: var(--bg); } .ds-row:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }"
+    },
+    {
+      "name": "Section Command Line",
+      "kind": "custom",
+      "refersTo": "body",
+      "description": "Muted shell command that introduces each section.",
+      "html": "<p class=\"ds-cmd\"><span class=\"ds-prompt\">$</span> git log --graph</p>",
+      "css": ".ds-cmd { margin: 0; font-family: var(--font-mono); font-size: 14px; line-height: 1.5rem; color: var(--muted); } .ds-prompt { color: var(--accent); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Working Terminal",
+    "overview": "The site reads as a real shell session: a prompt in the header, sections introduced by the command that would produce them, projects as an htop process list, experience as git log --graph, skills as neofetch. It is polished like a product site and skinned like a terminal, and the skin never costs legibility.\n\nDepth is flat and sharp. There are no shadows, no radii, no cards. Hierarchy comes from rules, indentation on whole-ch columns, colour roles, and reverse video.",
+    "keyCharacteristics": [
+      "Everything aligns to a 1.5rem vertical rhythm and whole-ch horizontal columns.",
+      "Colour is by role, not decoration.",
+      "Three themes: phosphor (default dark), amber, paper (light), all AA.",
+      "Motion enhances and never gates."
+    ],
+    "rules": [
+      {
+        "name": "The Role Rule",
+        "body": "accent = interactive, --num = numbers, --ident = names, --fg = prose, --muted = secondary. A colour is never used outside its role.",
+        "section": "colors"
+      },
+      {
+        "name": "The Contrast Rule",
+        "body": "Every foreground and background pair passes AA in all three themes.",
+        "section": "colors"
+      },
+      {
+        "name": "The Lowercase Rule",
+        "body": "Headings are lowercase, matching the GitHub README voice.",
+        "section": "typography"
+      },
+      {
+        "name": "The Grid Rule",
+        "body": "Line-height is always a multiple of 1.5rem; widths are in ch.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Surfaces are flat at all times. State is shown by colour fade or reverse video, never by shadow, lift or scale.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep every effect optional: plain semantic HTML on first paint, reduced-motion fallbacks for decode, scroll drawing, and the 3D hero.",
+      "Do use colour by role and verify AA contrast in all three themes.",
+      "Do set widths in ch and line-heights in multiples of 1.5rem so ASCII aligns.",
+      "Do write headings lowercase and copy in the README voice: specific, dry, numbers over adjectives.",
+      "Do show interaction with reverse video or a colour fade."
+    ],
+    "donts": [
+      "Don't add shadows, border radius, cards, gradients or glassmorphism.",
+      "Don't put content only in a canvas, animation or the terminal.",
+      "Don't use accent on non-interactive text or reuse number and identifier colours decoratively.",
+      "Don't use em-dashes or buzzwords in visible copy.",
+      "Don't add a photo, a contact form, or a phone number."
+    ]
+  }
+}

@@ -125,7 +125,7 @@ export default function AsciiHero({
         dpr={1}
         flat
         gl={{ antialias: false, powerPreference: 'low-power' }}
-        camera={{ position: [0, 2, 7.4], fov: 30 }}
+        camera={{ position: [0, 3.8, 10.4], fov: 30 }}
       >
         <color attach="background" args={['#000000']} />
         <ambientLight intensity={0.03} />

@@ -9,7 +9,7 @@ export const lsCommand: Command = {
   usage: 'ls [projects]',
   description: 'list projects',
   complete: () => ['projects'],
-  run(args) {
+  run(args, ctx) {
     const targets = args.filter((a) => !a.startsWith('-'));
     const bad = targets.filter((t) => !TARGETS.includes(t.toLowerCase()));
     if (bad.length > 0) {
@@ -17,10 +17,9 @@ export const lsCommand: Command = {
     }
 
     const width = Math.max(...projects.map((p) => p.slug.length)) + 2;
-    const rows: Line[] = projects.map((p) => [
-      { text: p.slug.padEnd(width) },
-      { text: p.metric, tone: 'muted' },
-    ]);
+    const rows: Line[] = ctx.narrow
+      ? projects.flatMap((p) => [p.slug, muted(` ${p.metric}`)])
+      : projects.map((p) => [{ text: p.slug.padEnd(width) }, { text: p.metric, tone: 'muted' }]);
     return [...rows, muted(`archive: ${archive.map((a) => a.name).join(' ')}`)];
   },
 };

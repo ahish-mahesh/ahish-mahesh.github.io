@@ -89,7 +89,7 @@ export function SiteHeader() {
             setOpen((o) => !o);
           }}
         >
-          <span aria-hidden="true">[</span>ls
+          <span aria-hidden="true">[</span>menu
           <span aria-hidden="true"> {open ? '▴' : '▾'}]</span>
         </button>
         <div id="site-menu" className={styles.menu} data-open={open ? 'true' : 'false'}>

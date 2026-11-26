@@ -4,7 +4,8 @@ import { HeroVisual } from './HeroVisual.tsx';
 import styles from './Hero.module.css';
 
 const buttons = [
-  { label: 'email', href: `mailto:${profile.email}`, external: false },
+  { label: profile.email, href: `mailto:${profile.email}`, external: false },
+  { label: 'view projects', href: '#projects', external: false },
   { label: 'résumé', href: profile.links.resume, external: false },
   { label: 'linkedin', href: profile.links.linkedin, external: true },
 ] as const;
@@ -27,7 +28,7 @@ export function Hero() {
         </dl>
         <ul className={styles.buttons}>
           {buttons.map((b) => (
-            <li key={b.label}>
+            <li key={b.label} className={b.label === profile.email ? styles.primary : undefined}>
               <a
                 href={b.href}
                 className={styles.button}

@@ -5,5 +5,5 @@ export const skillsCommand: Command = {
   name: 'skills',
   aliases: ['neofetch'],
   description: 'what I reach for',
-  run: () => neofetchOutput(),
+  run: (_args, ctx) => neofetchOutput(ctx.narrow),
 };

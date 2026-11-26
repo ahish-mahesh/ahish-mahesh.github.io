@@ -27,9 +27,13 @@ describe('Hero', () => {
     expect(container.textContent).not.toContain('●');
   });
 
-  it('links email, resume and linkedin', () => {
+  it('links projects, the email address, resume and linkedin', () => {
     render(<Hero />);
-    expect(screen.getByRole('link', { name: /email/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /view projects/ })).toHaveAttribute(
+      'href',
+      '#projects',
+    );
+    expect(screen.getByRole('link', { name: new RegExp(profile.email) })).toHaveAttribute(
       'href',
       `mailto:${profile.email}`,
     );

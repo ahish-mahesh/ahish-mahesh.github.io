@@ -20,7 +20,7 @@ export const catCommand: Command = {
 
     const lines: Line[] = [
       [{ text: project.title, tone: 'accent' }],
-      project.summary,
+      ...project.bullets.map((b) => `- ${b}`),
       '',
       `stack: ${(project.fullStack ?? project.stack).join(' · ')}`,
     ];

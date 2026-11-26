@@ -122,6 +122,13 @@ summary {
   display: none !important;
 }
 
+/* Avoids single-word last lines in running text. */
+p,
+li,
+dd {
+  text-wrap: pretty;
+}
+
 .prose {
   font-family: var(--font-prose);
   /* Plex has a smaller x-height than JetBrains Mono; 17px reads at the same size as 16px mono. */

@@ -2,8 +2,6 @@ import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 import { archive, projects } from '../../content/projects.ts';
-import { mockReducedMotion } from '../../test/matchMedia.ts';
-import { bar } from '../MigrationPanel/bar.ts';
 import { Projects } from './Projects.tsx';
 
 afterEach(() => {
@@ -36,9 +34,18 @@ describe('Projects', () => {
     expect(screen.getByText(project.headline)).toBeVisible();
   });
 
-  it('opens the KLA row by default, with bullets and the migration figure', () => {
+  it('starts every row closed', () => {
+    render(<Projects />);
+    for (const p of projects) {
+      expect(rowButton(p.name)).toHaveAttribute('aria-expanded', 'false');
+    }
+  });
+
+  it('opens the KLA row on click, with bullets and the migration figure', async () => {
+    const user = userEvent.setup();
     render(<Projects />);
     const button = rowButton(kla.name);
+    await user.click(button);
     expect(button).toHaveAttribute('aria-expanded', 'true');
     const panel = panelOf(button);
     expect(panel).not.toHaveAttribute('hidden');
@@ -118,22 +125,13 @@ describe('Projects', () => {
     expect(button).toHaveAttribute('aria-expanded', 'true');
   });
 
-  it('renders every bar full under reduced motion', () => {
-    mockReducedMotion();
+  it('marks each row with [+], and [-] once open', async () => {
+    const user = userEvent.setup();
     render(<Projects />);
-    for (const p of projects) {
-      const barEl = rowButton(p.name).querySelector('span[aria-hidden]:not([class*="stack"])');
-      expect(barEl?.textContent).toBe(bar(1));
-    }
-  });
-
-  it('starts bars empty, at full width, before they scroll into view', () => {
-    render(<Projects />);
-    for (const p of projects) {
-      const barEl = rowButton(p.name).querySelector('span[aria-hidden]:not([class*="stack"])');
-      expect(barEl?.textContent).toBe(bar(0));
-      expect(barEl?.textContent).toHaveLength(bar(1).length);
-    }
+    const button = rowButton('agent-goal');
+    expect(button).toHaveTextContent('[+]');
+    await user.click(button);
+    expect(button).toHaveTextContent('[-]');
   });
 
   it('keeps the archive collapsed until its summary is clicked', async () => {

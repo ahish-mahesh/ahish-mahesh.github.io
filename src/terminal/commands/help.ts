@@ -12,10 +12,10 @@ export const helpCommand: Command = {
         description: c.description,
       }));
     const width = Math.max(...rows.map((r) => r.label.length)) + 2;
-    const lines: Line[] = rows.map((r) => [
-      { text: r.label.padEnd(width) },
-      { text: r.description, tone: 'muted' },
-    ]);
+    // A single leading space keeps a stacked description wrappable.
+    const lines: Line[] = ctx.narrow
+      ? rows.flatMap((r) => [r.label, muted(` ${r.description}`)])
+      : rows.map((r) => [{ text: r.label.padEnd(width) }, { text: r.description, tone: 'muted' }]);
     const hint = ctx.touch
       ? 'tap a command below, or type one. close is top right.'
       : 'tab completes. up/down for history. esc closes.';

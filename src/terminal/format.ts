@@ -110,18 +110,60 @@ export function timelineOutput(): Output {
   return out;
 }
 
-/** The logo on the left, `title`, a rule and the skill rows on the right. */
-export function neofetchOutput(): Output {
+/** Widest skill-value line beside the logo and keys that still fits the 72ch terminal column. */
+const VALUES_WIDTH = 36;
+
+/** `values` joined with ' · ', broken at spaces into lines of at most `width` characters. */
+function wrapValues(values: readonly string[], width: number): string[] {
+  // A separator stays on the line of the value it follows, so no line starts with one.
+  const words = values.flatMap((v, i) => {
+    const parts = v.split(' ');
+    if (i < values.length - 1) parts.push(`${parts.pop() ?? ''} ·`);
+    return parts;
+  });
+  const lines: string[] = [];
+  let line = '';
+  for (const word of words) {
+    if (line && line.length + 1 + word.length > width) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = line ? `${line} ${word}` : word;
+    }
+  }
+  return [...lines, line];
+}
+
+/**
+ * The logo on the left, `title`, a rule and the skill rows on the right. On a phone the logo
+ * is dropped and each key sits above its values.
+ */
+export function neofetchOutput(narrow = false): Output {
+  const head: Span[][] = [
+    [{ text: neofetchTitle, tone: 'accent' }],
+    [{ text: '-'.repeat(neofetchTitle.length), tone: 'muted' }],
+  ];
+  if (narrow) {
+    return [
+      ...head,
+      ...skills.flatMap((s): Line[] => [
+        [{ text: s.key, tone: 'accent' }],
+        ` ${s.values.join(' · ')}`,
+      ]),
+    ];
+  }
+
   const logo = neofetchLogo.split('\n');
   const logoWidth = Math.max(...logo.map((l) => l.length));
   const keyWidth = Math.max(...skills.map((s) => s.key.length));
   const right: Span[][] = [
-    [{ text: neofetchTitle, tone: 'accent' }],
-    [{ text: '-'.repeat(neofetchTitle.length), tone: 'muted' }],
-    ...skills.map((s): Span[] => [
-      { text: s.key.padEnd(keyWidth), tone: 'accent' },
-      { text: `  ${s.values.join(' · ')}` },
-    ]),
+    ...head,
+    ...skills.flatMap((s) =>
+      wrapValues(s.values, VALUES_WIDTH).map((text, i): Span[] => [
+        { text: (i === 0 ? s.key : '').padEnd(keyWidth), tone: 'accent' },
+        { text: `  ${text}` },
+      ]),
+    ),
   ];
   const rows = Math.max(logo.length, right.length);
   return Array.from({ length: rows }, (_, i): Line => [

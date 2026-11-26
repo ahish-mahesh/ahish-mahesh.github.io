@@ -10,7 +10,6 @@ import {
   sectionPrompts,
 } from '../sections.ts';
 import { Section } from '../Section/Section.tsx';
-import { ProcessBar } from './ProcessBar.tsx';
 import styles from './Projects.module.css';
 
 function hashSlug(): string | undefined {
@@ -20,11 +19,9 @@ function hashSlug(): string | undefined {
   return projects.some((p) => p.slug === slug) ? slug : undefined;
 }
 
-/** The first project (the KLA migration) is open on first render; a hash adds its row. */
+/** Every row starts closed, so all four projects fit the first screen; a hash opens its row. */
 function initialOpen(): ReadonlySet<string> {
   const open = new Set<string>();
-  const [first] = projects;
-  if (first) open.add(first.slug);
   const slug = hashSlug();
   if (slug) open.add(slug);
   return open;
@@ -73,11 +70,15 @@ function Row({ project, open, onToggle, onReveal }: RowProps) {
             onClick={onToggle}
           >
             <span className={cx(styles.pid, 'muted')}>{project.pid}</span>
-            <span className={styles.name}>{project.name}</span>
+            <span className={styles.name}>
+              {project.name}
+              <span aria-hidden="true" className={styles.marker}>
+                {open ? ' [-]' : ' [+]'}
+              </span>
+            </span>
             <span aria-hidden="true" className={styles.stack}>
               {project.stack.join(' ')}
             </span>
-            <ProcessBar />
             <span className={styles.metric}>{project.metric}</span>
           </button>
         </h3>
@@ -158,8 +159,7 @@ export function Projects() {
           <span>PID</span>
           <span>NAME</span>
           <span className={styles.headerStack}>STACK</span>
-          <span>STATE</span>
-          <span>METRIC</span>
+          <span>HIGHLIGHT</span>
         </div>
         <ul>
           {projects.map((p) => (

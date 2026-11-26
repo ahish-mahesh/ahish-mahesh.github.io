@@ -50,11 +50,11 @@ describe('cat', () => {
   const goal = projects.find((p) => p.slug === 'agent-goal');
   const kla = projects.find((p) => p.slug === 'kla-pg-migration');
 
-  it('prints title, summary, stack and a repo link', () => {
+  it('prints title, every bullet, stack and a repo link', () => {
     const out = catCommand.run(['agent-goal'], fakeCtx());
     const text = outputText(out);
     expect(text[0]).toBe(goal?.title);
-    expect(text).toContain(goal?.summary);
+    for (const b of goal?.bullets ?? []) expect(text).toContain(`- ${b}`);
     expect(text).toContain(`stack: ${(goal?.fullStack ?? []).join(' · ')}`);
     const repo = out.find((l) => typeof l !== 'string' && l.some((s) => s.href === goal?.repo));
     expect(repo).toBeDefined();

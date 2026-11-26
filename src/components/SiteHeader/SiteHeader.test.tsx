@@ -78,7 +78,7 @@ describe('SiteHeader', () => {
   it('toggles the menu and closes on Escape with focus back on the toggle', async () => {
     const user = userEvent.setup();
     setup();
-    const toggle = screen.getByRole('button', { name: /^ls/ });
+    const toggle = screen.getByRole('button', { name: /^menu/ });
     expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await user.click(toggle);
     expect(toggle).toHaveAttribute('aria-expanded', 'true');
@@ -90,7 +90,7 @@ describe('SiteHeader', () => {
   it('closes the menu when a link is clicked', async () => {
     const user = userEvent.setup();
     setup();
-    const toggle = screen.getByRole('button', { name: /^ls/ });
+    const toggle = screen.getByRole('button', { name: /^menu/ });
     await user.click(toggle);
     await user.click(screen.getByRole('link', { name: 'skills' }));
     expect(toggle).toHaveAttribute('aria-expanded', 'false');

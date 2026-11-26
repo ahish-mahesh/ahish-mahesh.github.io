@@ -36,10 +36,6 @@
   margin: 0;
 }
 
-.fact[data-key='status'] dt {
-  color: var(--accent);
-}
-
 .buttons {
   display: flex;
   flex-wrap: wrap;

@@ -10,7 +10,6 @@ import { SiteHeader } from './components/SiteHeader/SiteHeader.tsx';
 import { ActiveSectionContext } from './hooks/ActiveSectionContext.ts';
 import { useActiveSection } from './hooks/useActiveSection.ts';
 import { TerminalLauncher } from './terminal/TerminalLauncher.tsx';
-import styles from './App.module.css';
 
 export default function App() {
   const active = useActiveSection(sectionIds);
@@ -24,10 +23,8 @@ export default function App() {
         <main id="main" tabIndex={-1}>
           <Hero />
           <Projects />
-          <div className={styles.split}>
-            <GitLogTimeline />
-            <Neofetch />
-          </div>
+          <GitLogTimeline />
+          <Neofetch />
           <Contact />
         </main>
       </ActiveSectionContext>

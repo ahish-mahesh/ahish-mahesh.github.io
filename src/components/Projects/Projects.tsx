@@ -20,11 +20,9 @@ function hashSlug(): string | undefined {
   return projects.some((p) => p.slug === slug) ? slug : undefined;
 }
 
-/** The first project (the KLA migration) is open on first render; a hash adds its row. */
+/** Every row starts closed, so all four projects fit the first screen; a hash opens its row. */
 function initialOpen(): ReadonlySet<string> {
   const open = new Set<string>();
-  const [first] = projects;
-  if (first) open.add(first.slug);
   const slug = hashSlug();
   if (slug) open.add(slug);
   return open;

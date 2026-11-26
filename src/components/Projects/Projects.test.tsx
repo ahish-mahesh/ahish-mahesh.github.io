@@ -36,9 +36,18 @@ describe('Projects', () => {
     expect(screen.getByText(project.headline)).toBeVisible();
   });
 
-  it('opens the KLA row by default, with bullets and the migration figure', () => {
+  it('starts every row closed', () => {
+    render(<Projects />);
+    for (const p of projects) {
+      expect(rowButton(p.name)).toHaveAttribute('aria-expanded', 'false');
+    }
+  });
+
+  it('opens the KLA row on click, with bullets and the migration figure', async () => {
+    const user = userEvent.setup();
     render(<Projects />);
     const button = rowButton(kla.name);
+    await user.click(button);
     expect(button).toHaveAttribute('aria-expanded', 'true');
     const panel = panelOf(button);
     expect(panel).not.toHaveAttribute('hidden');
